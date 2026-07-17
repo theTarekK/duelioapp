@@ -315,12 +315,24 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 /* =====================================================================
    CATALOG (exact iMessage catalog recreation)
    ===================================================================== */
+/* the catalog sits on its own raised slab: a lighter, bluer panel with a
+   fine stroked lattice (vs the page's filled plates), a crisp steel border
+   and a keycap-style lip + deep shadow so it reads clearly elevated */
 .catalog-shell {
   position: relative; max-width: 1180px; margin: 0 auto; padding: 0 14px;
-  border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
-  background: linear-gradient(150deg, var(--graphite-top), var(--graphite-bot));
+  border: 1px solid rgba(163, 181, 199, 0.38);
+  border-radius: 12px; overflow: hidden;
+  background:
+    radial-gradient(95% 55% at 50% 0%, rgba(46, 110, 190, 0.12), transparent 62%),
+    linear-gradient(165deg, #252a34, #101319 55%, #0a0c11);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 12px 0 -5px #04050a,
+    0 36px 90px rgba(0, 0, 0, 0.68),
+    0 0 46px rgba(46, 110, 190, 0.10);
 }
-.catalog-hexfx { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; pointer-events: none; }
+.catalog-hexfx { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.6; pointer-events: none; }
 .catalog-head {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center;
   gap: 14px; height: 66px; margin: 6px 0 2px;

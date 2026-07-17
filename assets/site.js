@@ -519,9 +519,6 @@
       g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
-      // the tiled wall: filled hex PLATES with seams, lit from the top-left,
-      // each plate slowly pulsing, some plates a shade darker — bevelled with
-      // a light top edge and a shadowed bottom edge so they read as physical
       const sweep = (t / 10) % 1;
       const cols = Math.ceil(W / colStep) + 2, rows = Math.ceil(H / rowStep) + 2;
       const pr = R - 2.4; // plate radius, leaving a grout seam
@@ -539,7 +536,22 @@
           if (sd < 0.09) lum += (0.09 - sd) * 3.2 * opts.sweep; // passing sheen
           lum = Math.min(lum, 1.15);
 
-          // plate vertices (pointy-top): used for fill and the bevel edges
+          if (opts.style === "lines") {
+            // the catalog slab's own look: a fine stroked lattice, no plates —
+            // reads as etched circuitry against the page's tiled wall
+            hexPath(cx, cy, pr + 1.2);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(163,181,199,${0.05 + 0.16 * Math.min(lum, 1)})`;
+            ctx.stroke();
+            if (h > 0.965) { // rare powered node at a lattice corner
+              ctx.fillStyle = `rgba(163,196,232,${0.25 * pulse})`;
+              ctx.beginPath(); ctx.arc(cx, cy - R, 1.6, 0, 6.28); ctx.fill();
+            }
+            continue;
+          }
+
+          // the page wall: filled hex PLATES with seams, lit from the top-left,
+          // bevelled with a light top edge and a shadowed bottom edge
           const v = [];
           for (let i = 0; i < 6; i++) {
             const a = Math.PI / 180 * (60 * i - 30);
@@ -574,5 +586,5 @@
   /* ---------------- boot ---------------- */
   renderCatalog();
   initTech(document.getElementById("hexfx"), { r: 30, sweep: 0.7, parallax: true });
-  initTech(document.querySelector(".catalog-hexfx"), { r: 22, sweep: 1.0 });
+  initTech(document.querySelector(".catalog-hexfx"), { r: 20, sweep: 1.0, style: "lines" });
 })();
