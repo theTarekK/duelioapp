@@ -343,7 +343,7 @@
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
         { open: "my lap record still stands",      reply: "not for long",             close: "eat my dust" },
       ]},
-      { cover: "showdown.png",  game: "Showdown",  lines: [
+      { cover: "cards.webp", live: true, game: "Showdown",  lines: [
         { open: "poker night. bring your chips",   reply: "dealing you in",           close: "all in first hand. watch" },
         { open: "i can read your bluffs from here", reply: "no you can't",            close: "we'll see about that" },
       ]},
@@ -355,7 +355,7 @@
         { open: "triple word score. warming up",   reply: "bring a dictionary",       close: "QI. 62 points. sit down" },
         { open: "word tiles rematch",              reply: "i've been reading the dictionary", close: "sure you have" },
       ]},
-      { cover: "gofish.png",    game: "Go Fish",   lines: [
+      { cover: "cards.webp", live: true, game: "Go Fish",   lines: [
         { open: "go fish. childhood rules",        reply: "got any threes?",          close: "GO FISH" },
         { open: "one easy game before dinner",     reply: "nothing about me is easy", close: "it's go fish" },
       ]},
@@ -382,7 +382,7 @@
       const pool = g.lines.concat(BANTER);
       const c = pool[Math.floor(Math.random() * pool.length)];
       const fill = (s) => s.replace("{g}", g.game);
-      return { cover: g.cover, game: g.game, caption: `Let's play ${g.game}!`, open: fill(c.open), reply: fill(c.reply), close: fill(c.close) };
+      return { cover: g.cover, game: g.game, live: !!g.live, caption: `Let's play ${g.game}!`, open: fill(c.open), reply: fill(c.reply), close: fill(c.close) };
     };
 
     const buildChat = (c) => {
@@ -391,7 +391,11 @@
         <div class="bubble me typing" data-step="2"><i></i><i></i><i></i></div>
         <div class="bubble me msg" data-step="3">${c.reply}</div>
         <div class="bubble me invite" data-step="4">
-          <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
+          <span class="inv-art">
+            <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
+            <span class="inv-orb"><svg viewBox="0 0 24 24" width="46%" height="46%"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z"/></svg></span>
+            ${c.live ? '<span class="inv-live">LIVE</span>' : ""}
+          </span>
           <div class="inv-bar"><img src="/assets/img/duelio-logo.png" alt=""><div><b>Duelio</b><span>${c.caption}</span></div></div>
         </div>
         <div class="bubble them msg" data-step="5">${c.close}</div>`;
@@ -518,23 +522,47 @@
       g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
-      // the honeycomb
+      // the tiled wall: filled hex PLATES with seams, lit from the top-left,
+      // each plate slowly pulsing, some plates a shade darker — bevelled with
+      // a light top edge and a shadowed bottom edge so they read as physical
       const sweep = (t / 10) % 1;
       const cols = Math.ceil(W / colStep) + 2, rows = Math.ceil(H / rowStep) + 2;
-      ctx.lineWidth = 1;
+      const pr = R - 2.4; // plate radius, leaving a grout seam
       for (let rr = -1; rr <= rows; rr++) {
         const rowOffset = (rr % 2 !== 0) ? colStep * 0.5 : 0;
         for (let c = -1; c <= cols; c++) {
           const cx = c * colStep + rowOffset + px;
           const cy = rr * rowStep + py;
-          const h = hash(c, rr);
-          const breathe = 0.5 + 0.5 * Math.sin(t * 0.55 + h * 6.28);
-          const diag = (cx + cy) / (W + H);
-          let a = 0.045 + breathe * 0.05;
-          const sd = Math.abs(diag - sweep);
-          if (sd < 0.08) a += (0.08 - sd) * 2.6 * opts.sweep;
-          hexPath(cx, cy, R);
-          ctx.strokeStyle = `rgba(163,181,199,${Math.min(a, 0.3)})`;
+          const h = hash(c, rr), h2 = hash(c + 57, rr + 13);
+          const pulse = 0.78 + 0.22 * Math.sin(t * 0.6 + h * 6.28);
+          const lightFall = 1.05 - (cx + cy) / (W + H) * 0.9; // top-left lit
+          let lum = lightFall * (0.45 + 0.75 * h2 * h2) * pulse;
+          if (h2 < 0.14) lum *= 0.35;                          // the odd dark tile
+          const sd = Math.abs((cx + cy) / (W + H) - sweep);
+          if (sd < 0.09) lum += (0.09 - sd) * 3.2 * opts.sweep; // passing sheen
+          lum = Math.min(lum, 1.15);
+
+          // plate vertices (pointy-top): used for fill and the bevel edges
+          const v = [];
+          for (let i = 0; i < 6; i++) {
+            const a = Math.PI / 180 * (60 * i - 30);
+            v.push([cx + pr * Math.cos(a), cy + pr * Math.sin(a)]);
+          }
+          ctx.beginPath();
+          v.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+          ctx.closePath();
+          ctx.fillStyle = `rgba(${Math.round(118 * lum)},${Math.round(128 * lum)},${Math.round(146 * lum)},${0.16 + Math.min(lum, 1) * 0.42})`;
+          ctx.fill();
+
+          // bevel: light catches the two upper edges, shadow pools on the lower
+          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = `rgba(255,255,255,${0.04 + 0.09 * Math.min(lum, 1)})`;
+          ctx.beginPath();
+          ctx.moveTo(v[4][0], v[4][1]); ctx.lineTo(v[5][0], v[5][1]); ctx.lineTo(v[0][0], v[0][1]);
+          ctx.stroke();
+          ctx.strokeStyle = "rgba(0,0,0,0.30)";
+          ctx.beginPath();
+          ctx.moveTo(v[1][0], v[1][1]); ctx.lineTo(v[2][0], v[2][1]); ctx.lineTo(v[3][0], v[3][1]);
           ctx.stroke();
         }
       }
