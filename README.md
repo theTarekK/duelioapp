@@ -35,10 +35,10 @@ everywhere. Re-transcode with macOS's built-in tool if you refresh them:
 
 The catalog on the homepage is a faithful recreation of the in-app iMessage catalog:
 grouped category sections (Strategy / Sports / Word Games / Multiplayer / Card Games /
-Racing), video tiles that autoplay muted (lazy-loaded so only near-viewport clips
-decode), and a tap → play-options popup (HOST ONLINE / FIND A GAME / JOIN WITH CODE /
-PLAY OVER IMESSAGE / PASS & PLAY) → per-game config with the app's real options. Pool
-and Darts open their forced 5-mode picker first, exactly like the app. All of this is
+Racing) and video tiles that all autoplay muted — clips are fetched as blobs through a
+small queue so every tile reliably plays. Tapping a tile opens the iMessage config
+popup as a display-only recreation (modes with clips + descriptions, toggles, time
+controls, gold SEND) — nothing inside is interactive, only close works. All of this is
 data-driven in `SECTIONS` at the top of `assets/site.js` — edit there to change games.
 
 ## Deploying (one-time setup)

@@ -10,7 +10,7 @@
   const vid = (base) => V + base + ".mp4";
 
   /* ---------------- reusable config fragments ---------------- */
-  const LANGS = { label: "Language", type: "flags", options: ["🇬🇧 English", "🇪🇸 Spanish", "🇫🇷 French", "🇮🇹 Italian"] };
+  const LANGS = { label: "Language", type: "seg", options: ["English", "Spanish", "French", "Italian"] };
   const wordConfig = (sizes) => [
     { label: "Board Size", type: "seg", options: sizes },
     { label: "Generation Quality", type: "seg", options: ["High", "Random", "Low"] },
@@ -38,8 +38,6 @@
           ]},
           { label: "Clock", type: "toggle", tt: "Timed game", td: "Off = untimed. On enables a chess clock." },
           { label: "Time Control", type: "seg", def: 2, options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
-          { label: "Piece Set", type: "seg", options: ["Default", "Water & Fire", "Pixel"] },
-          { label: "Board Theme", type: "seg", options: ["Basic Wood", "Black & White", "Plant", "Crystal"] },
         ]},
         { n: "Checkers", k: "checkers", players: "2", pass: true, config: [
           { label: "Board Size", type: "seg", options: ["8 × 8", "10 × 10", "Custom"] },
@@ -97,7 +95,7 @@
             { id: "powers", label: "Powers", desc: "A 901 countdown with a random power on every throw.", video: "DartsModePreview-powers" },
             { id: "combo", label: "Combo", desc: "A 501 with the combo power always on, chaining hits into bonus points.", video: "DartsModePreview-combo" },
           ],
-          config: [{ label: "Dart Style", type: "seg", options: ["Dart", "Shuriken", "Kunai"] }] },
+          config: null },
       ],
       builders: [{ n: "Table Builder", k: "tablebuilder", sub: "POOL", players: "2" }],
     },
@@ -160,27 +158,51 @@
 
   const ALL_GAMES = SECTIONS.flatMap(s => s.games);
 
-  /* ---------------- lazy video manager (perf for ~40 clips) ---------------- */
+  /* ---------------- tile videos: load them ALL, every tile plays ----------------
+     Clips are fetched as blobs through a small queue, then handed to the
+     <video> as an object URL. fetch() is never media-throttled or cancelled
+     the way <video preload> is, so every tile reliably reaches playback —
+     and a blob src loops with zero network hiccups. One cache serves the
+     tiles AND the popup previews. */
+  const vidCache = new Map();
+  const videoURL = (base) => {
+    if (!vidCache.has(base)) {
+      vidCache.set(base, fetch(vid(base)).then(r => r.blob()).then(b => URL.createObjectURL(b)));
+    }
+    return vidCache.get(base);
+  };
+  const loadQueue = []; let inFlight = 0;
+  function attachVideo(v, base) {
+    loadQueue.push([v, base]);
+    pumpQueue();
+  }
+  function pumpQueue() {
+    while (inFlight < 6 && loadQueue.length) {
+      const [v, base] = loadQueue.shift();
+      inFlight++;
+      videoURL(base)
+        .then(u => { v.src = u; v.play?.().catch(() => {}); })
+        .catch(() => {})
+        .then(() => { inFlight--; pumpQueue(); });
+    }
+  }
+
   const videoIO = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const v = e.target;
-      if (e.isIntersecting) {
-        if (!v.src && v.dataset.src) v.src = v.dataset.src;
-        v.play?.().catch(() => {});
-      } else {
-        v.pause?.();
-      }
+      if (e.isIntersecting) v.play?.().catch(() => {});
+      else v.pause?.();
     }
-  }, { rootMargin: "150px 0px", threshold: 0.1 });
+  }, { rootMargin: "400px 0px" });
 
   function makeTileVideo(base, tint) {
     const wrap = document.createElement("div");
     wrap.className = "tile-face";
     const v = document.createElement("video");
-    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "none";
-    v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
-    v.dataset.src = vid(base);
-    v.addEventListener("loadeddata", () => v.classList.add("ready"), { once: true });
+    v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("autoplay", "");
+    v.addEventListener("loadeddata", () => { v.classList.add("ready"); v.play?.().catch(() => {}); }, { once: true });
+    attachVideo(v, base);
     wrap.appendChild(v);
     const gloss = document.createElement("div"); gloss.className = "gloss"; wrap.appendChild(gloss);
     if (tint) {
@@ -191,19 +213,30 @@
     return wrap;
   }
 
-  /* ---------------- render catalog ---------------- */
+  // gentle sweep: any visible, loaded, paused player gets a fresh play()
+  setInterval(() => {
+    if (document.hidden) return;
+    document.querySelectorAll(".tile-face video").forEach(v => {
+      if (v.readyState < 2 || !v.paused) return;
+      const r = v.getBoundingClientRect();
+      if (r.bottom > -400 && r.top < innerHeight + 400) v.play?.().catch(() => {});
+    });
+  }, 3000);
+
+  /* ---------------- render catalog (always grouped by category) ---------------- */
   const scroll = document.getElementById("catalog-scroll");
-  function renderCatalog(mode) {
+  function renderCatalog() {
     if (!scroll) return;
     scroll.innerHTML = "";
-    videoIO.disconnect?.();
-
-    const build = (games, tint, sectionEl) => {
+    SECTIONS.forEach(s => {
+      const sec = document.createElement("div"); sec.className = "cat-section reveal";
+      const count = s.games.length + s.builders.length;
+      sec.innerHTML = `<div class="cat-header"><span class="t">${s.title}</span><span class="rule"></span><span class="count">${count}</span></div>`;
       const grid = document.createElement("div"); grid.className = "tile-grid";
-      games.forEach(g => {
+      s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
         const tile = document.createElement("button");
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
-        tile.appendChild(makeTileVideo(g.tileVideo || g.k, g.builder ? null : tint));
+        tile.appendChild(makeTileVideo(g.tileVideo || g.k, g.builder ? null : s.tint));
         if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
         if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="pro-seal">PRO</span>`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
@@ -214,31 +247,9 @@
         if (!g.soon) tile.addEventListener("click", () => openGame(g));
         grid.appendChild(tile);
       });
-      sectionEl.appendChild(grid);
-    };
-
-    if (mode === "recent") {
-      // flat grid — a curated "recently played" order (live + new games first)
-      const recent = ["poker", "8ballreboot", "drawing", "chess", "roadracer", "trivia", "scrabble", "bombparty",
-        "darts", "wordhunt", "maps", "bowling", "gofish", "insider", "connect4", "ringtoss", "blackjack",
-        "spellingbee", "twotruths", "backgammon", "checkers", "tictactoe", "dotsandboxes", "anagrams",
-        "wordhuntplus", "wordshift", "toprace"];
-      const byKey = Object.fromEntries(ALL_GAMES.map(g => [g.k, g]));
-      const games = recent.map(k => byKey[k]).filter(Boolean);
-      const sec = document.createElement("div"); sec.className = "cat-section reveal";
-      sec.innerHTML = `<div class="cat-header"><span class="t">Recent</span><span class="rule"></span><span class="count">${games.length}</span></div>`;
-      build(games, null, sec);
+      sec.appendChild(grid);
       scroll.appendChild(sec);
-    } else {
-      SECTIONS.forEach(s => {
-        const sec = document.createElement("div"); sec.className = "cat-section reveal";
-        const count = s.games.length + s.builders.length;
-        sec.innerHTML = `<div class="cat-header"><span class="t">${s.title}</span><span class="rule"></span><span class="count">${count}</span></div>`;
-        const tiles = s.games.concat(s.builders.map(b => ({ ...b, builder: true })));
-        build(tiles, s.tint, sec);
-        scroll.appendChild(sec);
-      });
-    }
+    });
     revealObserve(scroll.querySelectorAll(".reveal"));
   }
 
@@ -256,7 +267,7 @@
     const pv = document.createElement("div"); pv.className = "pv";
     const hv = document.createElement("video"); hv.muted = true; hv.loop = true; hv.playsInline = true;
     hv.setAttribute("muted", ""); hv.setAttribute("playsinline", "");
-    hv.src = vid(g.tileVideo || g.k); hv.play?.().catch(() => {});
+    videoURL(g.tileVideo || g.k).then(u => { hv.src = u; hv.play?.().catch(() => {}); });
     pv.appendChild(hv);
     head.innerHTML = `<button class="popup-x" aria-label="Close">✕</button>`;
     head.appendChild(pv);
@@ -275,7 +286,8 @@
         const c = document.createElement("div"); c.className = "mode-card" + (i === 0 ? " sel" : "");
         c.innerHTML = `<span class="mv"><video muted loop playsinline></video></span>
           <span class="ol"><span class="mt">${m.label}${m.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${m.desc}</span></span>`;
-        const mvv = c.querySelector("video"); mvv.src = vid(m.video); mvv.play?.().catch(() => {});
+        const mvv = c.querySelector("video");
+        videoURL(m.video).then(u => { mvv.src = u; mvv.play?.().catch(() => {}); });
         el.appendChild(c);
       });
       body.appendChild(el);
@@ -289,8 +301,8 @@
     }
 
     body.insertAdjacentHTML("beforeend", `
-      <div class="cfg-confirm display"><span>➤</span> SEND</div>
-      <p class="cfg-note">The real setup screen, from the iMessage catalog — sending happens in Messages.</p>`);
+      <div class="cfg-confirm display"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 20.85 12 3.4 3.6l.01 6.53L15 12 3.41 13.87z"/></svg> SEND</div>
+      <p class="cfg-note">The real setup screen from the iMessage catalog. Sending happens in Messages.</p>`);
 
     scrim.classList.add("open");
     document.body.style.overflow = "hidden";
@@ -328,22 +340,6 @@
   scrim?.addEventListener("click", (e) => { if (e.target === scrim) closePopup(); });
   addEventListener("keydown", (e) => { if (e.key === "Escape" && scrim?.classList.contains("open")) closePopup(); });
 
-  /* ---------------- sort toggle ---------------- */
-  const sortWrap = document.getElementById("sort-toggle");
-  sortWrap?.addEventListener("click", (e) => {
-    const b = e.target.closest("button"); if (!b) return;
-    sortWrap.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
-    renderCatalog(b.dataset.sort);
-  });
-
-  /* ---------------- marquee ---------------- */
-  const track = document.getElementById("marquee-track");
-  if (track) {
-    const EMOJI = { tictactoe: "❌", dotsandboxes: "🟦", chess: "♟️", checkers: "🔴", scrabble: "🅰️", backgammon: "🎲", connect4: "🟡", bowling: "🎳", ringtoss: "🍾", "8ballreboot": "🎱", darts: "🎯", wordhunt: "🔍", wordhuntplus: "🔎", anagrams: "🔀", wordshift: "🧩", bombparty: "💣", trivia: "🧠", insider: "🕵️", maps: "🗺️", spellingbee: "🐝", twotruths: "🤥", drawing: "🎨", poker: "🃏", blackjack: "♠️", gofish: "🐟", roadracer: "🏎️", toprace: "🏁" };
-    const pills = ALL_GAMES.filter(g => !g.soon).map(g => `<span class="pill"><span class="em">${EMOJI[g.k] || "🎮"}</span> <b>${g.n}</b></span>`).join("");
-    track.innerHTML = pills + pills;
-  }
-
   /* ---------------- hero phone: iMessage thread with real invite bubbles ----------------
      The invite bubble uses the ACTUAL cover image Duelio composes into the
      message (Games/<X>/<x>messagecover.webp), framed like an MSMessage:
@@ -351,11 +347,11 @@
   const phoneScreen = document.getElementById("phone-screen");
   if (phoneScreen) {
     const CHATS = [
-      { cover: "bowling",  game: "Bowling",   caption: "Your turn · Bowling",   open: "loser buys coffee 🎳",            reply: "you're on",              close: "oh it's ON 😤" },
-      { cover: "darts",    game: "Darts",     caption: "Your throw · Darts",    open: "rematch. right now 🎯",           reply: "you sure about that",    close: "bring it 😤" },
-      { cover: "ringtoss", game: "Ring Toss", caption: "Your toss · Ring Toss", open: "winner picks dinner 🍾",          reply: "easy money",             close: "we'll see 😏" },
-      { cover: "roadrush", game: "Road Rush", caption: "Race on · Road Rush",   open: "race me. right now 🏁",           reply: "don't cry when you lose", close: "GO GO GO" },
-      { cover: "landmark", game: "Landmark",  caption: "Your guess · Landmark", open: "bet you can't find this place 🗺️", reply: "watch me",               close: "no maps app!! 😤" },
+      { cover: "bowling",  game: "Bowling",   caption: "Let's play Bowling!",   open: "loser buys coffee",             reply: "you're on",               close: "oh it's ON" },
+      { cover: "darts",    game: "Darts",     caption: "Let's play Darts!",     open: "rematch. right now",            reply: "you sure about that",     close: "bring it" },
+      { cover: "ringtoss", game: "Ring Toss", caption: "Let's play Ring Toss!", open: "winner picks dinner",           reply: "easy money",              close: "we'll see" },
+      { cover: "roadrush", game: "Road Rush", caption: "Let's play Road Rush!", open: "race me. right now",            reply: "don't cry when you lose", close: "GO GO GO" },
+      { cover: "landmark", game: "Landmark",  caption: "Let's play Landmark!",  open: "bet you can't find this place", reply: "watch me",                close: "no maps allowed!!" },
     ];
     phoneScreen.innerHTML = `
       <div class="thread-head">
@@ -458,14 +454,22 @@
 
   const yr = document.getElementById("year"); if (yr) yr.textContent = new Date().getFullYear();
 
-  /* ---------------- hex-tech backdrop (the catalog wall) ---------------- */
-  function initHex(canvas, opts) {
+  /* ---------------- tech backdrop: hex wall + circuits + energy ----------------
+     A richer take on the app's hex-tech chrome: breathing hex lattice with
+     powered accent cells (brand blue/red/gold), energy pulses racing along
+     the lattice axes with fading tails, drifting spark dust, a travelling
+     light sweep, expanding radar rings, and mouse parallax. */
+  function initTech(canvas, opts) {
     if (!canvas || reduce) return;
     const ctx = canvas.getContext("2d");
-    const DPR = Math.min(devicePixelRatio || 1, 2);
+    const DPR = Math.min(devicePixelRatio || 1, 1.75);
     let W = 0, H = 0, running = true, t0 = performance.now();
-    const R = opts.r || 24, colStep = R * 1.5, rowStep = R * 1.7320508;
+    const R = opts.r || 26, colStep = R * 1.5, rowStep = R * 1.7320508;
     const hash = (a, b) => { let h = (a * 374761393 + b * 668265263) ^ 0x5bd1e995; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; };
+    const ACCENTS = [[29, 137, 233], [254, 81, 0], [254, 188, 19]]; // blue, red, gold
+    const mouse = { x: 0.5, y: 0.5 };
+    if (opts.parallax) addEventListener("pointermove", (e) => { mouse.x = e.clientX / innerWidth; mouse.y = e.clientY / innerHeight; }, { passive: true });
+
     function size() {
       const r = canvas.getBoundingClientRect(); W = r.width; H = r.height;
       canvas.width = Math.max(1, W * DPR); canvas.height = Math.max(1, H * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -475,36 +479,110 @@
       for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); const x = cx + rad * Math.cos(a), y = cy + rad * Math.sin(a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
       ctx.closePath();
     }
+
+    // energy pulses racing along the three lattice axes
+    const AXES = [0, Math.PI / 3, -Math.PI / 3];
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const newPulse = () => ({
+      x: Math.random(), y: Math.random(),
+      a: AXES[Math.floor(Math.random() * 3)] * (Math.random() < 0.5 ? 1 : -1),
+      sp: rand(90, 220), life: rand(1.6, 3.4), t: 0,
+      c: ACCENTS[Math.floor(Math.random() * 3)],
+    });
+    const pulses = Array.from({ length: opts.pulses || 7 }, newPulse);
+
+    // spark dust, drifting upward
+    const dust = Array.from({ length: opts.dust || 50 }, () => ({
+      x: Math.random(), y: Math.random(), z: rand(0.3, 1),
+      vy: rand(4, 14), tw: rand(0, 6.28),
+    }));
+
+    let last = 0;
     function frame(now) {
       if (!running) return;
       const t = (now - t0) / 1000;
+      const dt = Math.min((now - (last || now)) / 1000, 0.05); last = now;
       ctx.clearRect(0, 0, W, H);
-      const cols = Math.ceil(W / colStep) + 1, rows = Math.ceil(H / rowStep) + 1;
-      const sweep = (t / 9) % 1;
-      for (let c = 0; c <= cols; c++) {
-        for (let rr = 0; rr <= rows; rr++) {
-          const cx = c * colStep, cy = rr * rowStep + (c % 2 ? rowStep * 0.5 : 0);
+      const px = (mouse.x - 0.5) * 18, py = (mouse.y - 0.5) * 12;
+      const cols = Math.ceil(W / colStep) + 2, rows = Math.ceil(H / rowStep) + 2;
+      const sweep = (t / 8) % 1;
+
+      // radar ring every ~5.5s from a hash-picked origin (like the app's pulse)
+      const cyc = t / 5.5, ci = Math.floor(cyc), cp = cyc - ci;
+      const ringX = hash(ci, 3) * W, ringY = hash(ci, 91) * H;
+      const ringR = cp * Math.hypot(W, H) * 0.6, ringFade = (1 - cp) * (1 - cp);
+
+      // hex lattice
+      for (let c = -1; c <= cols; c++) {
+        for (let rr = -1; rr <= rows; rr++) {
+          const cx = c * colStep + px, cy = rr * rowStep + (c % 2 ? rowStep * 0.5 : 0) + py;
           const diag = (cx + cy) / (W + H);
           const h = hash(c, rr);
           const breathe = 0.5 + 0.5 * Math.sin(t * 0.7 + h * 6.28);
-          let v = (1 - diag) * 0.16 + breathe * 0.03;
-          const sd = Math.abs(diag - sweep); if (sd < 0.08) v += (0.08 - sd) * 1.2 * opts.sweep;
-          hexPath(cx, cy, R - 1.4);
-          ctx.fillStyle = `rgba(${Math.round(148 * v)},${Math.round(162 * v)},${Math.round(188 * v)},${0.5 * v + 0.02})`;
-          ctx.fill();
-          if (h > 0.985) { ctx.strokeStyle = `rgba(163,181,199,${0.25 * breathe})`; ctx.lineWidth = 1; ctx.stroke(); }
+          let v = (1 - diag) * 0.10 + breathe * 0.04;
+          const sd = Math.abs(diag - sweep); if (sd < 0.07) v += (0.07 - sd) * 2.2 * opts.sweep;
+          const rd = Math.abs(Math.hypot(cx - ringX, cy - ringY) - ringR);
+          if (rd < 26) v += (1 - rd / 26) * 0.22 * ringFade;
+
+          if (h < 0.045) {
+            // powered accent cell: soft colored glow, breathing
+            const [ar, ag, ab] = ACCENTS[Math.floor(h * 1000) % 3];
+            const glow = 0.05 + 0.11 * breathe;
+            hexPath(cx, cy, R - 2);
+            ctx.fillStyle = `rgba(${ar},${ag},${ab},${glow})`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(${ar},${ag},${ab},${glow * 2.2})`;
+            ctx.lineWidth = 1; ctx.stroke();
+          } else {
+            hexPath(cx, cy, R - 1.4);
+            ctx.fillStyle = `rgba(148,162,188,${Math.min(v * 0.5, 0.14)})`;
+            ctx.fill();
+            if (h > 0.975) { ctx.strokeStyle = `rgba(163,181,199,${0.22 * breathe})`; ctx.lineWidth = 1; ctx.stroke(); }
+          }
         }
       }
+
+      // energy pulses with fading tails
+      for (const p of pulses) {
+        p.t += dt;
+        if (p.t > p.life) Object.assign(p, newPulse(), { t: 0 });
+        const dist = p.sp * p.t;
+        const hx = p.x * W + Math.cos(p.a) * dist + px;
+        const hy = p.y * H + Math.sin(p.a) * dist + py;
+        const fade = Math.sin(Math.min(p.t / p.life, 1) * Math.PI); // in-out
+        const TAIL = 90;
+        const g = ctx.createLinearGradient(hx - Math.cos(p.a) * TAIL, hy - Math.sin(p.a) * TAIL, hx, hy);
+        g.addColorStop(0, `rgba(${p.c[0]},${p.c[1]},${p.c[2]},0)`);
+        g.addColorStop(1, `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${0.55 * fade})`);
+        ctx.strokeStyle = g; ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(hx - Math.cos(p.a) * TAIL, hy - Math.sin(p.a) * TAIL);
+        ctx.lineTo(hx, hy); ctx.stroke();
+        // bright head
+        ctx.fillStyle = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${0.85 * fade})`;
+        ctx.beginPath(); ctx.arc(hx, hy, 1.7, 0, 6.28); ctx.fill();
+      }
+
+      // spark dust
+      for (const d of dust) {
+        d.y -= (d.vy * dt) / H;
+        if (d.y < -0.02) { d.y = 1.02; d.x = Math.random(); }
+        d.tw += dt * 2;
+        const a = (0.10 + 0.14 * Math.abs(Math.sin(d.tw))) * d.z;
+        ctx.fillStyle = `rgba(190,205,235,${a})`;
+        ctx.fillRect(d.x * W + px * d.z, d.y * H + py * d.z, 1.4, 1.4);
+      }
+
       requestAnimationFrame(frame);
     }
     size(); addEventListener("resize", size);
-    new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting && !document.hidden; if (running && !was) { requestAnimationFrame(frame); } }).observe(canvas);
-    document.addEventListener("visibilitychange", () => { running = !document.hidden; if (running) requestAnimationFrame(frame); });
+    new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting && !document.hidden; if (running && !was) { last = 0; requestAnimationFrame(frame); } }).observe(canvas);
+    document.addEventListener("visibilitychange", () => { running = !document.hidden; if (running) { last = 0; requestAnimationFrame(frame); } });
     requestAnimationFrame(frame);
   }
 
   /* ---------------- boot ---------------- */
-  renderCatalog("category");
-  initHex(document.getElementById("hexfx"), { r: 26, sweep: 0.6 });
-  initHex(document.getElementById("catalog-hexfx"), { r: 22, sweep: 1.0 });
+  renderCatalog();
+  initTech(document.getElementById("hexfx"), { r: 30, sweep: 0.7, pulses: 9, dust: 60, parallax: true });
+  initTech(document.querySelector(".catalog-hexfx"), { r: 22, sweep: 1.0, pulses: 5, dust: 24 });
 })();

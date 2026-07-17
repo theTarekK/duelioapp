@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Duelio — 27 games inside iMessage</title>
-<meta name="description" content="Duelio drops 27 games straight into iMessage — chess, pool, word games, live party games and more. Play friends in a chat, or match online. No ads, no accounts, no tracking.">
-<meta property="og:title" content="Duelio — 27 games inside iMessage">
-<meta property="og:description" content="Turn any chat into a game night. Challenge the group chat, match a stranger online, or pass the phone.">
+<title>Duelio — 31 games inside iMessage</title>
+<meta name="description" content="Duelio drops 31 games straight into iMessage. Chess, pool, word games, live party games and more. Play friends in a chat or match online. No ads, no accounts, no tracking.">
+<meta property="og:title" content="Duelio — 31 games inside iMessage">
+<meta property="og:description" content="Turn any chat into a game night. Challenge the group chat, match online, or pass the phone.">
 <meta property="og:url" content="https://duelioapp.com/">
 <meta property="og:image" content="https://duelioapp.com/assets/img/duelio-logo.png">
 <meta property="og:type" content="website">
@@ -19,6 +19,7 @@
 
 <div class="wall" aria-hidden="true"></div>
 <div class="duel-glow" aria-hidden="true"></div>
+<div class="engraved" aria-hidden="true"><span>DUELIO</span></div>
 <canvas id="hexfx" aria-hidden="true"></canvas>
 
 <header class="nav" id="nav">
@@ -29,8 +30,7 @@
   <nav class="nav-links">
     <a href="#catalog">Games</a>
     <a href="#online">Online</a>
-    <a href="#play">Ways to Play</a>
-    <a href="/privacy/">Privacy</a>
+    <a href="/privacy/">Privacy Policy</a>
     <a href="/support/">Support</a>
   </nav>
   <!-- APP STORE: when live, set href to the real App Store URL and drop the .soon span -->
@@ -43,30 +43,31 @@
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="hero-badge reveal"><img src="/assets/img/duelio-logo.png" alt=""> An iMessage app · iOS</div>
+      <div class="hero-badge reveal"><img src="/assets/img/duelio-logo.png" alt=""> An iMessage app for iOS</div>
       <h1 class="reveal d1">Pick a side.<span class="line2"><span class="grad-duel">Start the duel.</span></span></h1>
-      <p class="hero-sub reveal d2">
-        Duelio drops <b>27 games</b> straight into iMessage — chess, pool, darts, word games,
-        cards, racing and live party games. Challenge the group chat, <b>match a stranger online</b>,
-        or pass the phone. <b>No accounts. No ads. Ever.</b>
-      </p>
+      <ul class="hero-bullets reveal d2">
+        <li><b>31 games</b> inside iMessage</li>
+        <li>Live multiplayer and online matchmaking</li>
+        <li>Turn based duels that ride the conversation</li>
+        <li><b>No accounts. No ads. No tracking.</b></li>
+      </ul>
       <div class="hero-cta reveal d3">
         <!-- APP STORE: when live, set href to the real App Store URL and drop .disabled -->
         <a class="btn btn-gold disabled" href="#download" aria-disabled="true">
           <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.9 3.16-.8 1.79.14 3.04.86 3.9 2.18-3.6 2.16-2.75 6.9.53 8.16-.65 1.36-1.5 2.7-2.67 4.63ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z"/></svg>
           <span><small>Coming soon to the</small>App Store</span>
         </a>
-        <a class="btn btn-ghost" href="#catalog">Browse the games ↓</a>
+        <a class="btn btn-ghost" href="#catalog">Browse the games</a>
       </div>
       <div class="hero-stats reveal d3">
-        <div><b class="count" data-count="27">0</b><span>games</span></div>
+        <div><b class="count" data-count="31">0</b><span>games</span></div>
         <div><b class="count" data-count="11">0</b><span>play live</span></div>
         <div><b class="count" data-count="4">0</b><span>languages</span></div>
         <div><b class="gap">0</b><span>ads &amp; trackers</span></div>
       </div>
     </div>
 
-    <!-- phone shows a real, randomly-chosen gameplay clip (Pool or Road Rush) -->
+    <!-- animated iMessage thread with the app's real invite covers -->
     <div class="hero-phone reveal d2" aria-hidden="true">
       <div class="phone">
         <div class="phone-notch"></div>
@@ -75,28 +76,18 @@
       <div class="phone-glow"></div>
     </div>
   </div>
-  <div class="hero-hint" aria-hidden="true">↓ the whole catalog, live below</div>
 </section>
-
-<!-- ============================== MARQUEE ============================== -->
-<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
 
 <!-- ============================== CATALOG ============================== -->
 <section class="section" id="catalog">
   <p class="eyebrow reveal">The catalog</p>
   <h2 class="reveal">Every game, <span class="grad-gold">exactly as it looks</span></h2>
-  <p class="section-sub reveal">This is the real Duelio catalog — the same clips, categories and setup
-  screens from inside the app. Tap any tile to see how you’d start it.</p>
+  <p class="section-sub reveal">This is the real Duelio catalog. The same clips, categories and setup
+  screens from inside the app. Tap any tile to see its setup.</p>
 
   <div class="catalog-shell reveal">
     <canvas class="catalog-hexfx" aria-hidden="true"></canvas>
-    <div class="catalog-head">
-      <span class="wm">DUELIO</span>
-      <div class="sort-toggle" id="sort-toggle" role="tablist" aria-label="Sort">
-        <button class="on" data-sort="category">Category</button>
-        <button data-sort="recent">Recent</button>
-      </div>
-    </div>
+    <div class="catalog-head"><span class="wm">DUELIO</span></div>
     <div class="catalog-scroll" id="catalog-scroll"></div>
   </div>
 </section>
@@ -105,91 +96,44 @@
 <section class="section" id="online">
   <p class="eyebrow reveal">Online matchmaking</p>
   <h2 class="reveal">Nobody in the chat? <span class="grad-duel">Play the world.</span></h2>
-  <p class="section-sub reveal">Every game hosts and matches online — no friends required, no account either.
-  You’re an anonymous device ID and a display name, nothing more.</p>
+  <p class="section-sub reveal">Every game hosts and matches online. No friends required, and no
+  account either. You are an anonymous device ID and a display name, nothing more.</p>
 
   <div class="online-grid">
     <div class="online-card host reveal">
-      <div class="oc-icon">📡</div>
+      <div class="oc-icon"><img src="/assets/img/icons/host.png" alt=""></div>
       <h3>HOST ONLINE</h3>
       <p>Set the game up, then open a public room. Hosting mints a short room code and puts your
-      table on that game’s queue so seekers get routed straight in. Flip it Public ⇄ Private any time.</p>
+      table on that game's queue so seekers get routed straight in. Flip it Public or Private any time.</p>
     </div>
     <div class="online-card find reveal d1">
-      <div class="oc-icon">🔍</div>
+      <div class="oc-icon"><img src="/assets/img/icons/find.png" alt=""></div>
       <h3>FIND A GAME</h3>
-      <p>Search for an open room someone’s hosting. It <b>joins the moment someone hosts</b> that
-      game and mode — no lobby browser, no ready-up ceremony with strangers.</p>
+      <p>Search for an open room someone is hosting. It <b>joins the moment someone hosts</b> that
+      game and mode. No lobby browser, no ready-up ceremony with strangers.</p>
     </div>
     <div class="online-card join reveal d2">
-      <div class="oc-icon">🔑</div>
+      <div class="oc-icon"><img src="/assets/img/icons/code.png" alt=""></div>
       <h3>JOIN WITH CODE</h3>
-      <p>Got a code from a friend? Type it to drop into their exact room. It’s a friends feature — a
-      mistyped code just reads “no open room,” never a silent empty lobby.</p>
+      <p>Got a code from a friend? Type it to drop into their exact room. A mistyped code just reads
+      as no open room, never a silent empty lobby.</p>
       <div class="code-chip"><span>D</span><span>U</span><span>E</span><span>L</span><span>I</span><span>O</span></div>
     </div>
   </div>
 
   <div class="online-facts">
-    <div class="fact reveal"><div class="fi">🎭</div><div><h4>Anonymous by default</h4><p>No sign-in, no login, no email. Just a random per-install ID that resets if you reinstall.</p></div></div>
-    <div class="fact reveal d1"><div class="fi">🎯</div><div><h4>Matched on what matters</h4><p>Pools split by game, mode and language — 8 Ball meets 8 Ball — but never by difficulty or timer, so the pool stays big enough to actually pair.</p></div></div>
-    <div class="fact reveal d2"><div class="fi">⚔️</div><div><h4>1v1 duels &amp; live rooms</h4><p>Turn-based games run 1v1 over a relay; live party and card games seat a whole room, filling one seeker at a time.</p></div></div>
-    <div class="fact reveal d3"><div class="fi">🕹️</div><div><h4>Same game, three doors</h4><p>An invite bubble, a room code and the matchmaker are just three ways for two devices to agree on one room. The game can’t tell them apart.</p></div></div>
-  </div>
-</section>
-
-<!-- ============================== WAYS TO PLAY ============================== -->
-<section class="section" id="play">
-  <p class="eyebrow reveal">Three ways in</p>
-  <h2 class="reveal">However you like to <span class="grad-gold">throw down</span></h2>
-
-  <div class="ways">
-    <div class="way imsg reveal">
-      <div class="wi">💬</div>
-      <h3>In iMessage, with friends</h3>
-      <p>Launch from the Messages app drawer and an invite travels as a bubble to that exact chat.
-      Take turns on your own time, or go live with everyone in the thread.</p>
-      <span class="tag">TURN-BASED · LIVE</span>
-    </div>
-    <div class="way online reveal d1">
-      <div class="wi">🌐</div>
-      <h3>Online, with anyone</h3>
-      <p>Host or find a match with players you don’t know — the same games, the same ready rooms,
-      the same turn protocol, just reached without a conversation behind them.</p>
-      <span class="tag">HOST · FIND · CODE</span>
-    </div>
-    <div class="way pass reveal d2">
-      <div class="wi">🤝</div>
-      <h3>Pass &amp; Play, one phone</h3>
-      <p>Strategy and sports games share a single phone well — no hidden info, just hand it over and
-      take your turn. Chess to darts, right there in your palm.</p>
-      <span class="tag">STRATEGY · SPORTS</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============================== PRIVACY BAND ============================== -->
-<section class="section" style="padding-top:60px">
-  <div class="band reveal">
-    <div class="band-copy">
-      <p class="eyebrow" style="text-align:left">The fine print, unfined</p>
-      <h2>We built Duelio to need as little of your data as possible.</h2>
-      <ul class="checks">
-        <li>No third-party software — zero ads, analytics or trackers</li>
-        <li>No accounts, no passwords, no permissions requested</li>
-        <li>Your stats and unlocks never leave your device</li>
-        <li>Turn-based games ride iMessage — we never see them</li>
-      </ul>
-      <p class="band-honest">One honest caveat: live and online matches connect to a Duelio server and are
-      <b>not end-to-end encrypted</b>. We say so plainly, in plain English.</p>
-      <a class="btn btn-ghost" href="/privacy/">Read the privacy policy →</a>
-    </div>
-    <div class="band-zero" aria-hidden="true">
-      <div class="zero-row"><b class="b">0</b><span>ads</span></div>
-      <div class="zero-row"><b class="r">0</b><span>trackers</span></div>
-      <div class="zero-row"><b class="g">0</b><span>accounts</span></div>
-      <div class="zero-row"><b class="s">0</b><span>permissions</span></div>
-    </div>
+    <div class="fact reveal"><div class="fi">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5c0 4.4-3 8.4-7 9.5C8 19.4 5 15.4 5 11V6l7-3z"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M8.6 16c.7-1.6 1.9-2.4 3.4-2.4s2.7.8 3.4 2.4"/></svg>
+    </div><div><h4>Anonymous by default</h4><p>No sign in, no login, no email. Just a random per-install ID that resets if you reinstall.</p></div></div>
+    <div class="fact reveal d1"><div class="fi">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>
+    </div><div><h4>Matched on what matters</h4><p>Pools split by game, mode and language, never by difficulty or timer, so the pool stays big enough to actually pair.</p></div></div>
+    <div class="fact reveal d2"><div class="fi">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20L18 6M14 6h4v4M20 20L6 6M6 10V6h4"/></svg>
+    </div><div><h4>1v1 duels and live rooms</h4><p>Turn based games run 1v1 over a relay. Live party and card games seat a whole room, filling one seeker at a time.</p></div></div>
+    <div class="fact reveal d3"><div class="fi">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="9.4" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="15.8" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    </div><div><h4>Same game, three doors</h4><p>An invite bubble, a room code and the matchmaker are three ways for two devices to agree on one room. The game can't tell them apart.</p></div></div>
   </div>
 </section>
 
@@ -198,13 +142,13 @@
   <div class="download reveal">
     <img class="dllogo" src="/assets/img/duelio-logo.png" alt="Duelio">
     <h2>Coming soon to the <span class="grad-gold">App&nbsp;Store</span></h2>
-    <p>Duelio is in the final stretch. The download button will light up right here the moment it’s live.</p>
+    <p>Duelio is in the final stretch. The download button will light up right here the moment it goes live.</p>
     <!-- APP STORE: when live, set href to the real App Store URL and drop .disabled -->
     <a class="btn btn-gold big disabled" href="#" aria-disabled="true">
       <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8.98-.2 1.92-.9 3.16-.8 1.79.14 3.04.86 3.9 2.18-3.6 2.16-2.75 6.9.53 8.16-.65 1.36-1.5 2.7-2.67 4.63ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z"/></svg>
       <span><small>Coming soon to the</small>App Store</span>
     </a>
-    <p class="dl-note">Questions in the meantime? <a href="/support/">We’re here →</a></p>
+    <p class="dl-note">Questions in the meantime? <a href="/support/">We're here</a></p>
   </div>
 </section>
 
@@ -217,18 +161,19 @@
   <div class="foot-inner">
     <div class="foot-brand">
       <a class="nav-logo" href="/"><img src="/assets/img/duelio-logo.png" alt="Duelio"><span class="wm">DUELIO</span></a>
-      <p>© <span id="year">2026</span> METK LLC. All rights reserved. Made for iMessage.</p>
+      <p>© <span id="year">2026</span> METK LLC</p>
     </div>
-    <nav class="foot-links">
-      <a href="/privacy/">Privacy Policy</a>
-      <a href="/terms/">Terms of Use</a>
-      <a href="/support/">Support</a>
-      <a href="mailto:contact@metkapps.com">contact@metkapps.com</a>
-    </nav>
+    <div class="foot-contact">
+      <span class="fc-lbl">Contact</span>
+      <a class="btn btn-ghost" href="mailto:contact@metkapps.com">contact@metkapps.com</a>
+    </div>
+    <a class="foot-metk" href="https://metkapps.com" rel="noopener">
+      <img src="/assets/img/metk-logo.png" alt="METK">
+      <span>More from METK<b>metkapps.com</b></span>
+    </a>
   </div>
-  <p class="foot-legal">Apple, the Apple logo, iPhone, iMessage and App&nbsp;Store are trademarks of Apple&nbsp;Inc.
-  Duelio is intended for players aged 13 and over. Card games use play points with no monetary value —
-  nothing to buy, win or cash out.</p>
+  <p class="foot-legal">Apple, iPhone, iMessage and App&nbsp;Store are trademarks of Apple&nbsp;Inc.
+  Duelio is for players aged 13 and over. <a href="/terms/">Terms of Use</a></p>
 </footer>
 
 <script src="/assets/site.js" defer></script>
