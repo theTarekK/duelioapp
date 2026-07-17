@@ -520,35 +520,62 @@
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
       if (opts.style === "grid") {
-        // the catalog slab's own look — NO hexagons: a fine dot-matrix
-        // circuit grid with breathing nodes and a scan band drifting down.
-        // Reads as a lit instrument panel against the page's tiled wall.
-        const step = 26;
-        const scanY = ((t / 7) % 1.2 - 0.1) * H; // drifting horizontal scan band
-        const gcols = Math.ceil(W / step) + 1, grows = Math.ceil(H / step) + 1;
-        for (let gy = 0; gy <= grows; gy++) {
-          for (let gx = 0; gx <= gcols; gx++) {
-            const x = gx * step + px * 0.5, y = gy * step + py * 0.5;
-            const h = hash(gx, gy);
-            const breathe = 0.5 + 0.5 * Math.sin(t * 0.9 + h * 6.28);
-            let a = 0.10 + 0.16 * breathe * h;
-            const dScan = Math.abs(y - scanY);
-            if (dScan < 46) a += (1 - dScan / 46) * 0.4;      // scan glow
-            if (h > 0.978) {                                   // powered node
-              ctx.fillStyle = `rgba(126,186,255,${0.25 + 0.4 * breathe})`;
-              ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 6.28); ctx.fill();
-            } else {
-              ctx.fillStyle = `rgba(126,160,210,${a})`;
-              ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6);
-            }
-          }
+        // the catalog slab's own look: a glowing GRID washed in the logo's
+        // duel palette — blue bleeding in from the left, red from the right,
+        // a soft gold seam between them — with energy pulses riding the lines
+        const step = 34;
+
+        // blendy colour fields (the logo wash), drifting slowly
+        let f = ctx.createRadialGradient(W * 0.16 + Math.sin(t * 0.1) * 30, H * 0.32, 0, W * 0.16, H * 0.32, Math.max(W, H) * 0.55);
+        f.addColorStop(0, "rgba(29,137,233,0.16)"); f.addColorStop(1, "rgba(29,137,233,0)");
+        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
+        f = ctx.createRadialGradient(W * 0.85 + Math.cos(t * 0.09) * 30, H * 0.38, 0, W * 0.85, H * 0.38, Math.max(W, H) * 0.55);
+        f.addColorStop(0, "rgba(254,81,0,0.13)"); f.addColorStop(1, "rgba(254,81,0,0)");
+        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
+        f = ctx.createRadialGradient(W * 0.5, H * (0.8 + Math.sin(t * 0.07) * 0.08), 0, W * 0.5, H * 0.8, Math.max(W, H) * 0.4);
+        f.addColorStop(0, "rgba(254,188,19,0.07)"); f.addColorStop(1, "rgba(254,188,19,0)");
+        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
+
+        // the grid itself, stroked in a blue → gold → red sweep
+        const grad = ctx.createLinearGradient(0, 0, W, 0);
+        grad.addColorStop(0, "rgb(64,150,235)");
+        grad.addColorStop(0.5, "rgb(240,190,80)");
+        grad.addColorStop(1, "rgb(250,110,50)");
+        ctx.strokeStyle = grad; ctx.lineWidth = 1;
+        const nx = Math.ceil(W / step), ny = Math.ceil(H / step);
+        for (let i = 0; i <= nx; i++) {
+          const x = i * step + px * 0.5;
+          ctx.globalAlpha = 0.05 + 0.05 * Math.sin(t * 0.7 + hash(i, 3) * 6.28);
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
         }
-        // the scan band's soft leading light
-        const sg = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
-        sg.addColorStop(0, "rgba(88,150,230,0)");
-        sg.addColorStop(0.5, "rgba(88,150,230,0.05)");
-        sg.addColorStop(1, "rgba(88,150,230,0)");
-        ctx.fillStyle = sg; ctx.fillRect(0, scanY - 60, W, 120);
+        for (let j = 0; j <= ny; j++) {
+          const y = j * step + py * 0.5;
+          ctx.globalAlpha = 0.05 + 0.05 * Math.sin(t * 0.6 + hash(7, j) * 6.28);
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+
+        // glowing pulses riding random grid lines, coloured by where they are
+        for (let k = 0; k < 5; k++) {
+          const cyc = t / (5.5 + k * 1.3) + k * 0.37;
+          const seg = Math.floor(cyc), p = cyc - seg;
+          const vert = hash(seg, k) > 0.5;
+          const lane = Math.floor(hash(seg, k + 31) * (vert ? nx : ny)) * step;
+          const hx = vert ? lane : p * W, hy = vert ? p * H : lane;
+          const cr = Math.round(64 + (250 - 64) * (hx / W)), cg = Math.round(150 + (110 - 150) * (hx / W)), cb = Math.round(235 + (50 - 235) * (hx / W));
+          const fade = Math.sin(p * Math.PI);
+          const tail = 70, tx2 = vert ? hx : hx - tail, ty2 = vert ? hy - tail : hy;
+          const tg = ctx.createLinearGradient(tx2, ty2, hx, hy);
+          tg.addColorStop(0, `rgba(${cr},${cg},${cb},0)`);
+          tg.addColorStop(1, `rgba(${cr},${cg},${cb},${0.5 * fade})`);
+          ctx.strokeStyle = tg; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.moveTo(tx2, ty2); ctx.lineTo(hx, hy); ctx.stroke();
+          ctx.save();
+          ctx.shadowColor = `rgba(${cr},${cg},${cb},0.9)`; ctx.shadowBlur = 8;
+          ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.9 * fade})`;
+          ctx.beginPath(); ctx.arc(hx, hy, 1.8, 0, 6.28); ctx.fill();
+          ctx.restore();
+        }
         requestAnimationFrame(frame);
         return;
       }
