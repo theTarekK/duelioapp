@@ -291,28 +291,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   border-bottom-right-radius: 5px;
   box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
 }
-.inv-art { position: relative; display: block; }
 .inv-img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-/* the centered play orb every sent bubble carries (≈27% of bubble width) */
-.inv-orb {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 27%; aspect-ratio: 1; border-radius: 50%;
-  display: grid; place-items: center; color: #fff;
-  background: radial-gradient(circle at 34% 28%, #3a4152, #14161d 68%);
-  border: 2px solid rgba(255, 255, 255, 0.75);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 2px 3px rgba(255, 255, 255, 0.25);
-}
-.inv-orb svg { margin-left: 6%; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5)); }
-/* the pulsing LIVE capsule on live-game invites */
-.inv-live {
-  position: absolute; top: 7px; right: 7px;
-  display: inline-flex; align-items: center; gap: 4px;
-  font-family: var(--display); font-size: 0.5rem; letter-spacing: 0.08em; color: #fff;
-  background: rgba(178, 24, 24, 0.92); border-radius: 6px; padding: 3px 7px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-.inv-live::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 .inv-bar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; }
 .inv-bar img { width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; }
 .inv-bar b { display: block; font-family: var(--display); font-weight: 400; font-size: 0.56rem; letter-spacing: 0.08em; color: var(--gold); }
@@ -397,7 +376,6 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   opacity: 0; transition: opacity 0.5s ease;
 }
 .tile-face video.ready, .tile-face img.ready { opacity: 1; }
-.tile-face .tint { position: absolute; inset: 0; mix-blend-mode: overlay; opacity: 0.16; }
 .tile-face .gloss { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 40%); pointer-events: none; }
 .tile-face::after { /* steel inner rim */
   content: ""; position: absolute; inset: 1.5px; border-radius: 7px; border: 1px solid rgba(163, 181, 199, 0.2); pointer-events: none;

@@ -140,8 +140,8 @@
     {
       title: "Card Games", tint: "cards",
       games: [
-        { n: "Showdown", k: "poker", live: true, players: "2–7", config: jumpIn },
-        { n: "Perfect 21", k: "blackjack", live: true, players: "2–7", config: jumpIn },
+        { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
+        { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
         { n: "Go Fish", k: "gofish", live: true, players: "2–6", config: jumpIn },
       ],
       builders: [],
@@ -194,7 +194,7 @@
     }
   }, { rootMargin: "300px 0px" });
 
-  function makeTileVideo(base, tint) {
+  function makeTileVideo(base) {
     const wrap = document.createElement("div");
     wrap.className = "tile-face";
     const v = document.createElement("video");
@@ -208,10 +208,6 @@
     videoURL(base);                       // warm the byte cache right away
     wrap.appendChild(v);
     const gloss = document.createElement("div"); gloss.className = "gloss"; wrap.appendChild(gloss);
-    if (tint) {
-      const t = document.createElement("div"); t.className = "tint";
-      t.style.background = `var(--cat-${tint})`; wrap.appendChild(t);
-    }
     videoIO.observe(v);
     return wrap;
   }
@@ -241,7 +237,7 @@
       s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
         const tile = document.createElement("button");
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
-        tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k), g.builder ? null : s.tint));
+        tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k)));
         if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
         if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="pro-seal">PRO</span>`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
@@ -280,7 +276,7 @@
     ["Snooker", "The aim guide reads your spin, so set your English first"],
     ["Bowling", "A little spin curves into the pocket for more strikes"],
     ["Bowling", "If you miss enough, gutters may help"],
-    ["Perfect 21", "Standing early on a solid hand beats chasing a bust"],
+    ["Blackjack", "Standing early on a solid hand beats chasing a bust"],
     ["Go Fish", "Track what was asked, a card asked twice is likely gone"],
     ["Telephone", "Simpler drawings survive the chain better"],
     ["Corpse Collage", "Draw your part to connect at the seams, not the center"],
@@ -352,15 +348,19 @@
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
         { open: "my lap record still stands",      reply: "not for long",             close: "eat my dust" },
       ]},
-      { cover: "cards.webp", live: true, game: "Showdown",  lines: [
+      { cover: "cards.webp", game: "Poker",     lines: [
         { open: "poker night. bring your chips",   reply: "dealing you in",           close: "all in first hand. watch" },
         { open: "i can read your bluffs from here", reply: "no you can't",            close: "we'll see about that" },
+      ]},
+      { cover: "cards.webp", game: "Blackjack", lines: [
+        { open: "hit me. i dare you",              reply: "dealer says bust",         close: "twenty one. count it" },
+        { open: "blackjack. quick hands",          reply: "i always stand on 17",     close: "coward" },
       ]},
       { cover: "landmark.webp", game: "Landmark",  lines: [
         { open: "bet you can't find this place",   reply: "watch me",                 close: "no maps allowed!!" },
         { open: "geography duel. loser admits it", reply: "i never lose this",        close: "prove it" },
       ]},
-      { cover: "cards.webp", live: true, game: "Go Fish",   lines: [
+      { cover: "cards.webp", game: "Go Fish",   lines: [
         { open: "go fish. childhood rules",        reply: "got any threes?",          close: "GO FISH" },
         { open: "one easy game before dinner",     reply: "nothing about me is easy", close: "it's go fish" },
       ]},
@@ -383,7 +383,7 @@
       const pool = g.lines.concat(BANTER);
       const c = pool[Math.floor(Math.random() * pool.length)];
       const fill = (s) => s.replace("{g}", g.game);
-      return { cover: g.cover, game: g.game, live: !!g.live, caption: `Let's play ${g.game}!`, open: fill(c.open), reply: fill(c.reply), close: fill(c.close) };
+      return { cover: g.cover, game: g.game, caption: `Let's play ${g.game}!`, open: fill(c.open), reply: fill(c.reply), close: fill(c.close) };
     };
 
     const buildChat = (c) => {
@@ -392,11 +392,7 @@
         <div class="bubble me typing" data-step="2"><i></i><i></i><i></i></div>
         <div class="bubble me msg" data-step="3">${c.reply}</div>
         <div class="bubble me invite" data-step="4">
-          <span class="inv-art">
-            <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
-            <span class="inv-orb"><svg viewBox="0 0 24 24" width="46%" height="46%"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z"/></svg></span>
-            ${c.live ? '<span class="inv-live">LIVE</span>' : ""}
-          </span>
+          <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
           <div class="inv-bar"><img src="/assets/img/duelio-logo.png" alt=""><div><b>Duelio</b><span>${c.caption}</span></div></div>
         </div>
         <div class="bubble them msg" data-step="5">${c.close}</div>`;
