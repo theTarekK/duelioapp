@@ -509,72 +509,58 @@
       ctx.clearRect(0, 0, W, H);
       const px = (mouse.x - 0.5) * 14, py = (mouse.y - 0.5) * 10;
 
-      // two soft glow fields drifting slowly behind the lattice
-      const g1x = W * (0.28 + 0.14 * Math.sin(t * 0.11)), g1y = H * (0.30 + 0.12 * Math.cos(t * 0.09));
-      const g2x = W * (0.74 + 0.12 * Math.cos(t * 0.08)), g2y = H * (0.68 + 0.13 * Math.sin(t * 0.10));
-      let g = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, Math.max(W, H) * 0.38);
-      g.addColorStop(0, "rgba(46,110,190,0.075)"); g.addColorStop(1, "rgba(46,110,190,0)");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      g = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, Math.max(W, H) * 0.34);
-      g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      // two soft glow fields drifting slowly behind the lattice (page wall only —
+      // the catalog slab stays calm, its colour comes from the tiles' own tint)
+      if (opts.style !== "grid") {
+        const g1x = W * (0.28 + 0.14 * Math.sin(t * 0.11)), g1y = H * (0.30 + 0.12 * Math.cos(t * 0.09));
+        const g2x = W * (0.74 + 0.12 * Math.cos(t * 0.08)), g2y = H * (0.68 + 0.13 * Math.sin(t * 0.10));
+        let g = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, Math.max(W, H) * 0.38);
+        g.addColorStop(0, "rgba(46,110,190,0.075)"); g.addColorStop(1, "rgba(46,110,190,0)");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        g = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, Math.max(W, H) * 0.34);
+        g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      }
 
       if (opts.style === "grid") {
-        // the catalog slab's own look: a glowing GRID washed in the logo's
-        // duel palette — blue bleeding in from the left, red from the right,
-        // a soft gold seam between them — with energy pulses riding the lines
-        const step = 34;
-
-        // blendy colour fields (the logo wash), drifting slowly
-        let f = ctx.createRadialGradient(W * 0.16 + Math.sin(t * 0.1) * 30, H * 0.32, 0, W * 0.16, H * 0.32, Math.max(W, H) * 0.55);
-        f.addColorStop(0, "rgba(29,137,233,0.16)"); f.addColorStop(1, "rgba(29,137,233,0)");
-        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
-        f = ctx.createRadialGradient(W * 0.85 + Math.cos(t * 0.09) * 30, H * 0.38, 0, W * 0.85, H * 0.38, Math.max(W, H) * 0.55);
-        f.addColorStop(0, "rgba(254,81,0,0.13)"); f.addColorStop(1, "rgba(254,81,0,0)");
-        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
-        f = ctx.createRadialGradient(W * 0.5, H * (0.8 + Math.sin(t * 0.07) * 0.08), 0, W * 0.5, H * 0.8, Math.max(W, H) * 0.4);
-        f.addColorStop(0, "rgba(254,188,19,0.07)"); f.addColorStop(1, "rgba(254,188,19,0)");
-        ctx.fillStyle = f; ctx.fillRect(0, 0, W, H);
-
-        // the grid itself, stroked in a blue → gold → red sweep
-        const grad = ctx.createLinearGradient(0, 0, W, 0);
-        grad.addColorStop(0, "rgb(64,150,235)");
-        grad.addColorStop(0.5, "rgb(240,190,80)");
-        grad.addColorStop(1, "rgb(250,110,50)");
-        ctx.strokeStyle = grad; ctx.lineWidth = 1;
-        const nx = Math.ceil(W / step), ny = Math.ceil(H / step);
-        for (let i = 0; i <= nx; i++) {
-          const x = i * step + px * 0.5;
-          ctx.globalAlpha = 0.05 + 0.05 * Math.sin(t * 0.7 + hash(i, 3) * 6.28);
-          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-        }
+        // the catalog slab's own look: a wall of square TECH TILES — the same
+        // physical treatment as the page's hex plates (grout seams, top-left
+        // light, per-tile pulse, bevelled edges) but on a square grid, with a
+        // faint duel tint: bluer plates toward the left, warmer toward the
+        // right. Calm — no flying particles, the tiles themselves breathe.
+        const step = 42, gap = 3;
+        const nx = Math.ceil(W / step) + 1, ny = Math.ceil(H / step) + 1;
         for (let j = 0; j <= ny; j++) {
-          const y = j * step + py * 0.5;
-          ctx.globalAlpha = 0.05 + 0.05 * Math.sin(t * 0.6 + hash(7, j) * 6.28);
-          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-        }
-        ctx.globalAlpha = 1;
+          for (let i = 0; i <= nx; i++) {
+            const x = i * step + px * 0.5, y = j * step + py * 0.5;
+            const h = hash(i, j), h2 = hash(i + 57, j + 13);
+            const pulse = 0.78 + 0.22 * Math.sin(t * 0.5 + h * 6.28);
+            const lightFall = 1.05 - (x + y) / (W + H) * 0.85;
+            let lum = lightFall * (0.45 + 0.75 * h2 * h2) * pulse;
+            if (h2 < 0.13) lum *= 0.35;                        // the odd dark tile
+            const sd = Math.abs((x + y) / (W + H) - (t / 12) % 1);
+            if (sd < 0.08) lum += (0.08 - sd) * 1.6;           // slow passing sheen
+            lum = Math.min(lum, 1.1);
 
-        // glowing pulses riding random grid lines, coloured by where they are
-        for (let k = 0; k < 5; k++) {
-          const cyc = t / (5.5 + k * 1.3) + k * 0.37;
-          const seg = Math.floor(cyc), p = cyc - seg;
-          const vert = hash(seg, k) > 0.5;
-          const lane = Math.floor(hash(seg, k + 31) * (vert ? nx : ny)) * step;
-          const hx = vert ? lane : p * W, hy = vert ? p * H : lane;
-          const cr = Math.round(64 + (250 - 64) * (hx / W)), cg = Math.round(150 + (110 - 150) * (hx / W)), cb = Math.round(235 + (50 - 235) * (hx / W));
-          const fade = Math.sin(p * Math.PI);
-          const tail = 70, tx2 = vert ? hx : hx - tail, ty2 = vert ? hy - tail : hy;
-          const tg = ctx.createLinearGradient(tx2, ty2, hx, hy);
-          tg.addColorStop(0, `rgba(${cr},${cg},${cb},0)`);
-          tg.addColorStop(1, `rgba(${cr},${cg},${cb},${0.5 * fade})`);
-          ctx.strokeStyle = tg; ctx.lineWidth = 1.6;
-          ctx.beginPath(); ctx.moveTo(tx2, ty2); ctx.lineTo(hx, hy); ctx.stroke();
-          ctx.save();
-          ctx.shadowColor = `rgba(${cr},${cg},${cb},0.9)`; ctx.shadowBlur = 8;
-          ctx.fillStyle = `rgba(${cr},${cg},${cb},${0.9 * fade})`;
-          ctx.beginPath(); ctx.arc(hx, hy, 1.8, 0, 6.28); ctx.fill();
-          ctx.restore();
+            // duel tint: blue bias on the left half, warm bias on the right
+            const wx = x / W;
+            const r = Math.round((105 + 130 * wx) * lum);
+            const g = Math.round((122 - 6 * wx) * lum);
+            const b = Math.round((175 - 105 * wx) * lum);
+
+            const s = step - gap;
+            ctx.fillStyle = `rgba(${r},${g},${b},${0.12 + Math.min(lum, 1) * 0.34})`;
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(x, y, s, s, 4); else ctx.rect(x, y, s, s);
+            ctx.fill();
+
+            // bevel: lit top edge, shadowed bottom edge — same as the hex wall
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(255,255,255,${0.035 + 0.08 * Math.min(lum, 1)})`;
+            ctx.beginPath(); ctx.moveTo(x + 1, y + 0.5); ctx.lineTo(x + s - 1, y + 0.5); ctx.stroke();
+            ctx.strokeStyle = "rgba(0,0,0,0.28)";
+            ctx.beginPath(); ctx.moveTo(x + 1, y + s - 0.5); ctx.lineTo(x + s - 1, y + s - 0.5); ctx.stroke();
+          }
         }
         requestAnimationFrame(frame);
         return;
