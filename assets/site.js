@@ -7,7 +7,7 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4";
+  const vid = (base) => V + base + ".mp4?v=2";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = { label: "Language", type: "seg", options: ["English", "Spanish", "French", "Italian"] };
@@ -158,51 +158,54 @@
 
   const ALL_GAMES = SECTIONS.flatMap(s => s.games);
 
-  /* ---------------- tile videos: load them ALL, every tile plays ----------------
-     Clips are fetched as blobs through a small queue, then handed to the
-     <video> as an object URL. fetch() is never media-throttled or cancelled
-     the way <video preload> is, so every tile reliably reaches playback —
-     and a blob src loops with zero network hiccups. One cache serves the
-     tiles AND the popup previews. */
+  /* ---------------- tile videos: decoder-friendly, every visible tile plays ----------------
+     Bytes are prefetched as blobs (fetch is never media-throttled), but a
+     <video> only HOLDS a decoder while it is near the viewport — 30 parallel
+     load() calls exhaust the browser's media decoders and the losers die
+     with SRC_NOT_SUPPORTED (this is why most tiles showed nothing). So,
+     exactly like the app's catalog: attach on approach, tear down when far
+     offscreen, and kick any player that lost the decoder race until it runs. */
   const vidCache = new Map();
   const videoURL = (base) => {
     if (!vidCache.has(base)) {
-      vidCache.set(base, fetch(vid(base)).then(r => r.blob()).then(b => URL.createObjectURL(b)));
+      vidCache.set(base, fetch(vid(base)).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(b => URL.createObjectURL(b)));
     }
     return vidCache.get(base);
   };
-  const loadQueue = []; let inFlight = 0;
-  function attachVideo(v, base) {
-    loadQueue.push([v, base]);
-    pumpQueue();
+
+  function attach(v) {
+    videoURL(v.dataset.base).then(u => {
+      if (!v.dataset.on) return;         // scrolled away while fetching
+      if (v.src !== u) { v.src = u; v.load(); }
+      v.play?.().catch(() => {});
+    });
   }
-  function pumpQueue() {
-    while (inFlight < 6 && loadQueue.length) {
-      const [v, base] = loadQueue.shift();
-      inFlight++;
-      videoURL(base)
-        .then(u => { v.src = u; v.play?.().catch(() => {}); })
-        .catch(() => {})
-        .then(() => { inFlight--; pumpQueue(); });
-    }
+  function detach(v) {
+    v.pause?.();
+    if (v.src) { v.removeAttribute("src"); v.load(); } // releases the decoder
+    v.classList.remove("ready");
   }
 
   const videoIO = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const v = e.target;
-      if (e.isIntersecting) v.play?.().catch(() => {});
-      else v.pause?.();
+      if (e.isIntersecting) { v.dataset.on = "1"; attach(v); }
+      else { delete v.dataset.on; detach(v); }
     }
-  }, { rootMargin: "400px 0px" });
+  }, { rootMargin: "300px 0px" });
 
   function makeTileVideo(base, tint) {
     const wrap = document.createElement("div");
     wrap.className = "tile-face";
     const v = document.createElement("video");
-    v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
-    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("autoplay", "");
-    v.addEventListener("loadeddata", () => { v.classList.add("ready"); v.play?.().catch(() => {}); }, { once: true });
-    attachVideo(v, base);
+    v.muted = true; v.loop = true; v.playsInline = true;
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+    v.dataset.base = base;
+    const markReady = () => { v.classList.add("ready"); v.play?.().catch(() => {}); };
+    v.addEventListener("loadeddata", markReady);
+    v.addEventListener("canplay", markReady);
+    v.addEventListener("playing", () => v.classList.add("ready"));
+    videoURL(base);                       // warm the byte cache right away
     wrap.appendChild(v);
     const gloss = document.createElement("div"); gloss.className = "gloss"; wrap.appendChild(gloss);
     if (tint) {
@@ -213,15 +216,17 @@
     return wrap;
   }
 
-  // gentle sweep: any visible, loaded, paused player gets a fresh play()
+  // the kicker: rebuild any near-viewport player that stalled or lost the
+  // decoder race (error) — mirrors the app's kick-until-the-loop-runs logic
   setInterval(() => {
     if (document.hidden) return;
     document.querySelectorAll(".tile-face video").forEach(v => {
-      if (v.readyState < 2 || !v.paused) return;
-      const r = v.getBoundingClientRect();
-      if (r.bottom > -400 && r.top < innerHeight + 400) v.play?.().catch(() => {});
+      if (!v.dataset.on) return;
+      if (v.error) { detach(v); v.dataset.on = "1"; attach(v); }
+      else if (v.readyState >= 2 && v.paused) v.play?.().catch(() => {});
+      else if (v.readyState === 0 && !v.src) attach(v);
     });
-  }, 3000);
+  }, 2500);
 
   /* ---------------- render catalog (always grouped by category) ---------------- */
   const scroll = document.getElementById("catalog-scroll");
@@ -236,7 +241,7 @@
       s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
         const tile = document.createElement("button");
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
-        tile.appendChild(makeTileVideo(g.tileVideo || g.k, g.builder ? null : s.tint));
+        tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k), g.builder ? null : s.tint));
         if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
         if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="pro-seal">PRO</span>`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
@@ -331,13 +336,17 @@
       { open: "settle it in {g}?",            reply: "gladly",                   close: "no take backs" },
     ];
     const GAMES = [
-      { cover: "pool.png",      game: "8 Ball",    lines: [
-        { open: "rack em up",                      reply: "chalk my cue",             close: "corner pocket. called it" },
-        { open: "you still owe me a rematch",      reply: "and you'll owe me another", close: "big words" },
+      { cover: "bowling.webp",  game: "Bowling",   lines: [
+        { open: "loser buys coffee",               reply: "you're on",                close: "oh it's ON" },
+        { open: "strike incoming. watch",          reply: "your gutter says otherwise", close: "RUDE" },
       ]},
-      { cover: "snooker.png",   game: "Snooker",   lines: [
-        { open: "fancy a frame of snooker",        reply: "how sophisticated. yes",   close: "147 incoming" },
-        { open: "real table this time. snooker",   reply: "you're getting snookered", close: "we'll see about that" },
+      { cover: "darts.webp",    game: "Darts",     lines: [
+        { open: "rematch. right now",              reply: "you sure about that",      close: "bring it" },
+        { open: "bullseye first try. calling it",  reply: "sure you are",             close: "watch me" },
+      ]},
+      { cover: "ringtoss.webp", game: "Ring Toss", lines: [
+        { open: "winner picks dinner",             reply: "easy money",               close: "we'll see" },
+        { open: "ring toss. best arc wins",        reply: "physics is on my side",    close: "physics can't save you" },
       ]},
       { cover: "roadrush.webp", game: "Road Rush", lines: [
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
@@ -351,17 +360,9 @@
         { open: "bet you can't find this place",   reply: "watch me",                 close: "no maps allowed!!" },
         { open: "geography duel. loser admits it", reply: "i never lose this",        close: "prove it" },
       ]},
-      { cover: "wordtiles.png", game: "Word Tiles", lines: [
-        { open: "triple word score. warming up",   reply: "bring a dictionary",       close: "QI. 62 points. sit down" },
-        { open: "word tiles rematch",              reply: "i've been reading the dictionary", close: "sure you have" },
-      ]},
       { cover: "cards.webp", live: true, game: "Go Fish",   lines: [
         { open: "go fish. childhood rules",        reply: "got any threes?",          close: "GO FISH" },
         { open: "one easy game before dinner",     reply: "nothing about me is easy", close: "it's go fish" },
-      ]},
-      { cover: "wordhunt.png",  game: "Word Hunt", lines: [
-        { open: "found 40 words last round",       reply: "i found 41",               close: "prove it" },
-        { open: "word hunt. loser makes coffee",   reply: "hope you like making it",  close: "big talk" },
       ]},
     ];
 
