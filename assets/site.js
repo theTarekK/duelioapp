@@ -519,6 +519,40 @@
       g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
+      if (opts.style === "grid") {
+        // the catalog slab's own look — NO hexagons: a fine dot-matrix
+        // circuit grid with breathing nodes and a scan band drifting down.
+        // Reads as a lit instrument panel against the page's tiled wall.
+        const step = 26;
+        const scanY = ((t / 7) % 1.2 - 0.1) * H; // drifting horizontal scan band
+        const gcols = Math.ceil(W / step) + 1, grows = Math.ceil(H / step) + 1;
+        for (let gy = 0; gy <= grows; gy++) {
+          for (let gx = 0; gx <= gcols; gx++) {
+            const x = gx * step + px * 0.5, y = gy * step + py * 0.5;
+            const h = hash(gx, gy);
+            const breathe = 0.5 + 0.5 * Math.sin(t * 0.9 + h * 6.28);
+            let a = 0.10 + 0.16 * breathe * h;
+            const dScan = Math.abs(y - scanY);
+            if (dScan < 46) a += (1 - dScan / 46) * 0.4;      // scan glow
+            if (h > 0.978) {                                   // powered node
+              ctx.fillStyle = `rgba(126,186,255,${0.25 + 0.4 * breathe})`;
+              ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 6.28); ctx.fill();
+            } else {
+              ctx.fillStyle = `rgba(126,160,210,${a})`;
+              ctx.fillRect(x - 0.8, y - 0.8, 1.6, 1.6);
+            }
+          }
+        }
+        // the scan band's soft leading light
+        const sg = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
+        sg.addColorStop(0, "rgba(88,150,230,0)");
+        sg.addColorStop(0.5, "rgba(88,150,230,0.05)");
+        sg.addColorStop(1, "rgba(88,150,230,0)");
+        ctx.fillStyle = sg; ctx.fillRect(0, scanY - 60, W, 120);
+        requestAnimationFrame(frame);
+        return;
+      }
+
       const sweep = (t / 10) % 1;
       const cols = Math.ceil(W / colStep) + 2, rows = Math.ceil(H / rowStep) + 2;
       const pr = R - 2.4; // plate radius, leaving a grout seam
@@ -535,20 +569,6 @@
           const sd = Math.abs((cx + cy) / (W + H) - sweep);
           if (sd < 0.09) lum += (0.09 - sd) * 3.2 * opts.sweep; // passing sheen
           lum = Math.min(lum, 1.15);
-
-          if (opts.style === "lines") {
-            // the catalog slab's own look: a fine stroked lattice, no plates —
-            // reads as etched circuitry against the page's tiled wall
-            hexPath(cx, cy, pr + 1.2);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = `rgba(163,181,199,${0.05 + 0.16 * Math.min(lum, 1)})`;
-            ctx.stroke();
-            if (h > 0.965) { // rare powered node at a lattice corner
-              ctx.fillStyle = `rgba(163,196,232,${0.25 * pulse})`;
-              ctx.beginPath(); ctx.arc(cx, cy - R, 1.6, 0, 6.28); ctx.fill();
-            }
-            continue;
-          }
 
           // the page wall: filled hex PLATES with seams, lit from the top-left,
           // bevelled with a light top edge and a shadowed bottom edge
@@ -586,5 +606,5 @@
   /* ---------------- boot ---------------- */
   renderCatalog();
   initTech(document.getElementById("hexfx"), { r: 30, sweep: 0.7, parallax: true });
-  initTech(document.querySelector(".catalog-hexfx"), { r: 20, sweep: 1.0, style: "lines" });
+  initTech(document.querySelector(".catalog-hexfx"), { sweep: 1.0, style: "grid" });
 })();
