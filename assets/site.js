@@ -341,18 +341,58 @@
   addEventListener("keydown", (e) => { if (e.key === "Escape" && scrim?.classList.contains("open")) closePopup(); });
 
   /* ---------------- hero phone: iMessage thread with real invite bubbles ----------------
-     The invite bubble uses the ACTUAL cover image Duelio composes into the
-     message (Games/<X>/<x>messagecover.webp), framed like an MSMessage:
-     cover art + caption bar with the app icon. A random game each cycle. */
+     The invite bubble carries a REAL image of the game — the composed cover
+     art where one exists, an actual gameplay frame where the app renders the
+     bubble in code — framed like an MSMessage with the app icon + caption.
+     Every cycle picks a fresh game and a fresh exchange; clicking the phone
+     skips straight to the next matchup. */
   const phoneScreen = document.getElementById("phone-screen");
   if (phoneScreen) {
-    const CHATS = [
-      { cover: "bowling",  game: "Bowling",   caption: "Let's play Bowling!",   open: "loser buys coffee",             reply: "you're on",               close: "oh it's ON" },
-      { cover: "darts",    game: "Darts",     caption: "Let's play Darts!",     open: "rematch. right now",            reply: "you sure about that",     close: "bring it" },
-      { cover: "ringtoss", game: "Ring Toss", caption: "Let's play Ring Toss!", open: "winner picks dinner",           reply: "easy money",              close: "we'll see" },
-      { cover: "roadrush", game: "Road Rush", caption: "Let's play Road Rush!", open: "race me. right now",            reply: "don't cry when you lose", close: "GO GO GO" },
-      { cover: "landmark", game: "Landmark",  caption: "Let's play Landmark!",  open: "bet you can't find this place", reply: "watch me",                close: "no maps allowed!!" },
+    // {g} in a line is replaced with the game's name
+    const BANTER = [
+      { open: "quick game of {g}?",           reply: "always",                   close: "loading up" },
+      { open: "loser buys lunch",             reply: "hope you're hungry",       close: "for victory, sure" },
+      { open: "winner picks the movie",       reply: "fine. but no horror",      close: "we'll see" },
+      { open: "best of three?",               reply: "best of one. i'm busy",    close: "scared. noted" },
+      { open: "i've been practicing",         reply: "practicing losing?",       close: "rude. get in here" },
+      { open: "you. me. {g}. now",            reply: "say less",                 close: "it begins" },
+      { open: "settle it in {g}?",            reply: "gladly",                   close: "no take backs" },
     ];
+    const GAMES = [
+      { cover: "pool.png",      game: "8 Ball",    lines: [
+        { open: "rack em up",                      reply: "chalk my cue",             close: "corner pocket. called it" },
+        { open: "you still owe me a rematch",      reply: "and you'll owe me another", close: "big words" },
+      ]},
+      { cover: "snooker.png",   game: "Snooker",   lines: [
+        { open: "fancy a frame of snooker",        reply: "how sophisticated. yes",   close: "147 incoming" },
+        { open: "real table this time. snooker",   reply: "you're getting snookered", close: "we'll see about that" },
+      ]},
+      { cover: "roadrush.webp", game: "Road Rush", lines: [
+        { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
+        { open: "my lap record still stands",      reply: "not for long",             close: "eat my dust" },
+      ]},
+      { cover: "showdown.png",  game: "Showdown",  lines: [
+        { open: "poker night. bring your chips",   reply: "dealing you in",           close: "all in first hand. watch" },
+        { open: "i can read your bluffs from here", reply: "no you can't",            close: "we'll see about that" },
+      ]},
+      { cover: "landmark.webp", game: "Landmark",  lines: [
+        { open: "bet you can't find this place",   reply: "watch me",                 close: "no maps allowed!!" },
+        { open: "geography duel. loser admits it", reply: "i never lose this",        close: "prove it" },
+      ]},
+      { cover: "wordtiles.png", game: "Word Tiles", lines: [
+        { open: "triple word score. warming up",   reply: "bring a dictionary",       close: "QI. 62 points. sit down" },
+        { open: "word tiles rematch",              reply: "i've been reading the dictionary", close: "sure you have" },
+      ]},
+      { cover: "gofish.png",    game: "Go Fish",   lines: [
+        { open: "go fish. childhood rules",        reply: "got any threes?",          close: "GO FISH" },
+        { open: "one easy game before dinner",     reply: "nothing about me is easy", close: "it's go fish" },
+      ]},
+      { cover: "wordhunt.png",  game: "Word Hunt", lines: [
+        { open: "found 40 words last round",       reply: "i found 41",               close: "prove it" },
+        { open: "word hunt. loser makes coffee",   reply: "hope you like making it",  close: "big talk" },
+      ]},
+    ];
+
     phoneScreen.innerHTML = `
       <div class="thread-head">
         <div class="avatar">A</div>
@@ -361,7 +401,17 @@
       <div class="thread" id="thread"></div>
       <div class="thread-field"><span>iMessage</span><em>↑</em></div>`;
     const thread = document.getElementById("thread");
-    let lastPick = -1, chatTimers = [];
+    let lastGame = -1, chatTimers = [];
+
+    const pickChat = () => {
+      let i; do { i = Math.floor(Math.random() * GAMES.length); } while (i === lastGame);
+      lastGame = i;
+      const g = GAMES[i];
+      const pool = g.lines.concat(BANTER);
+      const c = pool[Math.floor(Math.random() * pool.length)];
+      const fill = (s) => s.replace("{g}", g.game);
+      return { cover: g.cover, game: g.game, caption: `Let's play ${g.game}!`, open: fill(c.open), reply: fill(c.reply), close: fill(c.close) };
+    };
 
     const buildChat = (c) => {
       thread.innerHTML = `
@@ -369,7 +419,7 @@
         <div class="bubble me typing" data-step="2"><i></i><i></i><i></i></div>
         <div class="bubble me msg" data-step="3">${c.reply}</div>
         <div class="bubble me invite" data-step="4">
-          <img class="inv-img" src="/assets/img/covers/${c.cover}.webp" alt="${c.game} invite">
+          <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
           <div class="inv-bar"><img src="/assets/img/duelio-logo.png" alt=""><div><b>Duelio</b><span>${c.caption}</span></div></div>
         </div>
         <div class="bubble them msg" data-step="5">${c.close}</div>`;
@@ -377,9 +427,7 @@
 
     const playChat = () => {
       chatTimers.forEach(clearTimeout); chatTimers = [];
-      let i; do { i = Math.floor(Math.random() * CHATS.length); } while (i === lastPick);
-      lastPick = i;
-      buildChat(CHATS[i]);
+      buildChat(pickChat());
       const typing = thread.querySelector(".typing");
       // [step, delay-before-next]
       const SCRIPT = [[1, 700], [2, 1200], [3, 1300], [4, 1500], [5, 1400]];
@@ -396,11 +444,13 @@
     };
 
     if (reduce) {
-      buildChat(CHATS[0]);
+      buildChat(pickChat());
       thread.querySelectorAll(".bubble").forEach(b => b.classList.add("on"));
       thread.querySelector(".typing").classList.add("done");
     } else {
       playChat();
+      // tap the phone to skip to the next matchup
+      phoneScreen.closest(".hero-phone")?.addEventListener("click", playChat);
       document.addEventListener("visibilitychange", () => {
         chatTimers.forEach(clearTimeout);
         if (!document.hidden) playChat();
