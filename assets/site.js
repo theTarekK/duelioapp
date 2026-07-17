@@ -37,7 +37,7 @@
             { label: "Horde", desc: "A wall of white pawns takes on the full black army." },
           ]},
           { label: "Clock", type: "toggle", tt: "Timed game", td: "Off = untimed. On enables a chess clock." },
-          { label: "Time Control", type: "seg", options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
+          { label: "Time Control", type: "seg", def: 2, options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
           { label: "Piece Set", type: "seg", options: ["Default", "Water & Fire", "Pixel"] },
           { label: "Board Theme", type: "seg", options: ["Basic Wood", "Black & White", "Plant", "Crystal"] },
         ]},
@@ -45,7 +45,7 @@
           { label: "Board Size", type: "seg", options: ["8 × 8", "10 × 10", "Custom"] },
           { label: "Your Color", type: "seg", options: ["Red", "Black"] },
           { label: "Mandatory Capture", type: "toggle", tt: "Must capture", td: "Forces a capture when one is available.", on: true },
-          { label: "Time Control", type: "seg", options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
+          { label: "Time Control", type: "seg", def: 2, options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
         ]},
         { n: "Word Tiles", k: "scrabble", players: "2–4", pass: true, config: [
           { label: "Board Size", type: "seg", options: ["11 × 11", "13 × 13"] },
@@ -117,7 +117,7 @@
         { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
         { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
           { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6"] },
-          { label: "Seconds / Question", type: "seg", options: ["10s", "15s", "20s"] },
+          { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
           { label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "5 categories, 15s timer, no second chance." },
           { label: "Second Chance", type: "toggle", tt: "2nd chance", td: "A shot at redemption on a miss.", on: true },
         ]},
@@ -242,24 +242,16 @@
     revealObserve(scroll.querySelectorAll(".reveal"));
   }
 
-  /* ---------------- popup (play options + config) ---------------- */
+  /* ---------------- popup: the iMessage catalog's config, display-only ----------------
+     Mirrors DuelioMessagesConfigPopup: graphite slab, game header, the game's
+     real modes/options laid out with their defaults selected, and the gold
+     staging SEND button. Nothing inside is interactive — it's a faithful
+     look at the setup screen, not a working one. Only close works. */
   const scrim = document.getElementById("popup-scrim");
   const popup = document.getElementById("popup");
-  let currentGame = null, currentMode = null;
-
-  function findTint(g) {
-    const s = SECTIONS.find(sec => sec.games.includes(g));
-    return s ? s.tint : null;
-  }
-  function purposeMeta(p) {
-    return { host: { t: "HOST ROOM", i: "📡" }, pass: { t: "START", i: "▶" }, imsg: { t: "OPEN IMESSAGE", i: "✈" }, find: { t: "JUMP IN", i: "▶" } }[p] || { t: "START", i: "▶" };
-  }
 
   function openGame(g) {
-    currentGame = g; currentMode = null;
-    const tint = findTint(g);
     popup.innerHTML = "";
-    // header
     const head = document.createElement("div"); head.className = "popup-head";
     const pv = document.createElement("div"); pv.className = "pv";
     const hv = document.createElement("video"); hv.muted = true; hv.loop = true; hv.playsInline = true;
@@ -272,149 +264,60 @@
     popup.appendChild(head);
     head.querySelector(".popup-x").addEventListener("click", closePopup);
 
-    const body = document.createElement("div"); body.className = "popup-body";
+    const body = document.createElement("div"); body.className = "popup-body noclick";
     popup.appendChild(body);
-    showOptions(body);
+
+    // Pool/Darts: the forced mode picker, all five cards with their real clips
+    if (g.modes) {
+      const el = document.createElement("div"); el.className = "cfg-group";
+      el.insertAdjacentHTML("beforeend", `<span class="lbl">Game Mode</span>`);
+      g.modes.forEach((m, i) => {
+        const c = document.createElement("div"); c.className = "mode-card" + (i === 0 ? " sel" : "");
+        c.innerHTML = `<span class="mv"><video muted loop playsinline></video></span>
+          <span class="ol"><span class="mt">${m.label}${m.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${m.desc}</span></span>`;
+        const mvv = c.querySelector("video"); mvv.src = vid(m.video); mvv.play?.().catch(() => {});
+        el.appendChild(c);
+      });
+      body.appendChild(el);
+    }
+
+    const cfg = g.config;
+    if (cfg && cfg.blurb) {
+      body.insertAdjacentHTML("beforeend", `<p class="cfg-blurb">${cfg.blurb}</p>`);
+    } else if (Array.isArray(cfg)) {
+      cfg.forEach(group => body.appendChild(renderGroup(group)));
+    }
+
+    body.insertAdjacentHTML("beforeend", `
+      <div class="cfg-confirm display"><span>➤</span> SEND</div>
+      <p class="cfg-note">The real setup screen, from the iMessage catalog — sending happens in Messages.</p>`);
 
     scrim.classList.add("open");
     document.body.style.overflow = "hidden";
   }
 
-  function showOptions(body) {
-    const g = currentGame;
-    body.innerHTML = "";
-    const row = (cls, icon, title, desc, chev, fn) => {
-      const b = document.createElement("button");
-      b.className = "opt-row" + (cls ? " " + cls : "");
-      b.innerHTML = `<span class="oi">${icon}</span><span class="ol"><span class="ot">${title}</span>${desc ? `<span class="od">${desc}</span>` : ""}</span>${chev ? `<span class="chev">›</span>` : ""}`;
-      b.addEventListener("click", fn);
-      body.appendChild(b);
-    };
-    row("prominent", "📡", "HOST ONLINE", "Open a public room others can join", true, () => enterConfig(body, "host"));
-    row("", "🔍", "FIND A GAME", g.live ? "Join a live room in progress" : "Get matched with an opponent", true, () => showFind(body));
-    if (g.live) row("", "🔑", "JOIN WITH CODE", "Enter a friend's room code", true, () => showJoin(body));
-    row("", "💬", "PLAY OVER IMESSAGE", "Send it into a conversation", true, () => g.live ? showImsg(body) : enterConfig(body, "imsg"));
-    if (g.pass) row("", "🤝", "PASS & PLAY", "One phone, take turns", true, () => enterConfig(body, "pass"));
-  }
-
-  function backRow(body, fn) {
-    const b = document.createElement("button"); b.className = "cfg-back";
-    b.innerHTML = "‹ Back"; b.addEventListener("click", fn); body.appendChild(b);
-  }
-
-  function enterConfig(body, purpose) {
-    // Pool/Darts: forced mode select first
-    if (currentGame.modes && !currentMode) return showModeSelect(body, purpose);
-    showConfig(body, purpose);
-  }
-
-  function showModeSelect(body, purpose) {
-    body.innerHTML = "";
-    backRow(body, () => showOptions(body));
-    body.insertAdjacentHTML("beforeend", `<span class="cfg-group" style="display:block"><span class="lbl">Choose a mode</span></span>`);
-    currentGame.modes.forEach(m => {
-      const c = document.createElement("button"); c.className = "mode-card";
-      c.innerHTML = `<span class="mv"><video muted loop playsinline></video></span>
-        <span class="ol"><span class="mt">${m.label}${m.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${m.desc}</span></span>`;
-      const mvv = c.querySelector("video"); mvv.src = vid(m.video); mvv.play?.().catch(() => {});
-      c.addEventListener("click", () => { currentMode = m; showConfig(body, purpose); });
-      body.appendChild(c);
-    });
-  }
-
-  function showConfig(body, purpose) {
-    body.innerHTML = "";
-    backRow(body, () => (currentGame.modes ? showModeSelect(body, purpose) : showOptions(body)));
-    const cfg = currentGame.config;
-    if (!cfg || cfg.blurb) {
-      body.insertAdjacentHTML("beforeend", `<p class="cfg-blurb">${cfg && cfg.blurb ? cfg.blurb : "Ready when you are — jump in."}</p>`);
-    } else {
-      cfg.forEach(group => body.appendChild(renderGroup(group)));
-    }
-    const m = purposeMeta(purpose);
-    const btn = document.createElement("button"); btn.className = "cfg-confirm";
-    btn.innerHTML = `<span>${m.i}</span> ${m.t}`;
-    btn.addEventListener("click", () => confirmFx(btn, purpose));
-    body.appendChild(btn);
-    body.insertAdjacentHTML("beforeend", `<p class="cfg-note">Preview only — the real game runs in the app.</p>`);
-  }
-
   function renderGroup(group) {
     const el = document.createElement("div"); el.className = "cfg-group";
     if (group.type === "toggle") {
-      el.innerHTML = `<div class="cfg-toggle"><div class="tl"><div class="tt">${group.tt}</div><div class="td">${group.td}</div></div><button class="switch${group.on ? " on" : ""}" role="switch"></button></div>`;
-      const sw = el.querySelector(".switch");
-      sw.addEventListener("click", () => sw.classList.toggle("on"));
+      el.innerHTML = `<div class="cfg-toggle"><div class="tl"><div class="tt">${group.tt}</div><div class="td">${group.td}</div></div><span class="switch${group.on ? " on" : ""}"></span></div>`;
       return el;
     }
     el.insertAdjacentHTML("beforeend", `<span class="lbl">${group.label}</span>`);
     if (group.type === "modes") {
       group.options.forEach((o, i) => {
-        const c = document.createElement("button"); c.className = "mode-card" + (i === 0 ? " sel" : "");
+        const c = document.createElement("div"); c.className = "mode-card" + (i === 0 ? " sel" : "");
         c.innerHTML = `<span class="ol"><span class="mt">${o.label}${o.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${o.desc}</span></span>`;
-        c.addEventListener("click", () => { el.querySelectorAll(".mode-card").forEach(x => x.classList.remove("sel")); c.classList.add("sel"); });
         el.appendChild(c);
       });
-    } else { // seg / flags
+    } else { // seg / flags — group.def picks the highlighted default (app parity)
       const seg = document.createElement("div"); seg.className = "seg" + (group.type === "flags" ? " flags" : "");
       group.options.forEach((o, i) => {
-        const b = document.createElement("button"); b.className = i === 0 ? "on" : ""; b.textContent = o;
-        b.addEventListener("click", () => { seg.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); });
+        const b = document.createElement("span"); b.className = i === (group.def || 0) ? "on" : ""; b.textContent = o;
         seg.appendChild(b);
       });
       el.appendChild(seg);
     }
     return el;
-  }
-
-  function showFind(body) {
-    body.innerHTML = "";
-    backRow(body, () => showOptions(body));
-    const g = currentGame;
-    body.insertAdjacentHTML("beforeend", `
-      <div style="text-align:center;padding:20px 8px">
-        <div class="finder-orb" style="margin:0 auto 18px"></div>
-        <div class="bungee" style="font-size:0.9rem;letter-spacing:0.06em">${g.live ? "LOOKING FOR AN OPEN ROOM" : "WAITING FOR AN OPPONENT"}</div>
-        <p style="color:var(--muted);font-size:0.86rem;margin-top:8px">${g.live ? "Joins the moment someone hosts this game." : "You’ll be dealt in the moment someone appears — the joiner moves first."}</p>
-      </div>`);
-    if (currentGame.modes) body.insertAdjacentHTML("afterbegin", "");
-    body.insertAdjacentHTML("beforeend", `<p class="cfg-note">Anonymous — no account, no sign-in.</p>`);
-  }
-
-  function showJoin(body) {
-    body.innerHTML = "";
-    backRow(body, () => showOptions(body));
-    body.insertAdjacentHTML("beforeend", `
-      <div style="text-align:center;padding:12px 8px 8px">
-        <span class="lbl" style="display:block;margin-bottom:12px">Enter room code</span>
-        <div class="code-boxes" style="display:flex;gap:7px;justify-content:center"></div>
-        <p style="color:var(--muted);font-size:0.82rem;margin-top:14px">Room codes are a friends feature — read one off a host’s ready room.</p>
-      </div>`);
-    const boxes = body.querySelector(".code-boxes");
-    "DUELIO".split("").forEach((ch, i) => {
-      const b = document.createElement("div");
-      b.textContent = i < 3 ? ch : "";
-      b.style.cssText = "width:38px;height:46px;border-radius:9px;border:1px solid var(--line);background:rgba(3,4,6,.4);display:grid;place-items:center;font-family:var(--display);font-size:1.1rem;color:var(--gold)";
-      boxes.appendChild(b);
-    });
-  }
-
-  function showImsg(body) {
-    body.innerHTML = "";
-    backRow(body, () => showOptions(body));
-    body.insertAdjacentHTML("beforeend", `
-      <div style="text-align:center;padding:16px 8px">
-        <div style="font-size:2.4rem;margin-bottom:12px">💬</div>
-        <div class="bungee" style="font-size:0.86rem;letter-spacing:0.05em">PLAY IN A CONVERSATION</div>
-        <p style="color:var(--muted);font-size:0.86rem;margin-top:8px">Live games stage straight into your iMessage thread — everyone in the chat can jump in.</p>
-      </div>`);
-  }
-
-  function confirmFx(btn, purpose) {
-    btn.style.transform = "translateY(2px)";
-    const label = btn.textContent;
-    btn.innerHTML = "✓ In the app";
-    setTimeout(() => { btn.style.transform = ""; btn.innerHTML = `<span>${purposeMeta(purpose).i}</span> ${purposeMeta(purpose).t}`; }, 1100);
   }
 
   function closePopup() {
@@ -441,26 +344,72 @@
     track.innerHTML = pills + pills;
   }
 
-  /* ---------------- hero phone: random real gameplay ---------------- */
+  /* ---------------- hero phone: iMessage thread with real invite bubbles ----------------
+     The invite bubble uses the ACTUAL cover image Duelio composes into the
+     message (Games/<X>/<x>messagecover.webp), framed like an MSMessage:
+     cover art + caption bar with the app icon. A random game each cycle. */
   const phoneScreen = document.getElementById("phone-screen");
   if (phoneScreen) {
-    const pick = Math.random() < 0.5
-      ? { base: "PoolModePreview-classic", name: "Pool", sub: "8 Ball · Your break", blue: "You", red: "Ayla" }
-      : { base: "MessageTilePreview-roadracer", name: "Road Rush", sub: "Lap 2 · Turn 3", blue: "You", red: "Sam" };
-    phoneScreen.insertAdjacentHTML("beforeend", `
-      <video id="phone-video" muted loop playsinline preload="auto"></video>
-      <div class="game-strip">
-        <span class="seat"><span class="dot blue">${pick.blue[0]}</span></span>
-        <span class="vs">VS</span>
-        <span class="seat"><span class="dot red">${pick.red[0]}</span></span>
-        <span class="live">LIVE</span>
+    const CHATS = [
+      { cover: "bowling",  game: "Bowling",   caption: "Your turn · Bowling",   open: "loser buys coffee 🎳",            reply: "you're on",              close: "oh it's ON 😤" },
+      { cover: "darts",    game: "Darts",     caption: "Your throw · Darts",    open: "rematch. right now 🎯",           reply: "you sure about that",    close: "bring it 😤" },
+      { cover: "ringtoss", game: "Ring Toss", caption: "Your toss · Ring Toss", open: "winner picks dinner 🍾",          reply: "easy money",             close: "we'll see 😏" },
+      { cover: "roadrush", game: "Road Rush", caption: "Race on · Road Rush",   open: "race me. right now 🏁",           reply: "don't cry when you lose", close: "GO GO GO" },
+      { cover: "landmark", game: "Landmark",  caption: "Your guess · Landmark", open: "bet you can't find this place 🗺️", reply: "watch me",               close: "no maps app!! 😤" },
+    ];
+    phoneScreen.innerHTML = `
+      <div class="thread-head">
+        <div class="avatar">A</div>
+        <div class="thread-name">Ayla<br><small>iMessage</small></div>
       </div>
-      <div class="game-label">${pick.name}<span>${pick.sub}</span></div>`);
-    const pv = document.getElementById("phone-video");
-    pv.src = vid(pick.base);
-    const tryPlay = () => pv.play?.().catch(() => {});
-    pv.addEventListener("canplay", tryPlay, { once: true });
-    tryPlay();
+      <div class="thread" id="thread"></div>
+      <div class="thread-field"><span>iMessage</span><em>↑</em></div>`;
+    const thread = document.getElementById("thread");
+    let lastPick = -1, chatTimers = [];
+
+    const buildChat = (c) => {
+      thread.innerHTML = `
+        <div class="bubble them msg" data-step="1">${c.open}</div>
+        <div class="bubble me typing" data-step="2"><i></i><i></i><i></i></div>
+        <div class="bubble me msg" data-step="3">${c.reply}</div>
+        <div class="bubble me invite" data-step="4">
+          <img class="inv-img" src="/assets/img/covers/${c.cover}.webp" alt="${c.game} invite">
+          <div class="inv-bar"><img src="/assets/img/duelio-logo.png" alt=""><div><b>Duelio</b><span>${c.caption}</span></div></div>
+        </div>
+        <div class="bubble them msg" data-step="5">${c.close}</div>`;
+    };
+
+    const playChat = () => {
+      chatTimers.forEach(clearTimeout); chatTimers = [];
+      let i; do { i = Math.floor(Math.random() * CHATS.length); } while (i === lastPick);
+      lastPick = i;
+      buildChat(CHATS[i]);
+      const typing = thread.querySelector(".typing");
+      // [step, delay-before-next]
+      const SCRIPT = [[1, 700], [2, 1200], [3, 1300], [4, 1500], [5, 1400]];
+      let t = 400;
+      for (const [step, dur] of SCRIPT) {
+        const el = thread.querySelector(`[data-step="${step}"]`);
+        chatTimers.push(setTimeout(() => {
+          if (step === 3) typing.classList.add("done"); // dots resolve into the reply
+          el.classList.add("on");
+        }, t));
+        t += dur;
+      }
+      chatTimers.push(setTimeout(playChat, t + 3400)); // linger, then a new duel
+    };
+
+    if (reduce) {
+      buildChat(CHATS[0]);
+      thread.querySelectorAll(".bubble").forEach(b => b.classList.add("on"));
+      thread.querySelector(".typing").classList.add("done");
+    } else {
+      playChat();
+      document.addEventListener("visibilitychange", () => {
+        chatTimers.forEach(clearTimeout);
+        if (!document.hidden) playChat();
+      });
+    }
   }
 
   /* ---------------- reveals + counters + nav ---------------- */
