@@ -1,6 +1,6 @@
 /* ============================================================
    Duelio — duelioapp.com
-   Catalog recreation, config popups, gameplay phone, hex-tech
+   Catalog recreation, tips key, gameplay phone chat, honeycomb
    backdrop. Vanilla JS, no dependencies.
    ============================================================ */
 (() => {
@@ -244,7 +244,6 @@
         name.className = "tile-name" + (g.builder ? " gold" : "");
         name.textContent = g.n;
         tile.appendChild(name);
-        if (!g.soon) tile.addEventListener("click", () => openGame(g));
         grid.appendChild(tile);
       });
       sec.appendChild(grid);
@@ -253,92 +252,65 @@
     revealObserve(scroll.querySelectorAll(".reveal"));
   }
 
-  /* ---------------- popup: the iMessage catalog's config, display-only ----------------
-     Mirrors DuelioMessagesConfigPopup: graphite slab, game header, the game's
-     real modes/options laid out with their defaults selected, and the gold
-     staging SEND button. Nothing inside is interactive — it's a faithful
-     look at the setup screen, not a working one. Only close works. */
-  const scrim = document.getElementById("popup-scrim");
-  const popup = document.getElementById("popup");
-
-  function openGame(g) {
-    popup.innerHTML = "";
-    const head = document.createElement("div"); head.className = "popup-head";
-    const pv = document.createElement("div"); pv.className = "pv";
-    const hv = document.createElement("video"); hv.muted = true; hv.loop = true; hv.playsInline = true;
-    hv.setAttribute("muted", ""); hv.setAttribute("playsinline", "");
-    videoURL(g.tileVideo || g.k).then(u => { hv.src = u; hv.play?.().catch(() => {}); });
-    pv.appendChild(hv);
-    head.innerHTML = `<button class="popup-x" aria-label="Close">✕</button>`;
-    head.appendChild(pv);
-    head.insertAdjacentHTML("beforeend", `<div class="meta"><h3>${g.n}</h3><div class="sub">${g.live ? "Live multiplayer" : "Turn-based"}</div></div><span class="players">${g.players} players</span>`);
-    popup.appendChild(head);
-    head.querySelector(".popup-x").addEventListener("click", closePopup);
-
-    const body = document.createElement("div"); body.className = "popup-body noclick";
-    popup.appendChild(body);
-
-    // Pool/Darts: the forced mode picker, all five cards with their real clips
-    if (g.modes) {
-      const el = document.createElement("div"); el.className = "cfg-group";
-      el.insertAdjacentHTML("beforeend", `<span class="lbl">Game Mode</span>`);
-      g.modes.forEach((m, i) => {
-        const c = document.createElement("div"); c.className = "mode-card" + (i === 0 ? " sel" : "");
-        c.innerHTML = `<span class="mv"><video muted loop playsinline></video></span>
-          <span class="ol"><span class="mt">${m.label}${m.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${m.desc}</span></span>`;
-        const mvv = c.querySelector("video");
-        videoURL(m.video).then(u => { mvv.src = u; mvv.play?.().catch(() => {}); });
-        el.appendChild(c);
-      });
-      body.appendChild(el);
-    }
-
-    const cfg = g.config;
-    if (cfg && cfg.blurb) {
-      body.insertAdjacentHTML("beforeend", `<p class="cfg-blurb">${cfg.blurb}</p>`);
-    } else if (Array.isArray(cfg)) {
-      cfg.forEach(group => body.appendChild(renderGroup(group)));
-    }
-
-    body.insertAdjacentHTML("beforeend", `
-      <div class="cfg-confirm display"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 20.85 12 3.4 3.6l.01 6.53L15 12 3.41 13.87z"/></svg> SEND</div>
-      <p class="cfg-note">The real setup screen from the iMessage catalog. Sending happens in Messages.</p>`);
-
-    scrim.classList.add("open");
-    document.body.style.overflow = "hidden";
+  /* ---------------- tip key: the app's rotating gameplay-tip ticker ----------------
+     The same tips the catalog footer cycles in the app, on the same 3D
+     pressable key: game name over the hint, auto-advancing every 6s, and a
+     tap presses the face down and deals a fresh tip (never the same twice). */
+  const TIPS = [
+    ["Road Rush", "If you are still air-born during the cooldown of the supernova, you keep your speed"],
+    ["Road Rush", "Level up your powers for a bigger speed boost"],
+    ["Road Rush", "Riding the ideal line powers you up, not just for show"],
+    ["Chess", "Stuck on a move? Tap the hint for a suggestion"],
+    ["Word Bomb", "Use a hint when you cannot find a word"],
+    ["Word Bomb", "Go for short safe words over risky long ones"],
+    ["Word Games", "Every valid word needs at least 3 letters"],
+    ["Word Games", "The longest word in the dictionary runs 45 letters"],
+    ["Spelling", "Repeat the word when you are stuck"],
+    ["Spelling", "Ask for the origin when you are stuck"],
+    ["Spelling", "Ask for the definition when you are stuck"],
+    ["Landmark", "Voting early cuts the timer down fast"],
+    ["Landmark", "Your vote counts as long as your pin is on the map"],
+    ["Landmark", "A rough pin in the right region beats a precise pin in the wrong one"],
+    ["Insider", "The letter count is a free clue, so count before you guess"],
+    ["Snooker", "The aim guide reads your spin, so set your English first"],
+    ["Bowling", "A little spin curves into the pocket for more strikes"],
+    ["Bowling", "If you miss enough, gutters may help"],
+    ["Perfect 21", "Standing early on a solid hand beats chasing a bust"],
+    ["Go Fish", "Track what was asked, a card asked twice is likely gone"],
+    ["Telephone", "Simpler drawings survive the chain better"],
+    ["Corpse Collage", "Draw your part to connect at the seams, not the center"],
+    ["Add On Art", "Build on what is there instead of starting fresh"],
+    ["Ring Toss", "Aim for a flat arc that drops onto the neck"],
+    ["Characters", "Level up your tier to unlock new characters for free"],
+    ["Tiers", "Reaching a new tier lets you pick a few unlocks"],
+    ["Badges", "Equipping a rarer badge plays a bigger unlock flourish"],
+    ["Pro", "Pro turns your player name gold in matches"],
+    ["Pro", "Pro includes exclusive characters and game cosmetics"],
+    ["Stats", "Your stats track across games and feed achievements"],
+    ["Ready Rooms", "Set the vibe on the jukebox before the match starts"],
+    ["Shop", "The shop is where all cosmetics and extra games live"],
+    ["Shop", "Car bundles unlock the same rides in Road Rush and Drift"],
+  ];
+  const tipKey = document.getElementById("tip-key");
+  if (tipKey) {
+    const tg = document.getElementById("tip-game"), th = document.getElementById("tip-hint");
+    const face = tipKey.querySelector(".tip-face");
+    let tipIdx = -1, tipTimer = null;
+    const dealTip = () => {
+      let i; do { i = Math.floor(Math.random() * TIPS.length); } while (i === tipIdx);
+      tipIdx = i;
+      face.classList.add("swap");
+      setTimeout(() => {
+        tg.textContent = TIPS[i][0];
+        th.textContent = TIPS[i][1];
+        face.classList.remove("swap");
+      }, 180);
+    };
+    const armTip = () => { clearInterval(tipTimer); tipTimer = setInterval(dealTip, 6000); };
+    tipKey.addEventListener("click", () => { dealTip(); armTip(); });
+    tg.textContent = TIPS[0][0]; th.textContent = TIPS[0][1]; tipIdx = 0;
+    if (!reduce) armTip();
   }
-
-  function renderGroup(group) {
-    const el = document.createElement("div"); el.className = "cfg-group";
-    if (group.type === "toggle") {
-      el.innerHTML = `<div class="cfg-toggle"><div class="tl"><div class="tt">${group.tt}</div><div class="td">${group.td}</div></div><span class="switch${group.on ? " on" : ""}"></span></div>`;
-      return el;
-    }
-    el.insertAdjacentHTML("beforeend", `<span class="lbl">${group.label}</span>`);
-    if (group.type === "modes") {
-      group.options.forEach((o, i) => {
-        const c = document.createElement("div"); c.className = "mode-card" + (i === 0 ? " sel" : "");
-        c.innerHTML = `<span class="ol"><span class="mt">${o.label}${o.pro ? '<span class="mini-pro">PRO</span>' : ""}</span><span class="md">${o.desc}</span></span>`;
-        el.appendChild(c);
-      });
-    } else { // seg / flags — group.def picks the highlighted default (app parity)
-      const seg = document.createElement("div"); seg.className = "seg" + (group.type === "flags" ? " flags" : "");
-      group.options.forEach((o, i) => {
-        const b = document.createElement("span"); b.className = i === (group.def || 0) ? "on" : ""; b.textContent = o;
-        seg.appendChild(b);
-      });
-      el.appendChild(seg);
-    }
-    return el;
-  }
-
-  function closePopup() {
-    scrim.classList.remove("open");
-    document.body.style.overflow = "";
-    popup.querySelectorAll("video").forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
-  }
-  scrim?.addEventListener("click", (e) => { if (e.target === scrim) closePopup(); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && scrim?.classList.contains("open")) closePopup(); });
 
   /* ---------------- hero phone: iMessage thread with real invite bubbles ----------------
      The invite bubble carries a REAL image of the game — the composed cover
@@ -504,19 +476,19 @@
 
   const yr = document.getElementById("year"); if (yr) yr.textContent = new Date().getFullYear();
 
-  /* ---------------- tech backdrop: hex wall + circuits + energy ----------------
-     A richer take on the app's hex-tech chrome: breathing hex lattice with
-     powered accent cells (brand blue/red/gold), energy pulses racing along
-     the lattice axes with fading tails, drifting spark dust, a travelling
-     light sweep, expanding radar rings, and mouse parallax. */
+  /* ---------------- tech backdrop: a clean glowing honeycomb ----------------
+     One properly-tiled pointy-top hex lattice (horizontal step √3·R, vertical
+     step 1.5·R, odd rows offset by √3·R/2 — shared edges line up exactly),
+     stroked in steel with per-cell breathing, a slow travelling light sweep,
+     and two soft glow fields drifting behind it. Nothing else. */
   function initTech(canvas, opts) {
     if (!canvas || reduce) return;
     const ctx = canvas.getContext("2d");
     const DPR = Math.min(devicePixelRatio || 1, 1.75);
     let W = 0, H = 0, running = true, t0 = performance.now();
-    const R = opts.r || 26, colStep = R * 1.5, rowStep = R * 1.7320508;
+    const R = opts.r || 26;
+    const colStep = R * 1.7320508, rowStep = R * 1.5;
     const hash = (a, b) => { let h = (a * 374761393 + b * 668265263) ^ 0x5bd1e995; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967295; };
-    const ACCENTS = [[29, 137, 233], [254, 81, 0], [254, 188, 19]]; // blue, red, gold
     const mouse = { x: 0.5, y: 0.5 };
     if (opts.parallax) addEventListener("pointermove", (e) => { mouse.x = e.clientX / innerWidth; mouse.y = e.clientY / innerHeight; }, { passive: true });
 
@@ -530,109 +502,52 @@
       ctx.closePath();
     }
 
-    // energy pulses racing along the three lattice axes
-    const AXES = [0, Math.PI / 3, -Math.PI / 3];
-    const rand = (a, b) => a + Math.random() * (b - a);
-    const newPulse = () => ({
-      x: Math.random(), y: Math.random(),
-      a: AXES[Math.floor(Math.random() * 3)] * (Math.random() < 0.5 ? 1 : -1),
-      sp: rand(90, 220), life: rand(1.6, 3.4), t: 0,
-      c: ACCENTS[Math.floor(Math.random() * 3)],
-    });
-    const pulses = Array.from({ length: opts.pulses || 7 }, newPulse);
-
-    // spark dust, drifting upward
-    const dust = Array.from({ length: opts.dust || 50 }, () => ({
-      x: Math.random(), y: Math.random(), z: rand(0.3, 1),
-      vy: rand(4, 14), tw: rand(0, 6.28),
-    }));
-
-    let last = 0;
     function frame(now) {
       if (!running) return;
       const t = (now - t0) / 1000;
-      const dt = Math.min((now - (last || now)) / 1000, 0.05); last = now;
       ctx.clearRect(0, 0, W, H);
-      const px = (mouse.x - 0.5) * 18, py = (mouse.y - 0.5) * 12;
+      const px = (mouse.x - 0.5) * 14, py = (mouse.y - 0.5) * 10;
+
+      // two soft glow fields drifting slowly behind the lattice
+      const g1x = W * (0.28 + 0.14 * Math.sin(t * 0.11)), g1y = H * (0.30 + 0.12 * Math.cos(t * 0.09));
+      const g2x = W * (0.74 + 0.12 * Math.cos(t * 0.08)), g2y = H * (0.68 + 0.13 * Math.sin(t * 0.10));
+      let g = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, Math.max(W, H) * 0.38);
+      g.addColorStop(0, "rgba(46,110,190,0.075)"); g.addColorStop(1, "rgba(46,110,190,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      g = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, Math.max(W, H) * 0.34);
+      g.addColorStop(0, "rgba(150,110,40,0.055)"); g.addColorStop(1, "rgba(150,110,40,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+      // the honeycomb
+      const sweep = (t / 10) % 1;
       const cols = Math.ceil(W / colStep) + 2, rows = Math.ceil(H / rowStep) + 2;
-      const sweep = (t / 8) % 1;
-
-      // radar ring every ~5.5s from a hash-picked origin (like the app's pulse)
-      const cyc = t / 5.5, ci = Math.floor(cyc), cp = cyc - ci;
-      const ringX = hash(ci, 3) * W, ringY = hash(ci, 91) * H;
-      const ringR = cp * Math.hypot(W, H) * 0.6, ringFade = (1 - cp) * (1 - cp);
-
-      // hex lattice
-      for (let c = -1; c <= cols; c++) {
-        for (let rr = -1; rr <= rows; rr++) {
-          const cx = c * colStep + px, cy = rr * rowStep + (c % 2 ? rowStep * 0.5 : 0) + py;
-          const diag = (cx + cy) / (W + H);
+      ctx.lineWidth = 1;
+      for (let rr = -1; rr <= rows; rr++) {
+        const rowOffset = (rr % 2 !== 0) ? colStep * 0.5 : 0;
+        for (let c = -1; c <= cols; c++) {
+          const cx = c * colStep + rowOffset + px;
+          const cy = rr * rowStep + py;
           const h = hash(c, rr);
-          const breathe = 0.5 + 0.5 * Math.sin(t * 0.7 + h * 6.28);
-          let v = (1 - diag) * 0.10 + breathe * 0.04;
-          const sd = Math.abs(diag - sweep); if (sd < 0.07) v += (0.07 - sd) * 2.2 * opts.sweep;
-          const rd = Math.abs(Math.hypot(cx - ringX, cy - ringY) - ringR);
-          if (rd < 26) v += (1 - rd / 26) * 0.22 * ringFade;
-
-          if (h < 0.045) {
-            // powered accent cell: soft colored glow, breathing
-            const [ar, ag, ab] = ACCENTS[Math.floor(h * 1000) % 3];
-            const glow = 0.05 + 0.11 * breathe;
-            hexPath(cx, cy, R - 2);
-            ctx.fillStyle = `rgba(${ar},${ag},${ab},${glow})`;
-            ctx.fill();
-            ctx.strokeStyle = `rgba(${ar},${ag},${ab},${glow * 2.2})`;
-            ctx.lineWidth = 1; ctx.stroke();
-          } else {
-            hexPath(cx, cy, R - 1.4);
-            ctx.fillStyle = `rgba(148,162,188,${Math.min(v * 0.5, 0.14)})`;
-            ctx.fill();
-            if (h > 0.975) { ctx.strokeStyle = `rgba(163,181,199,${0.22 * breathe})`; ctx.lineWidth = 1; ctx.stroke(); }
-          }
+          const breathe = 0.5 + 0.5 * Math.sin(t * 0.55 + h * 6.28);
+          const diag = (cx + cy) / (W + H);
+          let a = 0.045 + breathe * 0.05;
+          const sd = Math.abs(diag - sweep);
+          if (sd < 0.08) a += (0.08 - sd) * 2.6 * opts.sweep;
+          hexPath(cx, cy, R);
+          ctx.strokeStyle = `rgba(163,181,199,${Math.min(a, 0.3)})`;
+          ctx.stroke();
         }
       }
-
-      // energy pulses with fading tails
-      for (const p of pulses) {
-        p.t += dt;
-        if (p.t > p.life) Object.assign(p, newPulse(), { t: 0 });
-        const dist = p.sp * p.t;
-        const hx = p.x * W + Math.cos(p.a) * dist + px;
-        const hy = p.y * H + Math.sin(p.a) * dist + py;
-        const fade = Math.sin(Math.min(p.t / p.life, 1) * Math.PI); // in-out
-        const TAIL = 90;
-        const g = ctx.createLinearGradient(hx - Math.cos(p.a) * TAIL, hy - Math.sin(p.a) * TAIL, hx, hy);
-        g.addColorStop(0, `rgba(${p.c[0]},${p.c[1]},${p.c[2]},0)`);
-        g.addColorStop(1, `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${0.55 * fade})`);
-        ctx.strokeStyle = g; ctx.lineWidth = 1.4;
-        ctx.beginPath();
-        ctx.moveTo(hx - Math.cos(p.a) * TAIL, hy - Math.sin(p.a) * TAIL);
-        ctx.lineTo(hx, hy); ctx.stroke();
-        // bright head
-        ctx.fillStyle = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${0.85 * fade})`;
-        ctx.beginPath(); ctx.arc(hx, hy, 1.7, 0, 6.28); ctx.fill();
-      }
-
-      // spark dust
-      for (const d of dust) {
-        d.y -= (d.vy * dt) / H;
-        if (d.y < -0.02) { d.y = 1.02; d.x = Math.random(); }
-        d.tw += dt * 2;
-        const a = (0.10 + 0.14 * Math.abs(Math.sin(d.tw))) * d.z;
-        ctx.fillStyle = `rgba(190,205,235,${a})`;
-        ctx.fillRect(d.x * W + px * d.z, d.y * H + py * d.z, 1.4, 1.4);
-      }
-
       requestAnimationFrame(frame);
     }
     size(); addEventListener("resize", size);
-    new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting && !document.hidden; if (running && !was) { last = 0; requestAnimationFrame(frame); } }).observe(canvas);
-    document.addEventListener("visibilitychange", () => { running = !document.hidden; if (running) { last = 0; requestAnimationFrame(frame); } });
+    new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting && !document.hidden; if (running && !was) requestAnimationFrame(frame); }).observe(canvas);
+    document.addEventListener("visibilitychange", () => { running = !document.hidden; if (running) requestAnimationFrame(frame); });
     requestAnimationFrame(frame);
   }
 
   /* ---------------- boot ---------------- */
   renderCatalog();
-  initTech(document.getElementById("hexfx"), { r: 30, sweep: 0.7, pulses: 9, dust: 60, parallax: true });
-  initTech(document.querySelector(".catalog-hexfx"), { r: 22, sweep: 1.0, pulses: 5, dust: 24 });
+  initTech(document.getElementById("hexfx"), { r: 30, sweep: 0.7, parallax: true });
+  initTech(document.querySelector(".catalog-hexfx"), { r: 22, sweep: 1.0 });
 })();

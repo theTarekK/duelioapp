@@ -19,7 +19,6 @@
 
 <div class="wall" aria-hidden="true"></div>
 <div class="duel-glow" aria-hidden="true"></div>
-<div class="engraved" aria-hidden="true"><span>DUELIO</span></div>
 <canvas id="hexfx" aria-hidden="true"></canvas>
 
 <header class="nav" id="nav">
@@ -43,8 +42,8 @@
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="hero-badge reveal"><img src="/assets/img/duelio-logo.png" alt=""> An iMessage app for iOS</div>
-      <h1 class="reveal d1">Pick a side.<span class="line2"><span class="grad-duel">Start the duel.</span></span></h1>
+      <h1 class="reveal d1"><span class="grad-duel">DUELIO</span></h1>
+      <p class="hero-by reveal d1">by METK LLC</p>
       <ul class="hero-bullets reveal d2">
         <li><b>31 games</b> inside iMessage</li>
         <li>Live multiplayer and online matchmaking</li>
@@ -82,13 +81,19 @@
 <section class="section" id="catalog">
   <p class="eyebrow reveal">The catalog</p>
   <h2 class="reveal">Every game, <span class="grad-gold">exactly as it looks</span></h2>
-  <p class="section-sub reveal">This is the real Duelio catalog. The same clips, categories and setup
-  screens from inside the app. Tap any tile to see its setup.</p>
 
   <div class="catalog-shell reveal">
     <canvas class="catalog-hexfx" aria-hidden="true"></canvas>
     <div class="catalog-head"><span class="wm">DUELIO</span></div>
     <div class="catalog-scroll" id="catalog-scroll"></div>
+    <div class="tip-row">
+      <button class="tip-key" id="tip-key" type="button">
+        <span class="tip-face">
+          <span class="tip-game" id="tip-game"></span>
+          <span class="tip-hint" id="tip-hint"></span>
+        </span>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -96,44 +101,24 @@
 <section class="section" id="online">
   <p class="eyebrow reveal">Online matchmaking</p>
   <h2 class="reveal">Nobody in the chat? <span class="grad-duel">Play the world.</span></h2>
-  <p class="section-sub reveal">Every game hosts and matches online. No friends required, and no
-  account either. You are an anonymous device ID and a display name, nothing more.</p>
 
   <div class="online-grid">
     <div class="online-card host reveal">
       <div class="oc-icon"><img src="/assets/img/icons/host.png" alt=""></div>
       <h3>HOST ONLINE</h3>
-      <p>Set the game up, then open a public room. Hosting mints a short room code and puts your
-      table on that game's queue so seekers get routed straight in. Flip it Public or Private any time.</p>
+      <p>Open a public room with your setup. Seekers get routed straight in.</p>
     </div>
     <div class="online-card find reveal d1">
       <div class="oc-icon"><img src="/assets/img/icons/find.png" alt=""></div>
       <h3>FIND A GAME</h3>
-      <p>Search for an open room someone is hosting. It <b>joins the moment someone hosts</b> that
-      game and mode. No lobby browser, no ready-up ceremony with strangers.</p>
+      <p>Search for an open room and join the moment someone hosts.</p>
     </div>
     <div class="online-card join reveal d2">
       <div class="oc-icon"><img src="/assets/img/icons/code.png" alt=""></div>
       <h3>JOIN WITH CODE</h3>
-      <p>Got a code from a friend? Type it to drop into their exact room. A mistyped code just reads
-      as no open room, never a silent empty lobby.</p>
+      <p>Type a friend's room code to drop into their exact room.</p>
       <div class="code-chip"><span>D</span><span>U</span><span>E</span><span>L</span><span>I</span><span>O</span></div>
     </div>
-  </div>
-
-  <div class="online-facts">
-    <div class="fact reveal"><div class="fi">
-      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5c0 4.4-3 8.4-7 9.5C8 19.4 5 15.4 5 11V6l7-3z"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M8.6 16c.7-1.6 1.9-2.4 3.4-2.4s2.7.8 3.4 2.4"/></svg>
-    </div><div><h4>Anonymous by default</h4><p>No sign in, no login, no email. Just a random per-install ID that resets if you reinstall.</p></div></div>
-    <div class="fact reveal d1"><div class="fi">
-      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>
-    </div><div><h4>Matched on what matters</h4><p>Pools split by game, mode and language, never by difficulty or timer, so the pool stays big enough to actually pair.</p></div></div>
-    <div class="fact reveal d2"><div class="fi">
-      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 20L18 6M14 6h4v4M20 20L6 6M6 10V6h4"/></svg>
-    </div><div><h4>1v1 duels and live rooms</h4><p>Turn based games run 1v1 over a relay. Live party and card games seat a whole room, filling one seeker at a time.</p></div></div>
-    <div class="fact reveal d3"><div class="fi">
-      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="3" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="9.4" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="15.8" y="5" width="5.2" height="14" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-    </div><div><h4>Same game, three doors</h4><p>An invite bubble, a room code and the matchmaker are three ways for two devices to agree on one room. The game can't tell them apart.</p></div></div>
   </div>
 </section>
 
@@ -153,9 +138,6 @@
 </section>
 
 </main>
-
-<!-- popup mounts here -->
-<div class="popup-scrim" id="popup-scrim"><div class="popup" id="popup" role="dialog" aria-modal="true"></div></div>
 
 <footer class="footer">
   <div class="foot-inner">
