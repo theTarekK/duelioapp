@@ -143,6 +143,7 @@
         { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
         { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
         { n: "Go Fish", k: "gofish", live: true, players: "2–6", config: jumpIn },
+        { n: "Spades", k: "spades", live: true, players: "4", soon: true, noVideo: true },
       ],
       builders: [],
     },
@@ -237,7 +238,14 @@
       s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
         const tile = document.createElement("button");
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
-        tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k)));
+        if (g.noVideo) {
+          // no preview clip exists (e.g. a not-yet-built game) — bare graphite face
+          const face = document.createElement("div"); face.className = "tile-face";
+          face.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
+          tile.appendChild(face);
+        } else {
+          tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k)));
+        }
         if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
         if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="pro-seal">PRO</span>`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
