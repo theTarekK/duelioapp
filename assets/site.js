@@ -78,7 +78,7 @@
           ]},
         ]},
         // Pool & Darts: forced mode-select step (real per-mode preview clips)
-        { n: "Pool", k: "8ballreboot", tileVideo: "PoolModePreview-classic", players: "2", pass: true,
+        { n: "Pool", k: "8ballreboot", players: "2", pass: true,
           modes: [
             { id: "classic", label: "8 Ball", desc: "Standard 8 ball rules — pot your group, then sink the 8 to win.", video: "PoolModePreview-classic" },
             { id: "nineBall", label: "9 Ball", desc: "Balls 1–9 in a diamond. Always hit the lowest first; pot the 9 to win.", video: "PoolModePreview-nineBall" },
@@ -87,7 +87,7 @@
             { id: "runout", label: "Runout", desc: "Every object ball matches — clear the table; fastest time wins, fewest shots breaks ties.", video: "PoolModePreview-runoutChallenge" },
           ],
           config: [{ label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "Removes the aim guide lines on any game mode." }] },
-        { n: "Darts", k: "darts", tileVideo: "DartsModePreview-classic", players: "2–4", pass: true,
+        { n: "Darts", k: "darts", players: "2–4", pass: true,
           modes: [
             { id: "classic", label: "Classic", desc: "Race your score down from 301 to exactly zero.", video: "DartsModePreview-classic" },
             { id: "championship", label: "Championship", desc: "A 501 countdown on the championship stage.", pro: true, video: "DartsModePreview-championship" },
@@ -213,16 +213,129 @@
     return wrap;
   }
 
+  /* ---------------- Pool & Darts: the app's mode-cycling tile ----------------
+     These two are the only catalog games with a forced mode-select step, so in
+     the app their tile plays every mode's clip back to back and the caption
+     under the square becomes the current MODE name instead of the game name,
+     letter-faded on each change (DuelioMessagesTileVideoView + LetterFadeLabel).
+     Same here: an ordered playlist that advances when a clip ENDS — never on a
+     timer, so the caption can never drift out of sync with the picture — with a
+     standby <video> holding the next clip so the handoff is a cut rather than a
+     flash of empty tile. Only these two tiles carry a second decoder, and only
+     while they are near the viewport. */
+  const modeTiles = [];
+
+  function makeModeTile(modes, label) {
+    const wrap = document.createElement("div");
+    wrap.className = "tile-face";
+    let cur, next, idx = 0, on = false;
+
+    const clear = (v) => {
+      v.pause?.();
+      if (v.src) { v.removeAttribute("src"); v.load(); } // releases the decoder
+      v.classList.remove("ready");
+    };
+    const load = (v, i, autoplay) => videoURL(modes[i].video).then(u => {
+      if (!on) return;                                  // scrolled away mid-fetch
+      if (v.src !== u) { v.src = u; v.load(); }
+      if (autoplay) v.play?.().catch(() => {});
+    }).catch(() => {});
+
+    const advance = () => {
+      const spent = cur;
+      idx = (idx + 1) % modes.length;
+      cur = next; next = spent;                         // standby takes the stage
+      spent.classList.remove("ready");
+      cur.classList.add("ready");
+      cur.play?.().catch(() => {});
+      label.set(modes[idx].label);
+      clear(next);                                      // recycle as the next standby
+      load(next, (idx + 1) % modes.length, false);
+    };
+
+    const mk = () => {
+      const v = document.createElement("video");
+      v.className = "pv";                               // excluded from the generic kicker
+      v.muted = true; v.playsInline = true; v.preload = "auto";
+      v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+      v.addEventListener("ended", () => { if (v === cur) advance(); });
+      v.addEventListener("playing", () => { if (v === cur) v.classList.add("ready"); });
+      wrap.appendChild(v);
+      return v;
+    };
+    cur = mk(); next = mk();
+    wrap.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
+    label.init(modes[0].label);
+    videoURL(modes[0].video);                           // warm the opening clip only:
+    // the rest are pulled a clip ahead by the standby, so a mode tile costs the
+    // same up-front bytes as any other tile instead of downloading all five
+
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        if (on) return;
+        on = true;
+        load(cur, idx, true);
+        load(next, (idx + 1) % modes.length, false);
+      } else { on = false; clear(cur); clear(next); }
+    }, { rootMargin: "300px 0px" }).observe(wrap);
+
+    // a clip that will not decode must not park the tile on one mode forever
+    modeTiles.push(() => {
+      if (!on) return;
+      if (cur.error) advance();
+      else if (cur.readyState >= 2 && cur.paused) cur.play?.().catch(() => {});
+      else if (!cur.src) load(cur, idx, true);
+    });
+    return wrap;
+  }
+
+  /* the app's LetterFadeLabel: the whole caption fades out letter by letter,
+     then the new mode name fades back in on the same left-to-right stagger */
+  function letterLabel(el) {
+    let gen = 0;
+    // per-letter layout rules out a scale-to-fit, so the size steps down on the
+    // app's own length thresholds instead
+    const size = (text) => {
+      el.classList.remove("m-sm", "m-xs");
+      if (text.length > 12) el.classList.add("m-xs");
+      else if (text.length > 8) el.classList.add("m-sm");
+    };
+    const plain = (text) => { size(text); el.textContent = text; };
+    const render = (text) => {
+      size(text);
+      el.textContent = "";
+      [...text].forEach((ch, i) => {
+        const s = document.createElement("span");
+        s.className = "lt";
+        s.textContent = ch === " " ? " " : ch;
+        s.style.transitionDelay = (i * 0.03).toFixed(2) + "s";
+        el.appendChild(s);
+      });
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("shown")));
+    };
+    return {
+      init: (text) => reduce ? plain(text) : render(text),
+      set(text) {
+        if (reduce) { plain(text); return; }
+        const g = ++gen;
+        const out = Math.min(200 + Math.max(el.childElementCount - 1, 0) * 30, 750) + 50;
+        el.classList.remove("shown");
+        setTimeout(() => { if (g === gen) render(text); }, out);
+      },
+    };
+  }
+
   // the kicker: rebuild any near-viewport player that stalled or lost the
   // decoder race (error) — mirrors the app's kick-until-the-loop-runs logic
   setInterval(() => {
     if (document.hidden) return;
-    document.querySelectorAll(".tile-face video").forEach(v => {
+    document.querySelectorAll(".tile-face video:not(.pv)").forEach(v => {
       if (!v.dataset.on) return;
       if (v.error) { detach(v); v.dataset.on = "1"; attach(v); }
       else if (v.readyState >= 2 && v.paused) v.play?.().catch(() => {});
       else if (v.readyState === 0 && !v.src) attach(v);
     });
+    modeTiles.forEach(tick => tick());
   }, 2500);
 
   /* ---------------- render catalog (always grouped by category) ---------------- */
@@ -238,20 +351,26 @@
       s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
         const tile = document.createElement("button");
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
-        if (g.noVideo) {
+        const name = document.createElement("div");
+        name.className = "tile-name" + (g.builder ? " gold" : "");
+        if (g.modes) {
+          // Pool / Darts: the square cycles the modes and the caption rides it,
+          // exactly as in the app — the game's own name is not shown
+          name.classList.add("mode");
+          tile.appendChild(makeModeTile(g.modes, letterLabel(name)));
+        } else if (g.noVideo) {
           // no preview clip exists (e.g. a not-yet-built game) — bare graphite face
           const face = document.createElement("div"); face.className = "tile-face";
           face.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
           tile.appendChild(face);
+          name.textContent = g.n;
         } else {
           tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k)));
+          name.textContent = g.n;
         }
         if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
-        if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="pro-seal">PRO</span>`);
+        if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<img class="pro-seal" src="/assets/img/pro-icon.png" alt="Pro" width="160" height="109">`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
-        const name = document.createElement("div");
-        name.className = "tile-name" + (g.builder ? " gold" : "");
-        name.textContent = g.n;
         tile.appendChild(name);
         grid.appendChild(tile);
       });

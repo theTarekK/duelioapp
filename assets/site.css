@@ -383,17 +383,31 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   box-shadow: 0 3px 0 rgba(3, 4, 6, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   outline: 1px solid rgba(163, 181, 199, 0.16); outline-offset: -1px;
 }
-.tile-face video, .tile-face img {
+.tile-face video, .tile-face img:not(.pro-seal) { /* the Pro seal is a badge, not a face */
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   opacity: 0; transition: opacity 0.5s ease;
 }
-.tile-face video.ready, .tile-face img.ready { opacity: 1; }
+.tile-face video.ready, .tile-face img:not(.pro-seal).ready { opacity: 1; }
 .tile-face .gloss { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 40%); pointer-events: none; }
 .tile-face::after { /* steel inner rim */
   content: ""; position: absolute; inset: 1.5px; border-radius: 7px; border: 1px solid rgba(163, 181, 199, 0.2); pointer-events: none;
 }
 .tile-name { font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.86); line-height: 1.15; min-height: 1.9em; padding: 0 2px; }
 .tile-name.gold { background: linear-gradient(180deg, #FFF5BD, var(--gold) 50%, var(--gold-deep)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Pool & Darts: the caption is the current MODE, letter-faded on every change.
+   Height is locked in rem (not em) so the smaller sizes below cannot nudge the
+   grid as the name swaps, and the app's own length thresholds pick the size. */
+.tile-name.mode { min-height: 1.14rem; white-space: nowrap; text-transform: uppercase; }
+.tile-name.mode.m-sm { font-size: 0.48rem; }
+.tile-name.mode.m-xs { font-size: 0.39rem; letter-spacing: 0.01em; }
+.tile-name.mode .lt {
+  display: inline-block; opacity: 0; filter: blur(2.5px); transform: translateY(3px);
+  transition: opacity 0.2s ease-out, filter 0.2s ease-out, transform 0.2s ease-out;
+}
+.tile-name.mode.shown .lt { opacity: 1; filter: blur(0); transform: none; }
+/* the mode handoff is a cut, not the 0.5s reveal fade the other tiles use */
+.tile-face video.pv { transition: opacity 0.22s linear; }
 
 /* live pip on the tile face */
 .tile .live-pip {
@@ -404,10 +418,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   border-radius: 999px; padding: 2px 6px; backdrop-filter: blur(4px);
 }
 .tile .live-pip::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--cat-cards); }
+/* the app's own winged-gem Pro seal (DuelioProIcon), carried at the same
+   glow the app gives it rather than a lettered pill */
 .tile .pro-seal {
-  position: absolute; top: 5px; right: 5px; z-index: 4;
-  font-family: var(--display); font-size: 0.44rem; letter-spacing: 0.04em; color: #241a05;
-  background: linear-gradient(180deg, #FFF5BD, var(--gold)); border-radius: 5px; padding: 2px 5px;
+  position: absolute; top: 4px; right: 4px; z-index: 4;
+  width: 30px; height: auto;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 5px rgba(255, 212, 107, 0.35));
 }
 .tile.builder .tile-face { outline-color: rgba(255, 212, 107, 0.5); }
 .tile.soon { cursor: not-allowed; }
