@@ -399,8 +399,11 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
    Height is locked in rem (not em) so the smaller sizes below cannot nudge the
    grid as the name swaps, and the app's own length thresholds pick the size. */
 .tile-name.mode { min-height: 1.14rem; white-space: nowrap; text-transform: uppercase; }
-.tile-name.mode.m-sm { font-size: 0.48rem; }
-.tile-name.mode.m-xs { font-size: 0.39rem; letter-spacing: 0.01em; }
+/* Sized to the NARROWEST a tile ever gets (the 96px grid floor, so ~92px of
+   label): AROUND THE WORLD is 10.87em wide, which fits at 8.4px — the old
+   0.39rem was compensating far harder than the tile ever needed. */
+.tile-name.mode.m-sm { font-size: 0.56rem; }
+.tile-name.mode.m-xs { font-size: 0.5rem; letter-spacing: 0.01em; }
 .tile-name.mode .lt {
   display: inline-block; opacity: 0; filter: blur(2.5px); transform: translateY(3px);
   transition: opacity 0.2s ease-out, filter 0.2s ease-out, transform 0.2s ease-out;
