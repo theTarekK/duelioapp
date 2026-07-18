@@ -7,7 +7,7 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=2";
+  const vid = (base) => V + base + ".mp4?v=3";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = { label: "Language", type: "seg", options: ["English", "Spanish", "French", "Italian"] };
@@ -160,12 +160,15 @@
   const ALL_GAMES = SECTIONS.flatMap(s => s.games);
 
   /* ---------------- tile videos: decoder-friendly, every visible tile plays ----------------
-     Bytes are prefetched as blobs (fetch is never media-throttled), but a
+     Bytes are fetched as blobs (fetch is never media-throttled), but a
      <video> only HOLDS a decoder while it is near the viewport — 30 parallel
      load() calls exhaust the browser's media decoders and the losers die
      with SRC_NOT_SUPPORTED (this is why most tiles showed nothing). So,
      exactly like the app's catalog: attach on approach, tear down when far
-     offscreen, and kick any player that lost the decoder race until it runs. */
+     offscreen, and kick any player that lost the decoder race until it runs.
+     The fetch happens on approach too, NOT at boot: these are the app's
+     full-length clips (up to 17s, ~43MB across the catalog), so warming them
+     all up front would download the whole set before a visitor scrolls. */
   const vidCache = new Map();
   const videoURL = (base) => {
     if (!vidCache.has(base)) {
@@ -206,7 +209,6 @@
     v.addEventListener("loadeddata", markReady);
     v.addEventListener("canplay", markReady);
     v.addEventListener("playing", () => v.classList.add("ready"));
-    videoURL(base);                       // warm the byte cache right away
     wrap.appendChild(v);
     const gloss = document.createElement("div"); gloss.className = "gloss"; wrap.appendChild(gloss);
     videoIO.observe(v);
@@ -266,9 +268,8 @@
     cur = mk(); next = mk();
     wrap.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
     label.init(modes[0].label);
-    videoURL(modes[0].video);                           // warm the opening clip only:
-    // the rest are pulled a clip ahead by the standby, so a mode tile costs the
-    // same up-front bytes as any other tile instead of downloading all five
+    // nothing is fetched until the tile is approached; from there the standby
+    // pulls one clip ahead, so a mode tile never costs more than two clips
 
     new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
