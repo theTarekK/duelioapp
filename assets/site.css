@@ -542,6 +542,13 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 }
 .feedback-terminal h2 { text-align: left; font-size: 1.25rem; margin: 0; }
 .feedback-intro { max-width: 620px; color: var(--muted); font-size: 0.93rem; line-height: 1.6; margin-bottom: 20px; }
+.feedback-examples {
+  display: grid; gap: 5px; margin: 0 0 20px; padding: 12px 14px;
+  border: 1px solid rgba(126, 178, 212, 0.22); border-radius: 8px; background: rgba(1, 4, 10, 0.42);
+}
+.feedback-examples-title { color: #62d8ff; font-family: var(--display); font-size: 0.61rem; letter-spacing: 0.13em; margin-bottom: 2px; }
+.feedback-examples p:not(.feedback-examples-title) { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+.feedback-examples strong { color: var(--ink); font-family: var(--display); font-size: 0.67rem; letter-spacing: 0.05em; }
 .feedback-form { display: grid; gap: 12px; }
 .feedback-types { display: flex; gap: 8px; flex-wrap: wrap; }
 .feedback-type {
