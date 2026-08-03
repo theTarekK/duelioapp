@@ -603,6 +603,91 @@
     });
   });
 
+  /* ---------------- feedback terminal ---------------- */
+  const feedbackForm = document.getElementById("feedback-form");
+  if (feedbackForm) {
+    const feedbackEndpoint = "https://api.duelioapp.com/feedback";
+    const feedbackMax = 8000;
+    const message = document.getElementById("feedback-message");
+    const count = document.getElementById("feedback-count");
+    const status = document.getElementById("feedback-status");
+    const submit = feedbackForm.querySelector(".feedback-submit");
+    const websiteTrap = document.getElementById("feedback-website");
+    const typeButtons = feedbackForm.querySelectorAll("[data-feedback-kind]");
+    let kind = "bug_report";
+
+    const makeID = () => {
+      try { return crypto.randomUUID(); }
+      catch { return `${Date.now()}-${Math.random().toString(16).slice(2)}`; }
+    };
+    const installID = (() => {
+      try {
+        const key = "duelio-feedback-install-id";
+        const saved = localStorage.getItem(key);
+        if (saved) return saved;
+        const created = makeID();
+        localStorage.setItem(key, created);
+        return created;
+      } catch { return makeID(); }
+    })();
+    const updateCount = () => {
+      count.textContent = `${message.value.length.toLocaleString()} / ${feedbackMax.toLocaleString()}`;
+    };
+    const setStatus = (text, state = "") => {
+      status.textContent = text;
+      status.dataset.state = state;
+    };
+    const setKind = (next) => {
+      kind = next;
+      typeButtons.forEach(btn => {
+        const active = btn.dataset.feedbackKind === next;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-pressed", String(active));
+      });
+    };
+
+    typeButtons.forEach(btn => btn.addEventListener("click", () => setKind(btn.dataset.feedbackKind)));
+    message.addEventListener("input", updateCount);
+    updateCount();
+
+    feedbackForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (websiteTrap.value) return;
+      const text = message.value.trim();
+      if (!text) {
+        setStatus("Write a message before transmitting.", "error");
+        message.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      setStatus("Transmitting to the developer channel…");
+      try {
+        const response = await fetch(feedbackEndpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            reporter: `web-${installID}`,
+            source: "website-support",
+            kind,
+            message: text,
+            submissionID: makeID(),
+            appVersion: "duelioapp.com",
+            osVersion: navigator.userAgent.slice(0, 128),
+          }),
+        });
+        if (!response.ok) throw new Error("feedback request failed");
+        message.value = "";
+        updateCount();
+        setStatus("Received. Thanks for helping shape Duelio!", "success");
+      } catch {
+        setStatus("Transmission failed. Please try again or email contact@metkapps.com.", "error");
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+
   const yr = document.getElementById("year"); if (yr) yr.textContent = new Date().getFullYear();
 
   /* ---------------- tech backdrop: a clean glowing honeycomb ----------------

@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png?v=2">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=6">
 </head>
 <body>
 
@@ -32,7 +32,7 @@
 
   <div class="page-head">
     <h1>Duelio — Privacy Policy</h1>
-    <p class="dates"><b>Effective date:</b> 16 July 2026 &nbsp;·&nbsp; <b>Last updated:</b> 16 July 2026</p>
+    <p class="dates"><b>Effective date:</b> 2 August 2026 &nbsp;·&nbsp; <b>Last updated:</b> 2 August 2026</p>
   </div>
 
   <h2 style="border-top:none;padding-top:0;margin-top:0">The short version</h2>
@@ -48,6 +48,9 @@
       <li><strong>Your statistics never leave your device.</strong></li>
       <li><strong>Most games never contact us at all.</strong> Turn-based games travel inside your
       iMessage conversation. We never see them.</li>
+      <li><strong>You can voluntarily send us a bug report or suggestion.</strong> If you use the
+      feedback form in Settings, the note is sent to our server so the developer can read it. It is
+      not sent while you type, and it is never required to play.</li>
       <li><strong>Live multiplayer games do connect to a Duelio server</strong>, and while a live
       match is running we can technically see what passes through it. <strong>Live matches are not
       end-to-end encrypted.</strong> This is the most important thing on this page.</li>
@@ -144,6 +147,14 @@
   <h2 id="call-outs">5. Things worth calling out specifically</h2>
   <p>We would rather over-explain these than have you discover them later.</p>
 
+  <h3>Bug reports and suggestions</h3>
+  <p>The Settings panel includes an optional <strong>Bug Report / Suggestions</strong> form. Nothing
+  is sent while you type. If you tap <strong>Transmit Feedback</strong>, we send the note (up to 8,000
+  characters), whether it is a bug report or suggestion, an anonymous per-install identifier, your
+  current display name, and the app and operating-system versions. Our hosting provider also
+  necessarily sees the connecting IP address. The note is stored so the developer can review it; it
+  is not used for advertising, analytics, profiling, or tracking.</p>
+
   <h3>Chat and anything you type</h3>
   <p>Chat messages are relayed between the players in the match. <strong>They are not stored on our
   server.</strong></p>
@@ -196,13 +207,17 @@
     <li>Which characters, badges and items you have unlocked.</li>
     <li>What you have bought — whether you own Pro, and how many hints you have left. Your purchase
     itself is handled by Apple; what we keep is only the result of it, on your device.</li>
-    <li>Your display name and avatar choices.</li>
+    <li>Your display name and avatar choices, except that your display name and the note are sent if
+    you voluntarily submit feedback as described in Section 5.</li>
     <li>Your sound and game settings.</li>
     <li>A record of the players you have played against, kept as the anonymous player identifiers
     described in Section 4, so the app can show your history with them.</li>
     <li>Saved progress in a turn you haven't finished yet.</li>
   </ul>
-  <p><strong>Deleting Duelio deletes all of it.</strong></p>
+  <p><strong>Deleting Duelio deletes the on-device data above.</strong> Feedback you already
+  submitted remains in the developer inbox until it is manually deleted; contact us at
+  <a href="mailto:contact@metkapps.com">contact@metkapps.com</a> if you want to request deletion of
+  a feedback submission.</p>
   <p>One thing to be aware of: like most app settings, this data is included in your <strong>iCloud
   or computer backup</strong> if you back up your device. That is handled by Apple under their
   privacy policy, not by us.</p>
@@ -212,7 +227,8 @@
   <ul>
     <li><strong>Cloudflare</strong> — hosts the Duelio server that relays live matches. Everything in
     Section 4 passes through their infrastructure, and they necessarily see your IP address as part
-    of delivering the connection. Cloudflare acts as our processor under a data processing
+    of delivering the connection. Feedback submissions use the same infrastructure and are stored
+    in our protected developer inbox. Cloudflare acts as our processor under a data processing
     agreement.</li>
     <li><strong>Apple</strong> — delivers every Duelio message as part of iMessage, provides the maps
     and imagery in the Landmark game, and handles any purchase you make. Purchases go through the App
@@ -245,6 +261,7 @@
     <li><strong>A match abandoned partway through is deleted automatically, normally within about
     four hours</strong> of the last player leaving. We sweep for abandoned matches every hour and
     delete any that have been untouched for more than three.</li>
+    <li><strong>Feedback is kept in the protected developer inbox until it is manually deleted.</strong></li>
     <li><strong>Your statistics stay on your device</strong>, and are removed when you delete the app
     — see Section 6.</li>
   </ul>
@@ -264,9 +281,11 @@
   purely in order to make you identifiable.</p>
   <p>What you can do today, without asking us:</p>
   <ul>
-    <li><strong>Delete the app.</strong> Everything described in Section 6 goes with it.</li>
+    <li><strong>Delete the app.</strong> The on-device data described in Section 6 goes with it;
+    already-submitted feedback does not, but you can request its deletion at the contact address.</li>
     <li><strong>Change your display name</strong> at any time in Duelio's settings.</li>
-    <li><strong>Not play live games.</strong> Turn-based games never contact our server at all.</li>
+    <li><strong>Not play live games.</strong> Turn-based games never contact our server for gameplay;
+    voluntary feedback is a separate Settings action.</li>
     <li><strong>Wait.</strong> Live match data is not kept indefinitely — see Section 8.</li>
   </ul>
 
@@ -275,8 +294,8 @@
   relationships with third parties that would make that possible — see Section 7.</p>
   <ul>
     <li><strong>Categories of personal information we collect:</strong> identifiers (a player
-    identifier issued by Apple, an IP address), your display name, and content you create in a match
-    (Section 4).</li>
+    identifier issued by Apple, an IP address), your display name, content you create in a match
+    (Section 4), and any feedback note you voluntarily submit (Section 5).</li>
     <li><strong>Categories of third parties we share it with:</strong> our hosting provider, Apple,
     and the other players in your match. Nobody else.</li>
     <li><strong>Do Not Track:</strong> Duelio does not track you, so there is nothing for a Do Not
@@ -321,6 +340,6 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=4" defer></script>
+<script src="/assets/site.js?v=6" defer></script>
 </body>
 </html>
