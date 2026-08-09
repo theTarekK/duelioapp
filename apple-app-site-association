@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "YYJTCWJDX3.com.metkllc.duelio",
+        "paths": [
+          "/shop",
+          "/shop/",
+          "/shop/*"
+        ]
+      }
+    ]
+  }
+}

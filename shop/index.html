@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop — Duelio</title>
+<meta name="description" content="Browse Duelio Pro, game cosmetics, bundles and hint packs. Pick an item here, then complete the purchase securely inside Duelio with Apple.">
+<meta property="og:title" content="The Duelio Shop">
+<meta property="og:description" content="Browse here. Buy securely inside Duelio. Existing purchases are recognized in the app.">
+<meta property="og:url" content="https://duelioapp.com/shop/">
+<meta property="og:image" content="https://duelioapp.com/assets/img/duelio-logo.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#020104">
+<link rel="canonical" href="https://duelioapp.com/shop/">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
+<link rel="stylesheet" href="/assets/site.css?v=8">
+<link rel="stylesheet" href="/assets/shop.css?v=1">
+</head>
+<body class="shop-page">
+
+<div class="wall" aria-hidden="true"></div>
+<div class="duel-glow" aria-hidden="true"></div>
+<canvas id="hexfx" aria-hidden="true"></canvas>
+
+<header class="nav scrolled" id="nav">
+  <a class="nav-logo" href="/">
+    <img src="/assets/img/duelio-logo.png" alt="Duelio">
+    <span class="wm">DUELIO</span>
+  </a>
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="/#catalog">Games</a>
+    <a class="active" href="/shop/" aria-current="page">Shop</a>
+    <a href="/#online">Online</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="/support/">Support</a>
+  </nav>
+  <a class="nav-cta" href="#storefront">Browse items</a>
+</header>
+
+<main>
+  <section class="shop-hero">
+    <div class="shop-hero-copy reveal">
+      <p class="eyebrow">Connected to the game</p>
+      <h1>THE <span class="grad-duel">DUELIO</span> SHOP</h1>
+      <p class="shop-lede">Browse every current item here, then finish securely inside Duelio with Apple. The app checks the App Store account on your device before showing any purchase.</p>
+      <div class="shop-hero-actions">
+        <a class="btn btn-gold" href="#storefront">Browse the shop</a>
+        <a class="btn btn-ghost" href="duelio://shop" data-open-duelio>Open Duelio</a>
+      </div>
+      <p class="device-note">Opening items requires Duelio on an iPhone or iPad.</p>
+    </div>
+
+    <div class="purchase-path reveal d1" aria-label="How website purchases work">
+      <div class="path-step">
+        <span class="path-number">01</span>
+        <div><b>Choose here</b><span>Pick the exact bundle, cosmetic or perk.</span></div>
+      </div>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <div class="path-step">
+        <span class="path-number">02</span>
+        <div><b>Review in Duelio</b><span>See Apple’s localized price before buying.</span></div>
+      </div>
+      <span class="path-arrow" aria-hidden="true">→</span>
+      <div class="path-step">
+        <span class="path-number">03</span>
+        <div><b>Keep what you own</b><span>Restorable purchases show as owned in the game.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ownership-strip reveal" aria-label="Purchase and account information">
+    <div class="ownership-icon" aria-hidden="true">✓</div>
+    <div>
+      <b>Your purchases stay with Apple and Duelio</b>
+      <p>There is no separate website checkout or Duelio login. The game refreshes eligible purchases from StoreKit and keeps your in-game balances. Use <strong>Restore Purchases</strong> in Duelio if an owned item is ever missing.</p>
+    </div>
+  </section>
+
+  <section class="storefront section" id="storefront">
+    <p class="eyebrow reveal">All current items</p>
+    <h2 class="reveal">Choose your <span class="grad-gold">upgrade</span></h2>
+    <p class="section-sub reveal">Prices below are the current U.S. App Store prices. Apple shows the final localized price inside Duelio before you confirm.</p>
+
+    <div class="shop-controls reveal">
+      <div class="shop-filters" id="shop-filters" role="group" aria-label="Filter shop items"></div>
+      <p class="result-count" id="shop-result-count" aria-live="polite"></p>
+    </div>
+
+    <div class="product-grid" id="product-grid"></div>
+    <noscript><p class="shop-noscript">JavaScript is required to display the shop and open an exact item in Duelio.</p></noscript>
+  </section>
+
+  <section class="shop-faq section" aria-labelledby="shop-faq-title">
+    <p class="eyebrow reveal">Good to know</p>
+    <h2 class="reveal" id="shop-faq-title">Website convenience. <span class="grad-duel">Apple checkout.</span></h2>
+    <div class="faq-grid">
+      <article class="faq-card reveal">
+        <h3>Can the website see what I own?</h3>
+        <p>No. Your Apple purchase history is private. When Duelio opens, StoreKit checks the App Store account signed in on that device and updates the item there.</p>
+      </article>
+      <article class="faq-card reveal d1">
+        <h3>Will I be charged twice?</h3>
+        <p>Duelio blocks repurchasing non-consumable items it already recognizes. Apple’s purchase sheet always shows what will happen before you confirm.</p>
+      </article>
+      <article class="faq-card reveal d2">
+        <h3>Why does checkout open the game?</h3>
+        <p>That keeps purchases connected to your Apple account and uses the same trusted StoreKit checkout as the in-game shop.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<div class="open-notice" id="open-notice" role="status" aria-live="polite" hidden>
+  <div>
+    <b>Duelio didn’t open</b>
+    <span>Open this page on the iPhone or iPad where Duelio is installed, then try again.</span>
+  </div>
+  <button type="button" id="dismiss-open-notice" aria-label="Dismiss">×</button>
+</div>
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <a class="nav-logo" href="/"><img src="/assets/img/duelio-logo.png" alt="Duelio"><span class="wm">DUELIO</span></a>
+      <p>© <span id="year">2026</span> METK LLC</p>
+    </div>
+    <div class="foot-contact">
+      <span class="fc-lbl">Need purchase help?</span>
+      <a class="btn btn-ghost" href="/support/">Duelio Support</a>
+    </div>
+    <a class="foot-metk" href="https://metkapps.com" rel="noopener">
+      <img src="/assets/img/metk-logo.png" alt="METK">
+      <span>More from METK<b>metkapps.com</b></span>
+    </a>
+  </div>
+  <p class="foot-legal">Apple, iPhone, iPad and App Store are trademarks of Apple Inc. Prices and availability can vary by storefront. <a href="/terms/">Terms of Use</a> · <a href="/privacy/">Privacy Policy</a></p>
+</footer>
+
+<script src="/assets/site.js?v=8" defer></script>
+<script src="/assets/shop.js?v=1" defer></script>
+</body>
+</html>
