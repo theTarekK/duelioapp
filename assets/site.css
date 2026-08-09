@@ -120,10 +120,10 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
-.section { max-width: 1080px; margin: 0 auto; padding: 72px 20px 30px; }
+.section { max-width: 1240px; margin: 0 auto; padding: 52px 18px 24px; }
 .section > .eyebrow { text-align: center; }
 .section > h2 {
-  text-align: center; font-size: clamp(1.6rem, 3.6vw, 2.45rem); margin-bottom: 12px;
+  text-align: center; font-size: clamp(1.45rem, 3vw, 2.1rem); margin-bottom: 8px;
 }
 .section-sub { text-align: center; color: var(--muted); max-width: 40rem; margin: 0 auto 46px; font-size: 1.02rem; }
 
@@ -199,22 +199,22 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
    HERO
    ===================================================================== */
 .hero {
-  position: relative; min-height: min(100svh, 760px); display: flex; align-items: center;
-  padding: 96px 20px 50px;
+  position: relative; min-height: min(78svh, 640px); display: flex; align-items: center;
+  padding: 76px 18px 34px;
 }
 .hero-inner {
-  max-width: 1080px; margin: 0 auto; width: 100%;
-  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: center;
+  max-width: 1180px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 24px; align-items: center;
 }
-.hero h1 { font-size: clamp(3rem, 7.5vw, 5.4rem); letter-spacing: 0.04em; margin-bottom: 3px; }
+.hero h1 { font-size: clamp(2.7rem, 6vw, 4.6rem); letter-spacing: 0.04em; margin-bottom: 3px; }
 .hero-by {
   font-family: var(--display); font-size: 0.76rem; letter-spacing: 0.28em;
-  text-transform: uppercase; color: var(--steel); margin-bottom: 22px;
+  text-transform: uppercase; color: var(--steel); margin-bottom: 16px;
 }
-.hero-bullets { list-style: none; margin: 0 0 24px; max-width: 33rem; }
+.hero-bullets { list-style: none; margin: 0 0 18px; max-width: 33rem; }
 .hero-bullets li {
-  position: relative; padding-left: 24px; margin-bottom: 7px;
-  color: var(--muted); font-size: 1rem; font-weight: 600;
+  position: relative; padding-left: 24px; margin-bottom: 5px;
+  color: var(--muted); font-size: 0.92rem; font-weight: 600;
 }
 .hero-bullets li b { color: var(--ink); font-weight: 800; }
 .hero-bullets li::before {
@@ -223,10 +223,10 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   background: linear-gradient(135deg, var(--blue-bright), var(--red-bright));
   box-shadow: 0 0 10px rgba(255, 190, 40, 0.35);
 }
-.hero-cta { display: flex; gap: 11px; flex-wrap: wrap; align-items: center; margin-bottom: 28px; }
-.hero-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.hero-cta { display: flex; gap: 11px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+.hero-stats { display: flex; gap: 18px; flex-wrap: wrap; }
 .hero-stats > div { display: flex; flex-direction: column; }
-.hero-stats b { font-family: var(--display); font-size: 1.45rem; }
+.hero-stats b { font-family: var(--display); font-size: 1.25rem; }
 .hero-stats span { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
 .hero-stats .gap { color: var(--gold); }
 
@@ -234,7 +234,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 .hero-phone { position: relative; justify-self: center; cursor: pointer; }
 .hero-phone:active .phone { transform: rotate(2deg) scale(0.985); }
 .phone {
-  position: relative; width: 260px; aspect-ratio: 300 / 620; border-radius: 40px;
+  position: relative; width: clamp(200px, 20vw, 228px); aspect-ratio: 300 / 620; border-radius: 40px;
   background: linear-gradient(160deg, #202531, #0a0c13);
   border: 1px solid rgba(163, 181, 199, 0.18);
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.65), inset 0 0 0 6px #05060c, inset 0 0 0 7px rgba(163, 181, 199, 0.08);
@@ -318,7 +318,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 /* The previews sit on a restrained graphite slab. The global duel wall carries
    the color; this panel stays neutral so the game art remains the focal point. */
 .catalog-shell {
-  position: relative; max-width: 1060px; margin: 0 auto; padding: 0 10px;
+  position: relative; max-width: 1200px; margin: 0 auto; padding: 0 8px;
   border: 1px solid rgba(163, 181, 199, 0.22);
   border-radius: 12px; overflow: hidden;
   background:
@@ -340,13 +340,13 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 }
 .catalog-head {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center;
-  gap: 12px; height: 54px; margin: 4px 0 1px;
+  gap: 12px; height: 42px; margin: 2px 0 1px;
 }
-.catalog-head .wm { font-family: var(--display); font-size: 1.24rem; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.92); }
-.catalog-scroll { position: relative; z-index: 2; padding: 4px 2px 6px; }
+.catalog-head .wm { font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.92); }
+.catalog-scroll { position: relative; z-index: 2; padding: 2px 2px 4px; }
 
 /* the rotating gameplay-tip key, straight from the app's catalog footer */
-.tip-row { position: relative; z-index: 2; display: flex; justify-content: center; padding: 3px 8px 14px; }
+.tip-row { position: relative; z-index: 2; display: flex; justify-content: center; padding: 3px 8px 10px; }
 .tip-key {
   position: relative; border: none; background: none; padding: 0 0 4px; cursor: pointer;
   font-family: inherit; max-width: 440px; width: 100%;
@@ -357,7 +357,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 }
 .tip-face {
   position: relative; display: flex; flex-direction: column; gap: 3px;
-  padding: 10px 16px; border-radius: 8px; text-align: center;
+  padding: 8px 14px; border-radius: 8px; text-align: center;
   background: linear-gradient(180deg, var(--tile-top), var(--tile-bot));
   border: 1px solid rgba(163, 181, 199, 0.2);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
@@ -368,18 +368,18 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 .tip-game { font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--gold); }
 .tip-hint { font-family: var(--body); font-weight: 700; font-size: 0.8rem; color: rgba(255, 255, 255, 0.88); line-height: 1.35; }
 
-.cat-section { margin-bottom: 14px; }
+.cat-section { margin-bottom: 9px; }
 .cat-header {
-  display: flex; align-items: center; gap: 10px; margin: 8px 2px 7px;
+  display: flex; align-items: center; gap: 10px; margin: 6px 2px 5px;
 }
 .cat-header .t { font-family: var(--display); font-size: 0.76rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
 .cat-header .rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(163, 181, 199, 0.45), transparent); }
 .cat-header .count { font-family: var(--body); font-weight: 800; font-size: 0.7rem; color: var(--muted); }
 
-.tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
+.tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 5px; }
 
 .tile {
-  position: relative; display: flex; flex-direction: column; gap: 4px; cursor: default;
+  position: relative; display: flex; flex-direction: column; gap: 3px; cursor: default;
   border: none; background: transparent; padding: 0; font-family: inherit; text-align: center;
 }
 .tile-face {
@@ -601,10 +601,14 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
    RESPONSIVE
    ===================================================================== */
 @media (max-width: 960px) {
-  .hero { min-height: auto; }
-  .hero-inner { grid-template-columns: 1fr; gap: 42px; }
-  .hero-phone { order: 2; }
-  .online-grid { grid-template-columns: 1fr; }
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
+}
+@media (max-width: 780px) {
+  .online-card { padding: 16px 14px; }
+  .online-card .code-chip { gap: 2px; font-size: 0.72rem; letter-spacing: 0.05em; }
+  .online-card .code-chip span { padding: 4px 5px; }
+}
+@media (max-width: 760px) {
   .nav { flex-wrap: wrap; row-gap: 4px; padding-top: 10px; padding-bottom: 10px; }
   .nav-links {
     display: flex; order: 3; flex: 1 0 100%; width: 100%; margin-left: 0; gap: 18px;
@@ -613,19 +617,26 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-links a { font-size: 0.82rem; }
+  .hero { padding-top: 94px; }
+}
+@media (max-width: 640px) {
+  .hero { min-height: auto; padding: 92px 14px 28px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-phone { display: none; }
+  .online-grid { grid-template-columns: 1fr; }
+  .section { padding: 44px 12px 22px; }
+  .catalog-shell { padding-inline: 6px; }
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+  .tile-name.mode.m-sm { font-size: 0.48rem; }
+  .tile-name.mode.m-xs { font-size: 0.42rem; letter-spacing: 0; }
 }
 @media (max-width: 560px) {
   .nav { gap: 10px; padding-left: 16px; padding-right: 16px; }
   .nav-logo .wm { font-size: 1rem; }
   .nav-logo img { width: 30px; height: 30px; }
   .nav-links { gap: 16px; }
-  .hero { padding: 94px 16px 40px; }
   .hero h1 { font-size: clamp(2.65rem, 14vw, 4rem); }
-  .section { padding: 62px 14px 26px; }
-  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
-  .phone { width: 246px; }
-  .catalog-shell { padding-inline: 8px; }
-  .catalog-head .wm { font-size: 1.08rem; }
+  .catalog-head .wm { font-size: 0.98rem; }
   .feedback-terminal { border-radius: 16px; }
   .feedback-terminal-body { padding: 14px; }
 }

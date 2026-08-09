@@ -37,16 +37,16 @@
     { id: "cueLaser", name: "Precision Beam", price: "$1.99", category: "pool", shelf: "Cue Sticks", description: "The real Precision Beam cue used in Pool.", image: "/assets/shop/cueLaser.webp", art: "cue" },
     { id: "cueBoxing", name: "Knockout", price: "$1.99", category: "pool", shelf: "Cue Sticks", description: "The real Knockout cue used in Pool.", image: "/assets/shop/cueBoxing.webp", art: "cue" },
 
-    { id: "ball.ball_toxic.obj", name: "Toxic Swirl", price: "$0.99", category: "bowling", shelf: "Balls", description: "The Toxic Swirl ball from the in-game rack.", image: "/assets/shop/ball-toxic.webp", art: "ball" },
-    { id: "ball.ball_andromeda.obj", name: "Andromeda", price: "$1.99", category: "bowling", shelf: "Balls", description: "The Andromeda ball from the in-game rack.", image: "/assets/shop/ball-andromeda.webp", art: "ball" },
+    { id: "ball.ball_toxic.obj", name: "Toxic Swirl", price: "$0.99", category: "bowling", shelf: "Balls", description: "The Toxic Swirl ball from the in-game rack.", image: "/assets/shop/ball-toxic-render.png", art: "ball" },
+    { id: "ball.ball_andromeda.obj", name: "Andromeda", price: "$1.99", category: "bowling", shelf: "Balls", description: "The Andromeda ball from the in-game rack.", image: "/assets/shop/ball-andromeda-render.png", art: "ball" },
     { id: "shopRenderBowlingSports", name: "Sports Pack", price: "$3.99", category: "bowling", shelf: "Sports Pack", layout: "hero", description: "Basketball, Soccer, Volleyball and the 8 Ball.", image: "/assets/shop/shopRenderBowlingSports.webp", meta: "4 BALLS" },
 
     { id: "shopRenderDartShuriken", name: "Shuriken", price: "$1.99", category: "darts", shelf: "Throwables", description: "The Shuriken throwable shown in Duelio's Darts shop.", image: "/assets/shop/shopRenderDartShuriken.webp" },
     { id: "shopRenderDartKunai", name: "Kunai", price: "$1.99", category: "darts", shelf: "Throwables", description: "The Kunai throwable shown in Duelio's Darts shop.", image: "/assets/shop/shopRenderDartKunai.webp" },
 
-    { id: "ring.wideBand", name: "Wide Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Wide Band ring finish from Ring Toss.", image: "/assets/shop/ring-wide.jpg", art: "ring" },
-    { id: "ring.waveBand", name: "Wave Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Wave Band ring finish from Ring Toss.", image: "/assets/shop/ring-wave.jpg", art: "ring" },
-    { id: "ring.carvedBand", name: "Carved Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Carved Band ring finish from Ring Toss.", image: "/assets/shop/ring-carved.jpg", art: "ring" },
+    { id: "ring.wideBand", name: "Wide Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Wide Band ring finish from Ring Toss.", image: "/assets/shop/ring-wide-render.png", art: "ring" },
+    { id: "ring.waveBand", name: "Wave Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Wave Band ring finish from Ring Toss.", image: "/assets/shop/ring-wave-render.png", art: "ring" },
+    { id: "ring.carvedBand", name: "Carved Band", price: "$0.99", category: "ringtoss", shelf: "Rings & Bands", description: "The Carved Band ring finish from Ring Toss.", image: "/assets/shop/ring-carved-render.png", art: "ring" },
 
     { id: "bundle.sport", name: "Sports Bundle", price: "$3.99", category: "racing", shelf: "One Garage", layout: "hero", description: "Every sports car in the garage, shared by Road Rush and Drift.", image: "/assets/shop/shopRenderCarsSport.webp", meta: "BOTH GAMES" },
     { id: "bundle.luxury", name: "Luxury Bundle", price: "$3.99", category: "racing", shelf: "One Garage", layout: "hero", description: "The full lineup of styled rides, shared by Road Rush and Drift.", image: "/assets/shop/shopRenderCarsLuxury.webp", meta: "BOTH GAMES" },
@@ -73,6 +73,207 @@
 
   const sectionMap = new Map(sections.map((section) => [section.id, section]));
   let selectedSection = "pro";
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let activeMarquees = [];
+
+  function clearMarquees() {
+    activeMarquees.forEach((controller) => controller.destroy());
+    activeMarquees = [];
+  }
+
+  function makeMarquee(track, motionButton) {
+    const originals = [...track.children];
+    const abort = new AbortController();
+    const { signal } = abort;
+    const speed = Number(track.dataset.marqueeSpeed) || 16;
+    const direction = Number(track.dataset.marqueeDirection) || 1;
+    let cycleWidth = 0;
+    let canLoop = false;
+    let animationFrame = 0;
+    let lastFrame = 0;
+    let lastAutoWrite = 0;
+    let visible = true;
+    let hovered = false;
+    let focused = false;
+    let pointerActive = false;
+    let userPaused = false;
+    let resumeAt = 0;
+    let rampStartedAt = 0;
+    let pointerStartX = 0;
+    let pointerStartScroll = 0;
+    let mouseDragging = false;
+    let suppressClick = false;
+    let cloneGroups = 0;
+
+    function appendCloneGroup() {
+      originals.forEach((original) => {
+        const clone = original.cloneNode(true);
+        clone.classList.add("marquee-clone");
+        clone.removeAttribute("data-product");
+        clone.setAttribute("aria-hidden", "true");
+        clone.querySelectorAll("a, button, [tabindex]").forEach((control) => { control.tabIndex = -1; });
+        track.appendChild(clone);
+      });
+      cloneGroups += 1;
+    }
+
+    appendCloneGroup();
+
+    const firstClone = track.querySelector(".marquee-clone");
+
+    function updateMotionButton() {
+      const paused = userPaused || reducedMotion.matches;
+      motionButton.textContent = paused ? "PLAY" : "PAUSE";
+      motionButton.setAttribute("aria-label", `${paused ? "Start" : "Pause"} automatic ${track.dataset.marqueeShelf} scrolling`);
+      motionButton.setAttribute("aria-pressed", String(userPaused));
+    }
+
+    function measure() {
+      if (!firstClone || !originals[0]) return;
+      cycleWidth = firstClone.offsetLeft - originals[0].offsetLeft;
+      if (cycleWidth > 0) {
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        const groupsNeeded = Math.max(1, Math.ceil((track.clientWidth + gap) / cycleWidth));
+        while (cloneGroups < groupsNeeded) appendCloneGroup();
+      }
+      canLoop = originals.length > 1 && cycleWidth > 0;
+      motionButton.hidden = !canLoop;
+      if (direction < 0 && canLoop && track.scrollLeft < 1) track.scrollLeft = cycleWidth;
+    }
+
+    function normalizePosition() {
+      if (!cycleWidth) return;
+      while (track.scrollLeft >= cycleWidth) track.scrollLeft -= cycleWidth;
+      if (direction < 0 && track.scrollLeft <= 0) track.scrollLeft += cycleWidth;
+    }
+
+    function holdThenResume() {
+      const now = performance.now();
+      resumeAt = now + 1000;
+      rampStartedAt = resumeAt;
+    }
+
+    function rampFactor(now) {
+      if (now < resumeAt) return 0;
+      if (!rampStartedAt) return 1;
+      const u = Math.min(1, (now - rampStartedAt) / 3000);
+      if (u >= 1) rampStartedAt = 0;
+      return u * u * (3 - 2 * u);
+    }
+
+    function shouldMove() {
+      return canLoop && visible && !document.hidden && !reducedMotion.matches &&
+        !userPaused && !hovered && !focused && !pointerActive;
+    }
+
+    function tick(now) {
+      if (!lastFrame) lastFrame = now;
+      const elapsed = Math.min(64, now - lastFrame) / 1000;
+      lastFrame = now;
+      if (shouldMove()) {
+        const distance = speed * elapsed * rampFactor(now) * direction;
+        if (distance) {
+          lastAutoWrite = now;
+          track.scrollLeft += distance;
+          if (direction > 0 && track.scrollLeft >= cycleWidth) track.scrollLeft -= cycleWidth;
+          if (direction < 0 && track.scrollLeft <= 0) track.scrollLeft += cycleWidth;
+        }
+      }
+      animationFrame = requestAnimationFrame(tick);
+    }
+
+    motionButton.addEventListener("click", () => {
+      userPaused = !userPaused;
+      if (!userPaused) holdThenResume();
+      updateMotionButton();
+    }, { signal });
+
+    track.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") hovered = true;
+    }, { signal });
+    track.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") {
+        hovered = false;
+        holdThenResume();
+      }
+    }, { signal });
+    track.addEventListener("focusin", () => { focused = true; }, { signal });
+    track.addEventListener("focusout", () => {
+      requestAnimationFrame(() => {
+        focused = track.contains(document.activeElement);
+        if (!focused) holdThenResume();
+      });
+    }, { signal });
+
+    track.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+      pointerActive = true;
+      pointerStartX = event.clientX;
+      pointerStartScroll = track.scrollLeft;
+      mouseDragging = false;
+    }, { signal });
+    track.addEventListener("pointermove", (event) => {
+      if (!pointerActive || event.pointerType !== "mouse") return;
+      const distance = event.clientX - pointerStartX;
+      if (!mouseDragging && Math.abs(distance) < 12) return;
+      if (!mouseDragging) {
+        mouseDragging = true;
+        suppressClick = true;
+        track.setPointerCapture?.(event.pointerId);
+      }
+      track.scrollLeft = pointerStartScroll - distance;
+      event.preventDefault();
+    }, { signal, passive: false });
+    const finishPointer = () => {
+      if (!pointerActive) return;
+      pointerActive = false;
+      mouseDragging = false;
+      normalizePosition();
+      holdThenResume();
+      if (suppressClick) setTimeout(() => { suppressClick = false; }, 0);
+    };
+    track.addEventListener("pointerup", finishPointer, { signal });
+    track.addEventListener("pointercancel", finishPointer, { signal });
+    addEventListener("pointerup", finishPointer, { signal });
+    addEventListener("pointercancel", finishPointer, { signal });
+    track.addEventListener("click", (event) => {
+      if (!suppressClick) return;
+      suppressClick = false;
+      event.preventDefault();
+      event.stopPropagation();
+    }, { capture: true, signal });
+    track.addEventListener("scroll", () => {
+      if (performance.now() - lastAutoWrite < 90 || pointerActive) return;
+      holdThenResume();
+    }, { passive: true, signal });
+    track.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const card = originals[0];
+      const step = (card?.getBoundingClientRect().width || 160) + 8;
+      track.scrollBy({ left: event.key === "ArrowRight" ? step : -step, behavior: "smooth" });
+      holdThenResume();
+    }, { signal });
+
+    const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }, { threshold: 0.05 });
+    intersection.observe(track);
+    const resize = new ResizeObserver(measure);
+    resize.observe(track);
+    reducedMotion.addEventListener?.("change", updateMotionButton, { signal });
+
+    requestAnimationFrame(measure);
+    updateMotionButton();
+    animationFrame = requestAnimationFrame(tick);
+
+    return {
+      destroy() {
+        cancelAnimationFrame(animationFrame);
+        intersection.disconnect();
+        resize.disconnect();
+        abort.abort();
+      },
+    };
+  }
 
   function makeOpenMark() {
     const mark = document.createElement("span");
@@ -93,7 +294,7 @@
       const image = document.createElement("img");
       image.src = product.image;
       image.alt = product.name;
-      image.loading = "eager";
+      image.loading = "lazy";
       image.decoding = "async";
       art.appendChild(image);
     }
@@ -161,14 +362,17 @@
   }
 
   function renderSection(sectionID, requestedProduct = null) {
+    clearMarquees();
     selectedSection = sectionMap.has(sectionID) ? sectionID : "pro";
     const section = sectionMap.get(selectedSection);
     const sectionProducts = products.filter((product) => product.category === selectedSection);
     updateSelector(section);
     grid.replaceChildren();
     grid.setAttribute("aria-label", `${section.title} products`);
+    grid.setAttribute("aria-labelledby", `shop-tab-${selectedSection}`);
 
     const shelfNames = [...new Set(sectionProducts.map((product) => product.shelf))];
+    const marqueeSetups = [];
     shelfNames.forEach((shelfName) => {
       const shelfProducts = sectionProducts.filter((product) => product.shelf === shelfName);
       const shelf = document.createElement("section");
@@ -180,9 +384,29 @@
       shelfTitle.appendChild(shelfText);
       const track = document.createElement("div");
       track.className = "shelf-track";
+      const isPoolMarquee = selectedSection === "pool" && shelfProducts.length > 1;
+      if (isPoolMarquee) {
+        const isBundles = shelfName === "Bundles";
+        const motion = document.createElement("button");
+        motion.type = "button";
+        motion.className = "shelf-motion";
+        motion.hidden = true;
+        shelfTitle.appendChild(motion);
+        track.classList.add("is-marquee");
+        track.dataset.marqueeShelf = isBundles ? "bundles" : "cues";
+        track.dataset.marqueeSpeed = String(isBundles ? 17 : 13);
+        track.dataset.marqueeDirection = String(isBundles ? 1 : -1);
+        track.tabIndex = 0;
+        track.setAttribute("role", "region");
+        track.setAttribute("aria-label", `${shelfName} automatic carousel. Hover, focus, drag, or use arrow keys to pause and browse.`);
+        marqueeSetups.push([track, motion]);
+      }
       shelfProducts.forEach((product) => track.appendChild(makeCard(product)));
       shelf.append(shelfTitle, track);
       grid.appendChild(shelf);
+    });
+    marqueeSetups.forEach(([track, motion]) => {
+      activeMarquees.push(makeMarquee(track, motion));
     });
 
     filterHost.querySelectorAll(".filter-button").forEach((button) => {
@@ -209,7 +433,9 @@
     button.type = "button";
     button.className = "filter-button";
     button.dataset.section = section.id;
+    button.id = `shop-tab-${section.id}`;
     button.setAttribute("role", "tab");
+    button.setAttribute("aria-controls", "product-grid");
     button.textContent = section.label;
     button.addEventListener("click", () => {
       history.replaceState(null, "", section.id === "pro" ? "/shop/" : `/shop/?section=${encodeURIComponent(section.id)}`);
@@ -217,6 +443,20 @@
       grid.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
     filterHost.appendChild(button);
+  });
+
+  filterHost.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    const buttons = [...filterHost.querySelectorAll(".filter-button")];
+    const current = Math.max(0, buttons.indexOf(document.activeElement));
+    let next = current;
+    if (event.key === "ArrowLeft") next = (current - 1 + buttons.length) % buttons.length;
+    if (event.key === "ArrowRight") next = (current + 1) % buttons.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = buttons.length - 1;
+    event.preventDefault();
+    buttons[next]?.focus();
+    buttons[next]?.click();
   });
 
   const search = new URLSearchParams(location.search);
