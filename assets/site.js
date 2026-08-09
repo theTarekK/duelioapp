@@ -7,7 +7,7 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=3";
+  const vid = (base) => V + base + ".mp4?v=4";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = { label: "Language", type: "seg", options: ["English", "Spanish", "French", "Italian"] };
@@ -631,7 +631,8 @@
       } catch { return makeID(); }
     })();
     const updateCount = () => {
-      count.textContent = `${message.value.length.toLocaleString()} / ${feedbackMax.toLocaleString()}`;
+      count.textContent = `${message.value.length.toLocaleString()}/${feedbackMax.toLocaleString()}`;
+      submit.disabled = !message.value.trim();
     };
     const setStatus = (text, state = "") => {
       status.textContent = text;
@@ -639,6 +640,9 @@
     };
     const setKind = (next) => {
       kind = next;
+      message.placeholder = next === "bug_report"
+        ? "Describe what went wrong..."
+        : "Drop your next big idea...";
       typeButtons.forEach(btn => {
         const active = btn.dataset.feedbackKind === next;
         btn.classList.toggle("is-active", active);
@@ -683,7 +687,7 @@
       } catch {
         setStatus("Transmission failed. Please try again or email contact@metkapps.com.", "error");
       } finally {
-        submit.disabled = false;
+        submit.disabled = !message.value.trim();
       }
     });
   }

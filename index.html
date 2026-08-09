@@ -15,7 +15,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png?v=2">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
-<link rel="stylesheet" href="/assets/site.css?v=6">
+<link rel="stylesheet" href="/assets/site.css?v=7">
+<link rel="stylesheet" href="/assets/arcade.css?v=1">
 </head>
 <body>
 
@@ -99,6 +100,76 @@
   </div>
 </section>
 
+<!-- ============================== SOLO ARCADE ============================== -->
+<section class="section arcade-section" id="play">
+  <p class="eyebrow reveal">Play a round</p>
+  <h2 class="reveal">Duelio, <span class="grad-gold">right in your hands.</span></h2>
+  <p class="section-sub reveal">Pick a game, press Start, and play one complete solo challenge. Every round ends with your score.</p>
+
+  <div class="arcade-wrap reveal">
+    <div class="arcade-copy" aria-hidden="true">
+      <span class="arcade-kicker">SOLO ARCADE</span>
+      <h3>Seven games.<br>Zero setup.</h3>
+      <p>Quick, touch-first rounds drawn from the same game modes inside Duelio.</p>
+      <div class="arcade-feature"><b>01</b><span>Choose a game</span></div>
+      <div class="arcade-feature"><b>02</b><span>Press Start</span></div>
+      <div class="arcade-feature"><b>03</b><span>Post your score</span></div>
+    </div>
+
+    <div class="arcade-device">
+      <div class="arcade-phone">
+        <div class="arcade-island"><i></i></div>
+        <div class="arcade-screen" id="solo-arcade">
+          <div class="arcade-appbar">
+            <img src="/assets/img/duelio-logo.png" alt="">
+            <span>DUELIO</span>
+            <b>SOLO</b>
+          </div>
+
+          <div class="arcade-picker" role="tablist" aria-label="Choose a solo game">
+            <button type="button" role="tab" data-arcade-game="drift">Drift</button>
+            <button type="button" role="tab" data-arcade-game="wordhunt">Word Hunt</button>
+            <button type="button" role="tab" data-arcade-game="pool">Pool</button>
+            <button type="button" role="tab" data-arcade-game="darts">Darts</button>
+            <button type="button" role="tab" data-arcade-game="bowling">Bowling</button>
+            <button type="button" role="tab" data-arcade-game="ringtoss">Ring Toss</button>
+            <button type="button" role="tab" data-arcade-game="roadrush">Road Rush</button>
+          </div>
+
+          <div class="arcade-hud">
+            <div><small id="arcade-mode">ONE ROUND</small><strong id="arcade-title">DRIFT</strong></div>
+            <div class="arcade-clock"><small>TIME</small><strong id="arcade-time">0:20</strong></div>
+            <div class="arcade-score"><small>SCORE</small><strong id="arcade-score">0</strong></div>
+          </div>
+
+          <div class="arcade-stage" id="arcade-stage">
+            <canvas id="arcade-canvas" width="720" height="930" aria-label="Duelio solo game"></canvas>
+            <div class="arcade-overlay" id="arcade-overlay">
+              <div class="arcade-overlay-card">
+                <span class="arcade-round-tag" id="arcade-tag">ONE ROUND</span>
+                <h3 id="arcade-overlay-title">DRIFT</h3>
+                <p id="arcade-instruction">Steer through the bends and hold the longest drift you can.</p>
+                <button class="arcade-start" id="arcade-start" type="button">START</button>
+              </div>
+            </div>
+            <div class="arcade-drive-controls" id="arcade-drive-controls" aria-label="Steering controls">
+              <button type="button" data-drive="left" aria-label="Steer left">&#9664;</button>
+              <button type="button" data-drive="right" aria-label="Steer right">&#9654;</button>
+            </div>
+          </div>
+
+          <div class="arcade-footer">
+            <span class="arcade-live-dot"></span>
+            <span id="arcade-help">Drag left and right to steer</span>
+          </div>
+          <div class="arcade-status" id="arcade-status" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="arcade-phone-glow" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============================== ONLINE ============================== -->
 <section class="section" id="online">
   <p class="eyebrow reveal">Online matchmaking</p>
@@ -145,6 +216,7 @@
   Duelio is for players aged 13 and over. <a href="/terms/">Terms of Use</a></p>
 </footer>
 
-<script src="/assets/site.js?v=6" defer></script>
+<script src="/assets/site.js?v=7" defer></script>
+<script src="/assets/arcade.js?v=1" defer></script>
 </body>
 </html>

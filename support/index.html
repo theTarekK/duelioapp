@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png?v=2">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
-<link rel="stylesheet" href="/assets/site.css?v=7">
+<link rel="stylesheet" href="/assets/site.css?v=8">
 </head>
 <body>
 
@@ -94,36 +94,29 @@
   <section class="feedback-terminal" aria-labelledby="feedback-title">
     <div class="feedback-terminal-head">
       <div class="feedback-icon" aria-hidden="true">✦</div>
-      <div>
-        <p class="feedback-kicker">DEVELOPER CHANNEL // ONLINE</p>
-        <h2 id="feedback-title">Bug Report / Suggestions</h2>
-      </div>
+      <h2 id="feedback-title">Feedback Terminal</h2>
     </div>
-    <p class="feedback-intro">Tell us what broke or what we should build next. These messages go to
-      the same protected developer inbox used by the in-game feedback terminal.</p>
-    <div class="feedback-examples">
-      <p class="feedback-examples-title">GOOD TRANSMISSIONS INCLUDE</p>
-      <p><strong>IDEAS</strong> — game mode ideas, brand-new game ideas, feature requests, balance tweaks, or polish.</p>
-      <p><strong>ISSUES</strong> — bugs, glitches, lag spikes, crashes, or broken visuals and sounds. Include the game and what you expected to happen.</p>
+    <div class="feedback-terminal-body">
+      <p class="feedback-prompt">What should we patch or build next?</p>
+      <form id="feedback-form" class="feedback-form">
+        <div class="feedback-types" role="group" aria-label="Feedback type">
+          <button class="feedback-type is-active" type="button" data-feedback-kind="bug_report" aria-pressed="true">⚠ Bug Report</button>
+          <button class="feedback-type" type="button" data-feedback-kind="suggestion" aria-pressed="false">✦ Suggestion</button>
+        </div>
+        <label class="feedback-label" for="feedback-message">Your feedback</label>
+        <textarea id="feedback-message" name="message" maxlength="8000" rows="6"
+          placeholder="Describe what went wrong..." required></textarea>
+        <div class="feedback-honeypot" aria-hidden="true">
+          <label for="feedback-website">Leave this blank</label>
+          <input id="feedback-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="feedback-meta">
+          <span id="feedback-status" class="feedback-status" role="status" aria-live="polite"></span>
+          <span id="feedback-count" class="feedback-count">0/8,000</span>
+        </div>
+        <button class="feedback-submit" type="submit" disabled>➤ Transmit Feedback</button>
+      </form>
     </div>
-    <form id="feedback-form" class="feedback-form">
-      <div class="feedback-types" role="group" aria-label="Feedback type">
-        <button class="feedback-type is-active" type="button" data-feedback-kind="bug_report" aria-pressed="true">⚠ Bug Report</button>
-        <button class="feedback-type" type="button" data-feedback-kind="suggestion" aria-pressed="false">✦ Suggestion</button>
-      </div>
-      <label class="feedback-label" for="feedback-message">Transmission</label>
-      <textarea id="feedback-message" name="message" maxlength="8000" rows="7"
-        placeholder="Describe the bug or drop your next big idea..." required></textarea>
-      <div class="feedback-honeypot" aria-hidden="true">
-        <label for="feedback-website">Leave this blank</label>
-        <input id="feedback-website" name="website" tabindex="-1" autocomplete="off">
-      </div>
-      <div class="feedback-footer">
-        <span id="feedback-status" class="feedback-status" role="status" aria-live="polite"></span>
-        <span id="feedback-count" class="feedback-count">0 / 8,000</span>
-        <button class="feedback-submit" type="submit">TRANSMIT FEEDBACK</button>
-      </div>
-    </form>
   </section>
 
   <div class="contact-card">
@@ -152,6 +145,6 @@
   </div>
 </footer>
 
-<script src="/assets/site.js?v=6" defer></script>
+<script src="/assets/site.js?v=7" defer></script>
 </body>
 </html>
