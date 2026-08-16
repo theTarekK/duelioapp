@@ -47,8 +47,9 @@
       your device and are not uploaded.</li>
       <li><strong>There is no sign-up, email, or password.</strong> Friends uses a hidden random
       Duelio social ID backed up through your iCloud account.</li>
-      <li><strong>Your statistics never come to us.</strong> They may sync through your personal
-      iCloud account so a reinstall does not erase them.</li>
+      <li><strong>Most statistics stay on your device and may sync through your personal iCloud
+      account.</strong> If you use Social, Duelio uploads only your lifetime overall wins and highest
+      Word Hunt score so it can place your chosen name and avatar on the worldwide leaderboards.</li>
       <li><strong>Five starter hints are limited through Apple DeviceCheck.</strong> On first use,
       Duelio sends an encrypted, temporary DeviceCheck token through our server to Apple. We never
       receive an Apple ID, serial number, or advertising identifier.</li>
@@ -112,9 +113,9 @@
     <li><strong>No traditional account.</strong> There is no sign-up, login, password, email address,
     phone-number lookup, or contact upload. A hidden random social ID lets Friends work.</li>
     <li><strong>No crash or diagnostic reporting</strong> of our own.</li>
-    <li><strong>Your statistics never come to us.</strong> Wins, best scores, streaks and unlocks may
-    sync through Apple's iCloud key-value storage, but they are never uploaded to a Duelio
-    server.</li>
+    <li><strong>Your complete statistics record is not uploaded.</strong> Wins, best scores, streaks
+    and unlocks may sync through Apple's iCloud key-value storage. If you use Social, only the two
+    aggregate values explained under “Worldwide leaderboards” are uploaded to a Duelio server.</li>
   </ul>
   <p>Because Duelio contains no third-party software of any kind, there are no advertising networks,
   analytics vendors, or data brokers involved in any part of it.</p>
@@ -193,7 +194,23 @@
   <p>A friend share link or QR contains a replaceable add code, not the hidden social ID. The QR
   scanner processes frames only on-device. You can delete your social profile, relationships,
   requests, blocks, challenges, recent-player records, conversation memberships, messages you sent,
-  and hidden social ID from <strong>Friends &rarr; Add &rarr; Delete Duelio social data</strong>.</p>
+  and hidden social ID from <strong>Settings &rarr; Duelio Social Privacy &rarr; Delete Duelio Social
+  Data</strong>.</p>
+
+  <h3>Worldwide leaderboards</h3>
+  <p>When you use Social, Duelio reads the same statistics record shared by the standalone app and
+  the iMessage extension and uploads two lifetime aggregates: <strong>overall wins</strong> and
+  <strong>highest Word Hunt score</strong>. This means qualifying results earned through either place
+  can contribute after the standalone app next refreshes Social. Duelio does not upload the words
+  you found, opponents, individual match results, full statistics history, or which route you used
+  to earn a result for this feature.</p>
+  <p>The server stores those two values with your hidden social ID, chosen display name, and chosen
+  avatar and cosmetics. The leaderboards show the name, avatar, rank, and aggregate value to other
+  Duelio Social users worldwide. A submitted lifetime value is kept at its highest received value
+  so an older device cannot accidentally lower it. Blocked players are omitted from one another's
+  boards. These records are used only to provide the leaderboards, not for advertising, analytics,
+  tracking, or marketing profiles. Deleting all Duelio social data also deletes your leaderboard
+  record; the complete statistics stored on your device and in iCloud are not deleted.</p>
 
   <h3>Five starter hints and DeviceCheck</h3>
   <p>Each physical Apple device can contribute five starter hints once. To stop deleting and
@@ -259,7 +276,8 @@
   storage so it returns on another device or after a reinstall. Some values are also sent only when
   a feature requires them, as specifically described below and in Sections 4 and 5:</p>
   <ul>
-    <li>Your gameplay statistics — wins, best scores, streaks, fastest times.</li>
+    <li>Your complete gameplay statistics — wins, best scores, streaks, fastest times — except for
+    the two leaderboard aggregates described in Section 5 when you use Social.</li>
     <li>Which characters, badges and items you have unlocked.</li>
     <li>What you have bought — whether you own Pro, and how many hints you have left. Your purchase
     itself is handled by Apple; what we keep is only the result of it, on your device.</li>
@@ -285,9 +303,10 @@
     <li><strong>Cloudflare</strong> — hosts the Duelio server that relays live matches. Data described
     in Sections 4 and 5 passes through their infrastructure, and they necessarily see your IP address as
     part of delivering the connection. Friends, social chat, app-based game turns, feedback,
-    reports, and the brief DeviceCheck request use the same infrastructure. Social records, feedback,
-    and reports are stored as described here; the DeviceCheck token is forwarded to Apple and not stored.
-    Cloudflare acts as our processor under a data processing agreement.</li>
+    reports, the worldwide leaderboard, and the brief DeviceCheck request use the same infrastructure.
+    Social and leaderboard records, feedback, and reports are stored as described here; the
+    DeviceCheck token is forwarded to Apple and not stored. Cloudflare acts as our processor under a
+    data processing agreement.</li>
     <li><strong>Apple</strong> — delivers every Duelio message as part of iMessage, provides the maps
     and imagery in the Landmark game, syncs the device record through iCloud, handles any purchase
     you make, and stores the DeviceCheck claimed bit used for the five starter hints. Purchases go
@@ -328,8 +347,9 @@
     <li><strong>Starter-hint retry receipts are deleted automatically after 30 days.</strong> The
     temporary DeviceCheck token itself is never stored by us. Apple retains the claimed bit under
     its privacy policy so reinstalling cannot reset the offer.</li>
-    <li><strong>Your statistics stay on your device and in your iCloud</strong>, and never come to
-    our server — see Section 6.</li>
+    <li><strong>Leaderboard records remain until you delete all Duelio social data</strong> or we
+    remove them for safety or operations. The rest of your statistics stay on your device and in
+    your iCloud — see Section 6.</li>
   </ul>
 
   <h2 id="your-rights">9. Your rights</h2>
@@ -337,17 +357,16 @@
   have it deleted, restrict or object to how it is used, and to receive a copy. You also have the
   right to complain to your data protection authority — in the UK, the Information Commissioner's
   Office (<a href="https://ico.org.uk" rel="noopener">ico.org.uk</a>).</p>
-  <p><strong>An honest limitation, which we want to be upfront about.</strong> Duelio has no
-  accounts. The identifier we receive is issued by Apple, is different in every conversation, and is
-  not connected to your name, email, phone number, or Apple ID. <strong>This means we genuinely
-  cannot find your data, because we have no way to tell which data is yours.</strong> We think that
-  is a good thing — it is the reason we can keep so little — but it does mean that under Article 11
-  of the UK/EU GDPR, we cannot action a request to access, correct, delete or export data unless you
-  can give us enough information to identify the specific match, and we cannot ask you for more data
-  purely in order to make you identifiable.</p>
+  <p><strong>An honest limitation, which we want to be upfront about.</strong> Duelio does not connect
+  its random identifiers to your real-world email, phone number, Apple ID, or legal identity. We
+  therefore cannot usually locate data from your real-world name alone. The in-app social deletion
+  control is the most reliable way to identify and delete the social and leaderboard record
+  authenticated by your device. For feedback, reports, or matches, we may still need the specific
+  submission or room details.</p>
   <p>What you can do today, without asking us:</p>
   <ul>
-    <li><strong>Delete all Duelio social data</strong> from Friends &rarr; Add without contacting us.</li>
+    <li><strong>Delete all Duelio social data</strong>, including your leaderboard record, from
+    Settings &rarr; Duelio Social Privacy without contacting us.</li>
     <li><strong>Delete the app.</strong> The on-device data described in Section 6 goes with it;
     already-submitted feedback does not, but you can request its deletion at the contact address.</li>
     <li><strong>Change your display name</strong> at any time in Duelio's settings.</li>
@@ -363,8 +382,9 @@
     <li><strong>Categories of personal information we collect:</strong> identifiers (a player
     identifier issued by Apple, a random per-install identifier, an IP address, the hidden random
     social ID, and the temporary DeviceCheck token and random request identifier described in
-    Section 5), your display name and avatar choices, friend relationships, presence, requests,
-    challenges, recent players, Duelio social chat content, app-based game turns, content you create
+    Section 5), your display name and avatar choices, your overall-wins and highest-Word-Hunt-score
+    leaderboard values, friend relationships, presence, requests, challenges, recent players,
+    Duelio social chat content, app-based game turns, content you create
     in an online match, player-report details, and feedback you voluntarily submit.</li>
     <li><strong>Categories of third parties we share it with:</strong> our hosting provider, Apple,
     and the other players in your match. Nobody else.</li>
