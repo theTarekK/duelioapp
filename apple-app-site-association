@@ -5,6 +5,9 @@
       {
         "appID": "YYJTCWJDX3.com.metkllc.duelio",
         "paths": [
+          "/games",
+          "/games/",
+          "/games/*",
           "/shop",
           "/shop/",
           "/shop/*",
