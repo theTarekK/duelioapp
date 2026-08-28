@@ -16,7 +16,7 @@ terms/index.html    — EULA / terms     → https://duelioapp.com/terms/
 support/index.html  — support + FAQ    → https://duelioapp.com/support/
 404.html            — custom 404
 assets/site.css     — the whole design system (self-hosted @font-face for Bungee + Nunito)
-assets/site.js      — catalog + config-popup engine, lazy video loader, hex-tech canvas
+assets/site.js      — catalog data, lazy video loader, hero chat, hex-tech canvas
 assets/img/         — duelio-logo.png (the app icon) + favicon/apple-touch sizes
 assets/fonts/       — Bungee-Regular + Nunito weights, lifted from the app
 assets/videos/      — 38 catalog preview clips (H.264, see note below)
@@ -28,17 +28,15 @@ CNAME               — custom-domain marker for GitHub Pages (duelioapp.com)
 
 `assets/videos/` holds the 38 clips from `Duelio/Resources/MessageTilePreviews/`
 (`MessageTilePreview-<gamekey>.mp4`, plus the 5 `PoolModePreview-*` and 5
-`DartsModePreview-*` mode clips). **They were transcoded from the app's HEVC/H.265 to
-H.264 and trimmed to 5s** — the originals only decode in Safari, and H.264 plays
-everywhere. Re-transcode with macOS's built-in tool if you refresh them:
-`avconvert -p Preset640x480 --duration 5 -s in.mp4 -o out.mp4 --replace`.
+`DartsModePreview-*` mode clips). **They are full-length H.264 transcodes of the
+app's HEVC/H.265 originals** so they play across modern browsers. Re-transcode
+with macOS's built-in tool if you refresh them:
+`avconvert -p Preset640x480 -s in.mp4 -o out.mp4 --replace`.
 
-The catalog on the homepage is a faithful recreation of the in-app iMessage catalog:
+The catalog on the homepage is a compact recreation of the in-app iMessage catalog:
 grouped category sections (Strategy / Sports / Word Games / Multiplayer / Card Games /
-Racing) and video tiles that all autoplay muted — clips are fetched as blobs through a
-small queue so every tile reliably plays. Tapping a tile opens the iMessage config
-popup as a display-only recreation (modes with clips + descriptions, toggles, time
-controls, gold SEND) — nothing inside is interactive, only close works. All of this is
+Racing) and video tiles that all autoplay muted. Clips are fetched as blobs on approach
+so the browser does not download the entire catalog at startup. The catalog is
 data-driven in `SECTIONS` at the top of `assets/site.js` — edit there to change games.
 
 ## Deploying (one-time setup)
@@ -61,19 +59,17 @@ data-driven in `SECTIONS` at the top of `assets/site.js` — edit there to chang
 
 Every later update is just commit + push.
 
-## When the app goes live
+## App Store link
 
-Search `index.html` for `APP STORE` — three marked spots (nav pill, hero button,
-download section). Swap `href` for the real App Store URL and remove the
-`disabled` / `soon` classes. Optionally replace the hand-made button with Apple's
-official badge from https://developer.apple.com/app-store/marketing/guidelines/.
+The landing page links to Apple ID `6792538416` from its navigation, hero, and
+platform-availability panel. Keep all three URLs in sync if the listing changes.
 
 ## Refreshing assets from the app
 
-- **Logo/icon:** `Duelio/Assets.xcassets/AppIcon.appiconset/appcover.png` →
+- **Logo/icon:** `DuelioAppResources/AppAssets.xcassets/AppIcon.appiconset/appcover.png` →
   `assets/img/duelio-logo.png` (regenerate favicon sizes with `sips -Z 64 …`).
 - **Fonts:** `Duelio/Resources/Fonts/{Bungee,Nunito}/…` → `assets/fonts/`.
-- **Videos:** `Duelio/Resources/MessageTilePreviews/*.mp4` → transcode to H.264 (above)
+- **Videos:** `DuelioSharedResources/Resources/MessageTilePreviews/*.mp4` → transcode to H.264 (above)
   → `assets/videos/`.
 - **Colours** live in `:root` at the top of `assets/site.css`, sampled from the icon.
 

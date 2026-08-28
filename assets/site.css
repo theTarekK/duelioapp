@@ -466,6 +466,52 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 }
 .online-card .code-chip span { background: rgba(3, 4, 6, 0.5); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
 
+/* =====================================================================
+   PLATFORM AVAILABILITY
+   ===================================================================== */
+.platform-status {
+  max-width: 1080px; margin: 42px auto 52px; padding: 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 28px;
+  border: 1px solid rgba(163, 181, 199, 0.2); border-radius: 12px;
+  background:
+    radial-gradient(70% 130% at 12% 10%, rgba(29, 137, 233, 0.12), transparent 66%),
+    radial-gradient(60% 130% at 92% 100%, rgba(255, 212, 107, 0.09), transparent 70%),
+    linear-gradient(150deg, rgba(38, 41, 46, 0.92), rgba(10, 11, 14, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 22px 50px rgba(0, 0, 0, 0.32);
+}
+.platform-status-copy { max-width: 34rem; }
+.platform-status-copy .eyebrow { margin-bottom: 7px; }
+.platform-status-copy h2 { font-size: clamp(1.25rem, 2.7vw, 1.8rem); margin-bottom: 7px; }
+.platform-status-copy > p:last-child { color: var(--muted); font-size: 0.9rem; }
+.platform-list { display: flex; gap: 10px; flex: 0 0 auto; }
+.platform-card {
+  min-width: 170px; display: flex; align-items: center; gap: 12px;
+  padding: 13px 15px; border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(3, 4, 6, 0.48);
+}
+a.platform-card { transition: border-color 0.25s, box-shadow 0.25s, transform 0.15s; }
+a.platform-card:hover {
+  color: var(--ink); border-color: rgba(74, 222, 128, 0.55);
+  box-shadow: 0 0 24px rgba(74, 222, 128, 0.12); transform: translateY(-1px);
+}
+.platform-card strong {
+  display: block; color: var(--ink); font-family: var(--display); font-size: 0.78rem;
+  font-weight: 400; letter-spacing: 0.05em; line-height: 1.25;
+}
+.platform-card small { display: block; color: var(--muted); font-size: 0.72rem; font-weight: 800; }
+.platform-check, .platform-soon {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  flex: 0 0 34px; font-family: var(--display);
+}
+.platform-check {
+  color: #06140b; background: linear-gradient(180deg, #b8f5c9, var(--cat-cards));
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.22); font-size: 1rem;
+}
+.platform-soon {
+  color: var(--gold); background: rgba(255, 212, 107, 0.08);
+  border: 1px solid rgba(255, 212, 107, 0.22); font-size: 0.56rem; letter-spacing: 0.08em;
+}
+
 
 /* =====================================================================
    FOOTER
@@ -607,6 +653,9 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   .online-card { padding: 16px 14px; }
   .online-card .code-chip { gap: 2px; font-size: 0.72rem; letter-spacing: 0.05em; }
   .online-card .code-chip span { padding: 4px 5px; }
+  .platform-status { margin: 36px 18px 44px; align-items: flex-start; flex-direction: column; }
+  .platform-list { width: 100%; }
+  .platform-card { flex: 1 1 0; min-width: 0; }
 }
 @media (max-width: 760px) {
   .nav { flex-wrap: wrap; row-gap: 4px; padding-top: 10px; padding-bottom: 10px; }
@@ -639,6 +688,9 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   .catalog-head .wm { font-size: 0.98rem; }
   .feedback-terminal { border-radius: 16px; }
   .feedback-terminal-body { padding: 14px; }
+  .platform-status { margin-inline: 12px; padding: 19px 16px; }
+  .platform-list { flex-direction: column; }
+  .platform-card { width: 100%; }
 }
 
 /* =====================================================================

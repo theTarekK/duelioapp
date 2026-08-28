@@ -7,10 +7,14 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=4";
+  const vid = (base) => V + base + ".mp4?v=5";
 
   /* ---------------- reusable config fragments ---------------- */
-  const LANGS = { label: "Language", type: "seg", options: ["English", "Spanish", "French", "Italian"] };
+  const LANGS = {
+    label: "Language",
+    type: "seg",
+    options: ["English +", "Spanish", "French", "Italian", "German", "Portuguese", "Dutch", "Turkish"],
+  };
   const wordConfig = (sizes) => [
     { label: "Board Size", type: "seg", options: sizes },
     { label: "Generation Quality", type: "seg", options: ["High", "Random", "Low"] },
@@ -45,11 +49,10 @@
           { label: "Mandatory Capture", type: "toggle", tt: "Must capture", td: "Forces a capture when one is available.", on: true },
           { label: "Time Control", type: "seg", def: 2, options: ["Bullet", "Blitz", "Rapid", "No Clock"] },
         ]},
-        { n: "Word Tiles", k: "scrabble", players: "2–4", pass: true, config: [
+        { n: "Word Tiles", k: "scrabble", players: "2", pass: true, config: [
           { label: "Board Size", type: "seg", options: ["11 × 11", "13 × 13"] },
           { label: "Rack", type: "seg", options: ["7 Tiles", "10 Tiles"] },
           LANGS,
-          { label: "Max Players", type: "seg", options: ["2", "3", "4"] },
         ]},
         { n: "Backgammon", k: "backgammon", players: "2", pass: true, config: jumpIn },
         { n: "Four in a Row", k: "connect4", players: "2", pass: true, config: [
@@ -65,20 +68,20 @@
     {
       title: "Sports", tint: "sports",
       games: [
-        { n: "Bowling", k: "bowling", players: "2–4", pass: true, config: [
+        { n: "Bowling", k: "bowling", players: "2", pass: true, config: [
           { label: "Mode", type: "modes", options: [
             { label: "10 Pin", desc: "Standard ten-pin bowling with official scoring." },
             { label: "21 Pin", desc: "A taller rack — bowl for 21." },
           ]},
         ]},
-        { n: "Ring Toss", k: "ringtoss", players: "2–4", pass: true, config: [
+        { n: "Ring Toss", k: "ringtoss", players: "2", pass: true, config: [
           { label: "Mode", type: "modes", options: [
             { label: "Classic", desc: "Land rings on the bottles across a set number of throws." },
             { label: "Race", desc: "Both players toss at once — highest score when the clock runs out." },
           ]},
         ]},
         // Pool & Darts: forced mode-select step (real per-mode preview clips)
-        { n: "Pool", k: "8ballreboot", players: "2", pass: true,
+        { n: "Pool", k: "8ballreboot", players: "2–8", pass: true,
           modes: [
             { id: "classic", label: "8 Ball", desc: "Standard 8 ball rules — pot your group, then sink the 8 to win.", video: "PoolModePreview-classic" },
             { id: "nineBall", label: "9 Ball", desc: "Balls 1–9 in a diamond. Always hit the lowest first; pot the 9 to win.", video: "PoolModePreview-nineBall" },
@@ -87,7 +90,7 @@
             { id: "runout", label: "Runout", desc: "Every object ball matches — clear the table; fastest time wins, fewest shots breaks ties.", video: "PoolModePreview-runoutChallenge" },
           ],
           config: [{ label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "Removes the aim guide lines on any game mode." }] },
-        { n: "Darts", k: "darts", players: "2–4", pass: true,
+        { n: "Darts", k: "darts", players: "2", pass: true,
           modes: [
             { id: "classic", label: "Classic", desc: "Race your score down from 301 to exactly zero.", video: "DartsModePreview-classic" },
             { id: "championship", label: "Championship", desc: "A 501 countdown on the championship stage.", pro: true, video: "DartsModePreview-championship" },
@@ -114,15 +117,15 @@
       games: [
         { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
         { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
-          { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6"] },
+          { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6", "7", "8", "9"] },
           { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
           { label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "5 categories, 15s timer, no second chance." },
           { label: "Second Chance", type: "toggle", tt: "2nd chance", td: "A shot at redemption on a miss.", on: true },
         ]},
-        { n: "Insider", k: "insider", live: true, players: "3–8", config: jumpIn },
+        { n: "Insider", k: "insider", live: true, players: "3–6", config: jumpIn },
         { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
         { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
-        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, players: "2–8", config: jumpIn },
+        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, players: "3–6", config: jumpIn },
         { n: "Draw", k: "drawing", live: true, players: "2–8", config: [
           { label: "Mode", type: "modes", options: [
             { label: "Classic", desc: "Write a secret prompt, then draw another player's." },
@@ -133,7 +136,6 @@
           ]},
           { label: "Fast Mode", type: "toggle", tt: "Fast Mode", td: "Quick-fire 25s rounds." },
         ]},
-        { n: "Party Games", k: "partygames", live: true, players: "2–8", soon: true },
       ],
       builders: [],
     },
@@ -142,8 +144,7 @@
       games: [
         { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
         { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
-        { n: "Go Fish", k: "gofish", live: true, players: "2–6", config: jumpIn },
-        { n: "Spades", k: "spades", live: true, players: "4", soon: true, noVideo: true },
+        { n: "Go Fish", k: "gofish", live: true, players: "2–7", config: jumpIn },
       ],
       builders: [],
     },
@@ -392,7 +393,7 @@
     ["Chess", "Stuck on a move? Tap the hint for a suggestion"],
     ["Word Bomb", "Use a hint when you cannot find a word"],
     ["Word Bomb", "Go for short safe words over risky long ones"],
-    ["Word Games", "Every valid word needs at least 3 letters"],
+    ["Word Games", "English word games accept 1-letter words and longer; non-English lists and other games require at least 3 letters"],
     ["Word Games", "The longest word in the dictionary runs 45 letters"],
     ["Spelling", "Repeat the word when you are stuck"],
     ["Spelling", "Ask for the origin when you are stuck"],
@@ -401,7 +402,7 @@
     ["Landmark", "Your vote counts as long as your pin is on the map"],
     ["Landmark", "A rough pin in the right region beats a precise pin in the wrong one"],
     ["Insider", "The letter count is a free clue, so count before you guess"],
-    ["Snooker", "The aim guide reads your spin, so set your English first"],
+    ["Pool", "The aim guide reads your spin, so set your English first"],
     ["Bowling", "A little spin curves into the pocket for more strikes"],
     ["Bowling", "If you miss enough, gutters may help"],
     ["Blackjack", "Standing early on a solid hand beats chasing a bust"],
@@ -416,9 +417,14 @@
     ["Pro", "Pro turns your player name gold in matches"],
     ["Pro", "Pro includes exclusive characters and game cosmetics"],
     ["Stats", "Your stats track across games and feed achievements"],
+    ["Local Pass & Play", "Games played here do not count toward wins or any other stats"],
     ["Ready Rooms", "Set the vibe on the jukebox before the match starts"],
     ["Shop", "The shop is where all cosmetics and extra games live"],
     ["Shop", "Car bundles unlock the same rides in Road Rush and Drift"],
+    ["Suggestions", "Have a new game mode or game idea? Send it from Bug Report / Suggestions in Settings"],
+    ["Bug Reports", "Found a bug, glitch, lag spike, or crash? Tell us what happened in Bug Report / Suggestions"],
+    ["Feedback", "Tell us which game modes, features, or polish you want to see next"],
+    ["Feedback", "For a bug report, include the game and what you expected versus what happened"],
   ];
   const tipKey = document.getElementById("tip-key");
   if (tipKey) {
@@ -460,37 +466,41 @@
       { open: "settle it in {g}?",            reply: "gladly",                   close: "no take backs" },
     ];
     const GAMES = [
-      { cover: "bowling.webp",  game: "Bowling",   lines: [
+      { cover: "bowlingmessagecover.webp", game: "Bowling", lines: [
         { open: "loser buys coffee",               reply: "you're on",                close: "oh it's ON" },
         { open: "strike incoming. watch",          reply: "your gutter says otherwise", close: "RUDE" },
       ]},
-      { cover: "darts.webp",    game: "Darts",     lines: [
+      { cover: "dartsmessagecover_classicpowerscombo.webp", game: "Darts", lines: [
         { open: "rematch. right now",              reply: "you sure about that",      close: "bring it" },
         { open: "bullseye first try. calling it",  reply: "sure you are",             close: "watch me" },
       ]},
-      { cover: "ringtoss.webp", game: "Ring Toss", lines: [
+      { cover: "ringtossmessagecover.webp", game: "Ring Toss", lines: [
         { open: "winner picks dinner",             reply: "easy money",               close: "we'll see" },
         { open: "ring toss. best arc wins",        reply: "physics is on my side",    close: "physics can't save you" },
       ]},
-      { cover: "roadrush.webp", game: "Road Rush", lines: [
+      { cover: "roadrushmessagecover.webp", game: "Road Rush", lines: [
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
         { open: "my lap record still stands",      reply: "not for long",             close: "eat my dust" },
       ]},
-      { cover: "cards.webp", game: "Poker",     lines: [
+      { cover: "poker1v1messagecover.webp", game: "Poker", lines: [
         { open: "poker night. bring your chips",   reply: "dealing you in",           close: "all in first hand. watch" },
         { open: "i can read your bluffs from here", reply: "no you can't",            close: "we'll see about that" },
       ]},
-      { cover: "cards.webp", game: "Blackjack", lines: [
+      { cover: "blackjack1v1messagecover.webp", game: "Blackjack", lines: [
         { open: "hit me. i dare you",              reply: "dealer says bust",         close: "twenty one. count it" },
         { open: "blackjack. quick hands",          reply: "i always stand on 17",     close: "coward" },
       ]},
-      { cover: "landmark.webp", game: "Landmark",  lines: [
+      { cover: "landmark1v1messagecover.webp", game: "Landmark", lines: [
         { open: "bet you can't find this place",   reply: "watch me",                 close: "no maps allowed!!" },
         { open: "geography duel. loser admits it", reply: "i never lose this",        close: "prove it" },
       ]},
-      { cover: "cards.webp", game: "Go Fish",   lines: [
+      { cover: "gofish1v1messagecover.webp", game: "Go Fish", lines: [
         { open: "go fish. childhood rules",        reply: "got any threes?",          close: "GO FISH" },
         { open: "one easy game before dinner",     reply: "nothing about me is easy", close: "it's go fish" },
+      ]},
+      { cover: "spellingbee1v1messagecover.webp", game: "Spelling Bee", lines: [
+        { open: "spelling bee. no autocorrect",    reply: "you are going down",       close: "define: overconfident" },
+        { open: "can you spell rematch?",           reply: "already did",              close: "prove it" },
       ]},
     ];
 
