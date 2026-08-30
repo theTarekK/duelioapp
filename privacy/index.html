@@ -32,7 +32,7 @@
 
   <div class="page-head">
     <h1>Duelio — Privacy Policy</h1>
-    <p class="dates"><b>Effective date:</b> 2 August 2026 &nbsp;·&nbsp; <b>Last updated:</b> 25 August 2026</p>
+    <p class="dates"><b>Effective date:</b> 2 August 2026 &nbsp;·&nbsp; <b>Last updated:</b> 28 August 2026</p>
   </div>
 
 <h2 id="the-short-version">The short version</h2>
@@ -40,16 +40,17 @@
 need as little of your data as possible, and here is the honest summary:</p>
 <ul>
 <li><strong>Duelio contains no third-party analytics or advertising software.</strong> There are no ads, no
-cross-app tracking, no crash-reporting SDK, and no advertising identifier. Duelio does send a
-small, allow-listed set of first-party product-usage events to our own server so we can measure
-sessions, completed games, LiveOps reliability, community participation, and shop conversion.
-Those events never contain free-form text, scores, words, opponents, payment details, or an
-advertising identifier, and Section 5 explains exactly what they contain.</li>
+cross-app tracking, no third-party crash-reporting SDK, and no advertising identifier. Duelio
+sends a small, allow-listed set of first-party product, game-funnel, and aggregate Apple MetricKit
+signals to our own server so we can improve activation, game completion, multiplayer reliability,
+performance, LiveOps, community features, and the shop. Those events never contain free-form text,
+scores, words, opponents, room codes, payment details, raw crash call stacks, or an advertising
+identifier, and Section 5 explains exactly what they contain.</li>
 <li><strong>We never ask for contacts, location, microphone, or full photo-library access.</strong> Camera access
-is requested only if you choose to scan a friend&#39;s Duelio QR code. A tournament host can
-optionally choose one invitation image through Apple&#39;s system photo picker. Duelio re-renders and
+is requested only if you choose to scan a friend's Duelio QR code. A tournament host can
+optionally choose one invitation image through Apple's system photo picker. Duelio re-renders and
 compresses only that selected image; it stays in the local draft and is uploaded only if the host
-publishes the tournament as invite-only. Public discovery always uses Duelio&#39;s built-in artwork.</li>
+publishes the tournament as invite-only. Public discovery always uses Duelio's built-in artwork.</li>
 <li><strong>There is no sign-up, email, or password.</strong> Friends uses a hidden random Duelio social ID backed
 up through your iCloud account, plus a permanent short numeric Duelio ID shown only in Add Friends.</li>
 <li><strong>Most cumulative statistics stay on your device and may sync through your personal iCloud
@@ -57,16 +58,21 @@ account.</strong> For worldwide leaderboards, Social uploads only ten lifetime a
 Bowling, Word Bomb, Anagrams, Word Shift, and Drift scores; your longest Darts Combo streak; your
 fastest Road Rush completion time; and your number of unlocked avatars—so it can place your
 chosen name and avatar on the worldwide leaderboards. Separately, the first-party analytics in
-Section 5 can send a completed game&#39;s identifier and local result, but not its score or full history.</li>
-<li><strong>Five starter hints are limited through Apple DeviceCheck.</strong> On first use, Duelio sends an
+Section 5 can send bounded game-funnel fields such as a game identifier, local result,
+play-mode/player-count/duration bucket, and random run identifier, but not a score or full history.</li>
+<li><strong>Online session security and five starter hints use Apple DeviceCheck.</strong> When Duelio needs a
+signed online session, and when it checks the one-time starter-hint offer, the app sends an
 encrypted, temporary DeviceCheck token through our server to Apple. We never receive an Apple
-ID, serial number, or advertising identifier.</li>
+ID, serial number, or advertising identifier, and we do not store the DeviceCheck token. Session
+ownership is also protected by a P-256 credential: its private key stays on your device (including
+an App Group copy shared by both Duelio surfaces) and in your iCloud KVS record, while our server
+stores only the public verifier and last-used time.</li>
 <li><strong>Message games and Pass &amp; Play do not send their game state or content to us.</strong> An asynchronous
 game sent as an iMessage stays in that conversation, and Pass &amp; Play stays on the device in front
-of you. A completed message game can still send the bounded game identifier/result analytics
-event described in Section 5.</li>
+of you. Their bounded selection/start/completion/abandonment analytics described in Section 5 can
+still be sent without the game state, message content, score, or opponents.</li>
 <li><strong>Standalone online play does use our server — including turn-based games.</strong> Find Game, Host
-Online, and Join with Code relay the room and current game state through Duelio&#39;s server.</li>
+Online, and Join with Code relay the room and current game state through Duelio's server.</li>
 <li><strong>Sharing a Pool Table Builder design is an optional server upload.</strong> Anyone with its 10-digit
 code can retrieve it until you ask us to delete it.</li>
 <li><strong>You can voluntarily send us a bug report or suggestion.</strong> If you use the feedback form in
@@ -81,7 +87,7 @@ schedule and visibility, memberships and standings, and match/result records. Pu
 shows public tournament details and an active-player count, not the participant roster. Section 5
 explains invite-only images and exactly who can see each part.</li>
 <li><strong>Gifts use our server.</strong> We keep the item, sender and recipient Duelio IDs/profile snapshots,
-Apple&#39;s signed transaction identifiers, and delivery/refund status so a paid gift can be claimed
+Apple's signed transaction identifiers, and delivery/refund status so a paid gift can be claimed
 once, restored if unsent, and removed if Apple refunds it. We never receive payment-card details
 or the iMessage contact/address you choose.</li>
 <li><strong>Real-time live games also connect to a Duelio server.</strong> While an online room is running we can
@@ -109,10 +115,10 @@ in this policy.</p>
 <ul>
 <li><strong>Asynchronous games sent through iMessage do not use a Duelio server to deliver or store the
 match.</strong> The configuration, moves, drawings, scores, and other game data are packed into the
-messages you send and stay in your iMessage conversation, protected by Apple&#39;s security. We do
+messages you send and stay in your iMessage conversation, protected by Apple's security. We do
 not receive or store those message-game turns. When a message game finishes, the fixed analytics
-system described in Section 5 can send a bounded completion event: its game identifier and local
-result plus the standard event envelope listed there.</li>
+system described in Section 5 can send bounded selection, setup, start, completion, abandonment,
+and message-send outcomes without sending that game or conversation content.</li>
 <li><strong>Pass &amp; Play is local.</strong> Both or all players use the same device. Gameplay stays on that device
 and does not use a Duelio server.</li>
 <li><strong>Standalone online turn relay uses a Duelio server.</strong> If you choose Find Game, Host Online, or
@@ -128,8 +134,9 @@ friends can see requests, presence, chats, challenges, and game cards across lau
 <p>Section 4 describes both kinds of server-backed online play. Choosing the standalone app does not
 by itself mean gameplay is local; only Pass &amp; Play is local there. Separately, asking for a Pool
 Table Builder share code uploads that design as described in Section 5.</p>
-<p>Separately, Duelio makes one short DeviceCheck request when it tries to grant the five starter
-hints described in Section 5. That request is not game activity and does not reveal what you play.</p>
+<p>Separately, Duelio uses a temporary DeviceCheck validation when it needs to issue or renew a signed
+online session and when it tries to grant the five starter hints described in Section 5. Those
+requests are not game activity and do not reveal what you play.</p>
 <hr>
 <h2 id="section-3-what-we-do-not-do">3. What we do not do</h2>
 <p>All of the following are true of Duelio, and we intend to keep them true:</p>
@@ -143,22 +150,24 @@ Section 5 measure activity only inside Duelio and are not used for advertising o
 permission and could not access your location if it tried.</li>
 <li><strong>No contacts, location, microphone, full photo-library, or health access.</strong> If you tap Scan
 Friend QR Code, iOS asks for camera access; the camera image is processed on-device and is not
-uploaded. A tournament host can separately choose one invitation image through Apple&#39;s system
+uploaded. A tournament host can separately choose one invitation image through Apple's system
 photo picker as described in Section 5; Duelio receives only the image the host selects, after the
 app re-renders and compresses it for an invite-only tournament.</li>
 <li><strong>No conventional account.</strong> There is no sign-up, login, password, email address, phone-number
 lookup, or contact upload. A hidden random social ID lets the friends and chat system work and is
 restored through your personal iCloud key-value store.</li>
-<li><strong>No crash logs, call stacks, or device-performance diagnostics.</strong> The fixed LiveOps catalog
-refresh result described in Section 5 is the only first-party operational diagnostic signal.</li>
+<li><strong>No third-party crash reporting or raw diagnostic uploads.</strong> The standalone app uses Apple's
+MetricKit delivery to send only aggregate crash/hang/CPU/disk exception counts and bounded launch,
+responsiveness, memory, CPU, foreground-time, and disk measurements. Duelio does not upload
+MetricKit's raw payload JSON, call stacks, device identifiers, or diagnostic bodies.</li>
 <li><strong>Your complete statistics record is not uploaded.</strong> Wins, best scores, streaks and unlocks may
-sync through Apple&#39;s iCloud key-value storage. For worldwide leaderboards, Social uploads only
+sync through Apple's iCloud key-value storage. For worldwide leaderboards, Social uploads only
 the ten aggregate values explained below. Separately, the first-party analytics in Section 5 can
-send a completed game&#39;s identifier and local result, but not its score or full history.</li>
+send bounded game-funnel fields, but not scores, words, moves, opponents, or full history.</li>
 </ul>
 <p>Because Duelio contains no third-party analytics or advertising SDK, there are no advertising
 networks, analytics vendors, or data brokers involved in this measurement. The allow-listed events
-go directly to Duelio&#39;s own Cloudflare-hosted server.</p>
+go directly to Duelio's own Cloudflare-hosted server.</p>
 <hr>
 <h2 id="section-4-online-multiplayer-games">4. Online multiplayer games</h2>
 <p>Both standalone online turn relay and real-time live games use a Duelio server. Your device opens a
@@ -168,10 +177,10 @@ current room state may remain temporarily so a player can reconnect, as explaine
 <p>Games that normally exchange turns inside iMessage can also be played online from the standalone
 app. Find Game, Host Online, and Join with Code send the current turn or checkpoint through our
 server so the other player can receive it immediately and a reconnecting player can catch up.
-Those turns are not part of an iMessage conversation and do not receive iMessage&#39;s end-to-end
+Those turns are not part of an iMessage conversation and do not receive iMessage's end-to-end
 encryption.</p>
 <h3 id="real-time-live-games">Real-time live games</h3>
-<p>Eleven of Duelio&#39;s games use a shared live room for their ready room and real-time gameplay. These
+<p>Eleven of Duelio's games use a shared live room for their ready room and real-time gameplay. These
 rooms can be reached from an iMessage invite or from the standalone app. The server relays the
 roster, settings, live actions, chat, and current state to the players in the room.</p>
 <h3 id="what-is-sent-to-our-server">What is sent to our server</h3>
@@ -203,7 +212,7 @@ between from reading it. <strong>But the encryption ends at our server, which pr
 readable form in order to relay it.</strong></p>
 <p>We are saying this plainly because Duelio launches from inside an iMessage bubble, and iMessage
 itself <em>is</em> end-to-end encrypted. <strong>That protection does not extend to an online Duelio room, even
-when the room was opened from an iMessage invite.</strong> Please don&#39;t treat an online Duelio room as a
+when the room was opened from an iMessage invite.</strong> Please don't treat an online Duelio room as a
 private channel the way you would treat an iMessage conversation.</p>
 <h3 id="who-can-join-or-see-each-kind-of-match">Who can join or see each kind of match</h3>
 <ul>
@@ -212,20 +221,20 @@ anyone to whom its messages are forwarded. Apple, not Duelio, controls conversat
 <li><strong>Pass &amp; Play</strong> is visible to anyone using or looking at the shared device.</li>
 <li><strong>An online room opened from an iMessage invite</strong> can be joined by people who can use that invite,
 including people in a group conversation or anyone to whom the invite is forwarded.</li>
-<li><strong>A public standalone room</strong> is advertised in Duelio&#39;s room browser or matchmaking pool. People
+<li><strong>A public standalone room</strong> is advertised in Duelio's room browser or matchmaking pool. People
 you do not know can find and join it. Find Game is specifically designed to match you with other
 players, who may be strangers.</li>
 <li><strong>A private standalone room</strong> is not advertised, but anyone who knows or guesses its six-character
 code can try to join it. Treat a room code as an invitation, not as a password.</li>
 </ul>
-<p>We do not verify anyone&#39;s real-world identity. People in an online room can see the names, avatars,
+<p>We do not verify anyone's real-world identity. People in an online room can see the names, avatars,
 chat, drawings, answers, and other game content that the room shows them. Depending on the game, a
 person who joins after play begins may also be able to watch and receive the saved current state.</p>
 <hr>
 <h2 id="section-5-things-worth-calling-out-specifically">5. Things worth calling out specifically</h2>
 <p>We would rather over-explain these than have you discover them later.</p>
 <h3 id="friends-presence-challenges-and-duelio-chat">Friends, presence, challenges, and Duelio chat</h3>
-<p>The standalone app&#39;s Friends area sends a hidden random social ID, your display name and chosen
+<p>The standalone app's Friends area sends a hidden random social ID, your display name and chosen
 avatar/cosmetics to our server. The server stores your permanent numeric Duelio ID, accepted friendships, pending
 requests, blocks, recent Duelio opponents, whether you were recently online, and the game/room you
 are currently in when you choose to show online status. Friends can use that information to see
@@ -238,7 +247,7 @@ encrypted in transit but are not end-to-end encrypted. Do not use Duelio chat fo
 prevents new requests, social messages, and challenges between the two hidden IDs. Reporting from
 the Friends area stores the same limited moderation record described below.</p>
 <p>If an iMessage opponent runs a compatible version of Duelio, a game bubble can contain that
-opponent&#39;s hidden Duelio social ID and chosen Duelio profile. Duelio may then list them under Recent
+opponent's hidden Duelio social ID and chosen Duelio profile. Duelio may then list them under Recent
 Players as an “iMessage” connection. We do not receive their phone number, email address, Apple ID,
 contact-card data, or iMessage address, and Duelio never reads your Messages conversation or
 Contacts database.</p>
@@ -257,18 +266,19 @@ opaque key with a newly created public profile/code.</p>
 device. For a tournament you create, the server stores that host ID and the public Duelio name/profile
 associated with it; the title and description you author; the size tier and player cap; selected game
 and game configuration; duration and schedule; public/invite-only choice; lifecycle timestamps and
-revision; and its hosting-credit source/product record. Tournament titles and descriptions pass
-through the server&#39;s safety filter and cannot contain links. For participants, the server stores the
+revision; and its hosting-credit source, App Store product, transaction identifier, environment,
+verification, consumption, and status record. Tournament titles and descriptions pass
+through the server's safety filter and cannot contain links. For participants, the server stores the
 hidden member IDs, join/leave times, matchmaking queue position, wins/losses/draws/forfeits, match and
 room identifiers, the paired player IDs, reported or forfeited result/winner, and relevant timestamps.</p>
-<p>A public discovery card can show the host&#39;s public Duelio name/profile, authored title and
+<p>A public discovery card can show the host's public Duelio name/profile, authored title and
 description, game configuration, size/cap, schedule, status, and aggregate active-player count to
 authenticated Duelio users. It does not show the participant roster. Full standings—including each
-participant&#39;s current Duelio name/profile, rank, results, and join time—are returned only to the host
+participant's current Duelio name/profile, rank, results, and join time—are returned only to the host
 and current participants. An invite-only tournament is omitted from public discovery, although an
 authenticated person who has its high-entropy tournament identifier or invitation can retrieve its
 ordinary tournament metadata and choose whether to join.</p>
-<p>An invitation image is optional. The host selects it through Apple&#39;s system photo picker, and the app
+<p>An invitation image is optional. The host selects it through Apple's system photo picker, and the app
 re-renders it as a bounded compressed image before upload. Player-uploaded art is prohibited on a
 publicly discoverable tournament; public cards use artwork compiled into Duelio. For an invite-only
 tournament, the image can be read only by its host, a current participant, or a person presenting the
@@ -278,7 +288,7 @@ same Duelio origin after you open that invitation, rotated when the image is rep
 when the image is removed or the tournament is made public. Anyone you forward the private invite
 link to can use its capability, so treat that link as private. If the host uses the system share
 sheet, the person or app the host selects receives the invitation text and private link and may also
-receive an attached copy of the invitation image under that destination&#39;s own privacy terms.</p>
+receive an attached copy of the invitation image under that destination's own privacy terms.</p>
 <p>Hosted tournament metadata and records are stored in Cloudflare D1, and an optional invitation image
 is stored privately in Cloudflare R2. A server-backed tournament or invitation includes controls to
 report the tournament/host and block the host, except that a host cannot report or block themselves.
@@ -287,14 +297,24 @@ record and image retention, and what the in-app social deletion control removes,
 and 9.</p>
 <h3 id="first-party-product-analytics">First-party product analytics</h3>
 <p>Duelio sends a small, fixed set of product-usage events from the standalone app and Messages
-extension to our server. We use these events to understand whether LiveOps is working, which games
-and community features are used, and where players encounter problems in the shop. The events can
-contain:</p>
+extension to our server. We use these events to understand activation, retention, game and
+multiplayer funnels, performance, whether LiveOps is working, which games and community features
+are used, and where players encounter problems in the shop. The events can contain:</p>
 <ul>
 <li>a random event identifier and timestamp, the app or Messages surface, the app build, and a random
-identifier that lasts only for that running app or extension process;</li>
-<li>session starts and completed-game identifiers/results, but not scores, words, moves, opponents,
-room contents, or full statistics;</li>
+session identifier. Foreground entries more than 30 minutes apart receive a new session identifier;</li>
+<li>one-time first-session, first-game-selection, first-game-start, and first-game-completion
+milestones, plus How-to-Play page and mode identifiers;</li>
+<li>game selection, setup, start, completion, abandonment, and rematch signals. These may include a
+game identifier, local result, fixed play-mode/player-count/duration/reason bucket, and a random
+per-run identifier, but not scores, words, moves, opponents, room identifiers/codes, room contents,
+or full statistics;</li>
+<li>fixed multiplayer stages and outcomes for hosting, finding, joining by code, reconnecting, message
+invitations/sends, and match starts, without the conversation, recipient, room, or opponent identifier;</li>
+<li>from the standalone app, aggregate values delivered by Apple MetricKit: counts of crash, hang,
+CPU-exception, disk-write-exception, and memory-exit reports, plus bounded p95 launch/hang time and
+memory, CPU, foreground-time, and disk-write measurements. Raw MetricKit payloads, diagnostic
+bodies, call stacks, and device identifiers are not uploaded;</li>
 <li>LiveOps catalog refresh results and revision numbers;</li>
 <li>views, follows, RSVPs, registrations, and check-ins for specific creator, event, or tournament
 identifiers; and</li>
@@ -305,25 +325,27 @@ payment-card information, an Apple transaction identifier, or verified revenue.<
 <p>The app emits only fixed, compiled event call sites, and the server enforces a per-event field
 allow-list; this system does not send display names, messages, search text, feedback, or other
 free-form content. The upload is authenticated with your hidden Duelio social ID. Before storing an
-event, our server replaces that ID and the random process-session identifier with separate one-way
-HMAC hashes that use different domain prefixes. The analytics table does not store the raw player ID, raw session ID, IP address,
-display name, or arbitrary JSON.
+event, our server replaces that ID, the random session identifier, and any random game-run identifier
+with separate one-way HMAC hashes that use different domain prefixes. The analytics table does not
+store the raw player ID, raw session/run ID, IP address, display name, room code, or arbitrary JSON.
 Cloudflare necessarily processes the connecting IP address while delivering the request, just as it
 does for other Duelio server requests, but we do not put that address in the analytics record.</p>
-<p>The developer console shows aggregate counts, such as active players, sessions, completed games,
-community participation, and shop-funnel totals. These analytics are not used for advertising,
-cross-app tracking, eligibility decisions, or automated profiling, and they are not a verified
-creator-payout or revenue ledger. If you are in the UK or EU, our legal basis is our legitimate
-interest under Article 6(1)(f) in operating, securing, and improving Duelio. We limit that interest
-through fixed fields, pseudonymous hashes, aggregate reporting, short retention, and the deletion
-control described in Section 9. You may also object as described there.</p>
+<p>The developer console shows aggregate counts and rates, such as active players, activation/retention
+cohorts, selection-to-start and start-to-completion rates, abandonment/rematch/multiplayer outcomes,
+build-level performance, community participation, and shop-funnel totals. It does not expose
+event-level player rows or identifiers. These analytics are not used for advertising, cross-app
+tracking, eligibility decisions, or automated profiling, and they are not a verified creator-payout
+or revenue ledger. If you are in the UK or EU, our legal basis is our legitimate interest under
+Article 6(1)(f) in operating, securing, and improving Duelio. We limit that interest through fixed
+fields, pseudonymous hashes, aggregate reporting, short retention, and the deletion control described
+in Section 9. You may also object as described there.</p>
 <h3 id="gifts-and-app-store-verification">Gifts and App Store verification</h3>
-<p>When you buy or receive a gift, Duelio sends the selected item and the sender&#39;s hidden social ID,
-display name, and profile snapshot to our server. A direct Friends gift also includes the recipient&#39;s
+<p>When you buy or receive a gift, Duelio sends the selected item and the sender's hidden social ID,
+display name, and profile snapshot to our server. A direct Friends gift also includes the recipient's
 hidden social ID and current display name. For an iMessage gift, the server issues a random one-time
 claim secret that is placed in the Duelio message; <strong>the server does not receive the contact, phone
 number, email address, Apple ID, or iMessage address you choose in Messages</strong>.</p>
-<p>Apple handles payment. Duelio sends Apple&#39;s signed StoreKit transaction to our server, which verifies
+<p>Apple handles payment. Duelio sends Apple's signed StoreKit transaction to our server, which verifies
 the app, product, transaction identifier, environment, refund status, and random gift intent before
 granting anything. We store the transaction identifier, product, sender and eventual recipient IDs,
 profile/name snapshots, one-way claim-secret hash, and created/purchased/sent/claimed/applied/refunded
@@ -346,7 +368,7 @@ avatar/cosmetics. The leaderboards show the name, avatar, rank, and aggregate va
 Social users worldwide. Submitted score, win, and streak values are kept at their highest received
 value; the avatar count is kept for the current unlock era; Road Rush time is kept at the lowest
 positive value. This prevents an older device from
-accidentally replacing a better record. Blocked players are omitted from one another&#39;s boards.
+accidentally replacing a better record. Blocked players are omitted from one another's boards.
 These records are used only to provide the leaderboards, not for advertising, analytics, tracking,
 or marketing profiles. Deleting all Duelio social data also deletes your leaderboard record; the
 complete statistics stored on your device and in iCloud are not deleted.</p>
@@ -358,10 +380,10 @@ the app and operating-system versions. Our hosting provider also necessarily see
 IP address. The note is stored so the developer can review it; it is not used for advertising,
 analytics, profiling, or tracking.</p>
 <h3 id="player-and-hosted-tournament-reports-and-blocks">Player and hosted-tournament reports and blocks</h3>
-<p>In a supported live ready room, tapping another player&#39;s seat lets you report that player. A
+<p>In a supported live ready room, tapping another player's seat lets you report that player. A
 server-backed player-hosted tournament detail or private invitation also lets a non-host viewer report
 the tournament and its host. If you choose a reason and send the report, Duelio sends the relevant
-anonymous identifier described in Section 4, the reported player&#39;s identifier and current display
+anonymous identifier described in Section 4, the reported player's identifier and current display
 name, the room or tournament identifier, a fixed source/game label, and the reason you selected. There
 is no free-text report field, and the report does not automatically include a transcript, drawing,
 invitation image, tournament description, or other copy of the reported content. Our hosting provider
@@ -377,7 +399,7 @@ game, you can report the incident by emailing the address in Section 1.</p>
 <p>If you tap <strong>Copy</strong> to share a Pool Table Builder design, Duelio uploads the normalized scene JSON
 to our server. That design can include the table, ball positions and appearance, rules, goals, and
 powers you selected. The server stores the design, its creation time, and a random 10-digit table
-code. Duelio&#39;s application database does not store an uploader or player identifier, IP address,
+code. Duelio's application database does not store an uploader or player identifier, IP address,
 device token, or download history with the design, although Cloudflare necessarily processes the
 connecting IP address and standard platform metadata while serving the upload or download.</p>
 <p>There is no user account, ownership check, or password on a shared table. <strong>Anyone who has or
@@ -385,39 +407,52 @@ guesses its 10-digit code can retrieve it.</strong> Treat the code like a public
 with people you want to receive the design. Shared designs do not expire automatically; they remain
 retrievable until manually deleted. To request deletion, email the address in Section 1 and include
 the table code so we can identify it.</p>
-<h3 id="five-starter-hints-and-devicecheck">Five starter hints and DeviceCheck</h3>
+<h3 id="session-authentication-starter-hints-and-devicecheck">Session authentication, starter hints, and DeviceCheck</h3>
+<p>Before our server issues or renews a signed session for a Duelio player identifier, the app asks
+Apple for an encrypted, temporary <strong>DeviceCheck token</strong>. Our server forwards that token to Apple's
+DeviceCheck service, then returns a two-minute, one-time challenge. Duelio signs the exact challenge
+with a P-256 account credential. The private key is generated and stored on-device, including an App
+Group copy shared between the app and Messages extension, and stored in a sharded iCloud KVS record so the same
+hidden identity can survive reinstall or work on another device using the same iCloud account. The
+private key is never sent to us. Our server stores the matching public-key verifier, its creation
+time, and its last-used time so another install cannot claim an identifier merely by knowing it.</p>
+<p>Session challenges are consumed once and removed after a session is issued; an abandoned challenge
+expires after two minutes and is removed during cleanup. The temporary DeviceCheck token is not
+stored. A public-key verifier is retained while the corresponding opaque player/account, purchase,
+or gift identity remains protected. There is no public credential-rebind endpoint because allowing
+an unverified rebind would let someone take over a known player identifier.</p>
 <p>Each physical Apple device can contribute five starter hints once. To stop deleting and
 reinstalling Duelio from granting them again, the app asks Apple for an encrypted, temporary
 <strong>DeviceCheck token</strong> and sends that token, a random request identifier, and whether the build is a
 development or production build to our server. Our server immediately forwards the token to
-Apple&#39;s DeviceCheck service to read and set one yes/no claimed bit.</p>
+Apple's DeviceCheck service to read and set one yes/no claimed bit.</p>
 <p>We do not receive your Apple ID, device serial number, phone number, advertising identifier, or a
-DeviceCheck identifier we can use across other apps. The DeviceCheck token is not stored. Our
-server stores only the random request identifier and whether that request was granted for up to 30
-days, so the same installation can safely retry if its first response is interrupted. Our hosting
-provider necessarily sees the connecting IP address. This information is used only to deliver the
-one-time starter hints and prevent repeat claims; it is not used for advertising, analytics,
-profiling, or tracking.</p>
+DeviceCheck identifier we can use across other apps. For the starter-hint flow, our server stores
+only the random request identifier and whether that request was granted for up to 30 days as a
+bounded grant receipt. Our hosting provider
+necessarily sees the connecting IP address. DeviceCheck and the session credential are used only
+to authenticate Duelio, secure online services, deliver the one-time starter hints, and prevent
+abuse; they are not used for advertising, analytics, profiling, or tracking.</p>
 <h3 id="chat-and-anything-you-type">Chat and anything you type</h3>
 <p>Chat messages in an online room are relayed between the players in that room. <strong>They are not stored
 on our server.</strong> Text sent as an ordinary iMessage is handled by Apple, not our server.</p>
 <h3 id="drawings">Drawings</h3>
 <p><strong>Nothing leaves your device while you are drawing.</strong> When you submit a drawing, we send the
-finished image <strong>and</strong> the ordered record of the strokes that made it, so that other players&#39;
+finished image <strong>and</strong> the ordered record of the strokes that made it, so that other players'
 devices can replay it as an animation. Stroke data is sent when you submit, never while you draw.</p>
 <p>When Tic-Tac-Toe or Dots &amp; Boxes is played through iMessage, a custom symbol you draw by hand is
-included in the message you send and appears in that message&#39;s image. In standalone online play,
+included in the message you send and appears in that message's image. In standalone online play,
 the corresponding game payload travels through the Duelio server as described in Section 4.</p>
 <h3 id="custom-word-lists-in-draw">Custom word lists in Draw</h3>
-<p>If you enter your own list of words in Draw&#39;s settings, <strong>that list is included in every Draw
+<p>If you enter your own list of words in Draw's settings, <strong>that list is included in every Draw
 invite you send, and everyone in the conversation who has Duelio can read it</strong> — including in the
 game modes that do not use custom words, and including when the custom-words option is switched off.
 Switching the option off stops the words being <em>used</em>; it does not stop them being <em>sent</em>. Please
-don&#39;t put anything in that list you wouldn&#39;t want the whole conversation to see.</p>
+don't put anything in that list you wouldn't want the whole conversation to see.</p>
 <h3 id="two-truths-and-a-lie">Two Truths and a Lie</h3>
 <p>This game asks you to write true facts about your own life. <strong>Those statements are sent to our
 server, saved as part of the match, and shown to everyone in the room — including anyone who joins
-later.</strong> Please don&#39;t write anything you wouldn&#39;t be comfortable being seen by everyone who can
+later.</strong> Please don't write anything you wouldn't be comfortable being seen by everyone who can
 reach that conversation.</p>
 <h3 id="games-that-show-your-typing-as-you-type">Games that show your typing as you type</h3>
 <p>In <strong>Word Bomb</strong> and <strong>Insider</strong>, other players can see your word forming as you type it. To do
@@ -429,13 +464,13 @@ are included in the reply that goes back into the conversation. Everyone in that
 has Duelio can see them.</p>
 <h3 id="landmark-and-apple-maps">Landmark and Apple Maps</h3>
 <p>The Landmark game shows maps and street-level imagery from <strong>Apple Maps</strong>. To load them, your
-device asks Apple for imagery of <strong>the puzzle&#39;s location</strong> — a landmark from a list built into the
+device asks Apple for imagery of <strong>the puzzle's location</strong> — a landmark from a list built into the
 app — and for the map tiles you pan around while guessing. <strong>Your own location is never requested,
 received, or sent.</strong> Apple receives these requests from your device, including your IP address, and
-handles them under <a href="https://www.apple.com/legal/privacy/">Apple&#39;s privacy policy</a>.</p>
+handles them under <a href="https://www.apple.com/legal/privacy/">Apple's privacy policy</a>.</p>
 <hr>
 <h2 id="section-6-what-stays-on-your-device-and-in-your-icloud">6. What stays on your device and in your iCloud</h2>
-<p>The following is stored on your device and may be mirrored through Apple&#39;s iCloud key-value
+<p>The following is stored on your device and may be mirrored through Apple's iCloud key-value
 storage so it returns on another device or after a reinstall. Except for the particular fields
 needed for online play, analytics, feedback, or reporting as described in Sections 4 and 5, we do not receive
 it:</p>
@@ -455,13 +490,13 @@ a share code as described in Section 5.</li>
 <li>A record of the players you have played against, kept as the anonymous player identifiers
 described in Section 4, so the app can show your history with them. Online play necessarily sends
 the relevant identifier while you are in the room.</li>
-<li>Saved progress in a local or iMessage turn you haven&#39;t finished yet. An online room&#39;s current
+<li>Saved progress in a local or iMessage turn you haven't finished yet. An online room's current
 checkpoint is instead handled as described in Sections 4 and 8.</li>
 <li>Player-hosted tournament drafts and recently fetched tournament records, including a selected and
 compressed invitation image while it is part of a local draft/cache. This Application Support
-cache is on the device; Duelio does not put it in the app&#39;s iCloud key-value statistics record.</li>
+cache is on the device; Duelio does not put it in the app's iCloud key-value statistics record.</li>
 <li>A bounded analytics upload queue containing the fixed fields described in Section 5. It is stored
-locally only until upload succeeds and automatically drops records outside the server&#39;s seven-day
+locally only until upload succeeds and automatically drops records outside the server's seven-day
 ingestion window.</li>
 </ul>
 <p><strong>Deleting Duelio deletes the local copy of the data above, but an iCloud copy of iCloud-backed data
@@ -477,17 +512,19 @@ deletion of a specific submission and can give us enough information to identify
 <ul>
 <li><strong>Cloudflare</strong> — hosts the Duelio server and its D1/R2 storage. Online games, Friends and chat,
 hosted tournament records/private invitation images, Gifting, the worldwide leaderboard,
-first-party analytics, feedback, reports, the brief DeviceCheck starter-hint request, LiveOps media,
+first-party analytics, feedback, reports, session authentication and its brief DeviceCheck
+validations, the starter-hint DeviceCheck request, LiveOps media,
 and Pool Table Builder sharing use this infrastructure, so Cloudflare necessarily receives the
 connecting IP address and ordinary request metadata. Feedback and reports are stored in protected
 developer inboxes; the other records are stored as described in this policy; and the DeviceCheck
 token is forwarded to Apple rather than stored. Shop, creator, event, and official-tournament media
-loads only from Duelio&#39;s same-origin Cloudflare/R2 route, not from a creator&#39;s external site.
+loads only from Duelio's same-origin Cloudflare/R2 route, not from a creator's external site.
 Cloudflare acts as our processor under a data processing agreement.</li>
 <li><strong>Apple</strong> — delivers every Duelio message as part of iMessage, provides the maps and imagery in
-the Landmark game, syncs the device record through iCloud, handles any purchase you make, and
-stores the DeviceCheck claimed bit used for the five starter hints. Purchases go through the App
-Store, so <strong>we never see your payment details</strong>.</li>
+the Landmark game, syncs the device record and private session credential through iCloud, handles
+any purchase you make, validates temporary DeviceCheck tokens used for session authentication,
+and stores the DeviceCheck claimed bit used for the five starter hints. Purchases go through the
+App Store, so <strong>we never see your payment details</strong>.</li>
 <li><strong>Creator, event, and tournament links, only if you choose to open one</strong> — creator profiles can
 contain optional HTTPS community or social links, and official event/tournament cards can contain
 an HTTPS rules link. Duelio never contacts those destinations automatically. If you tap one,
@@ -500,10 +537,10 @@ app you select. That destination handles the copy under its own privacy terms.</
 </ul>
 <p>That is the complete list. Duelio does not automatically send data to anyone else.</p>
 <h3 id="where-your-data-goes">Where your data goes</h3>
-<p>METK LLC is based in the United States, and the Duelio server runs on Cloudflare&#39;s global network,
+<p>METK LLC is based in the United States, and the Duelio server runs on Cloudflare's global network,
 so the server-backed data described in Sections 4 and 5 may be processed outside the UK and EU. Where
 that happens, the transfer is covered by our data processing agreement with Cloudflare, which
-incorporates the European Commission&#39;s <strong>Standard Contractual Clauses</strong> and the UK Addendum to them.</p>
+incorporates the European Commission's <strong>Standard Contractual Clauses</strong> and the UK Addendum to them.</p>
 <hr>
 <h2 id="section-8-how-long-we-keep-it">8. How long we keep it</h2>
 <p>We keep as little as we can, for as short a time as we can. Specifically:</p>
@@ -515,12 +552,12 @@ remain until the sender deletes all Duelio social data or we remove them for saf
 controls retention of the messages in your conversation, and local Pass &amp; Play remains on the
 device.</li>
 <li><strong>A match that never started is deleted immediately.</strong> When the last player leaves a room that
-hadn&#39;t begun, everything in it goes at once.</li>
+hadn't begun, everything in it goes at once.</li>
 <li><strong>Starting a rematch deletes the match before it.</strong> The saved game state is deleted the moment the
 room resets.</li>
 <li><strong>An online match that has started is saved while it runs</strong>, so that a player who disconnects can
 rejoin and catch up. This applies to standalone turn-relay rooms as well as real-time live rooms.
-What we save is the players&#39; display names, the game&#39;s settings, and the game state itself —
+What we save is the players' display names, the game's settings, and the game state itself —
 which, depending on the game, can include a turn-based board or checkpoint, drawings, prompts,
 and Two Truths statements.</li>
 <li><strong>A match abandoned partway through is deleted automatically, normally within about four hours</strong>
@@ -534,6 +571,12 @@ for moderation review and follow-up.</li>
 <li><strong>Starter-hint retry receipts are deleted automatically after 30 days.</strong> The temporary
 DeviceCheck token itself is never stored by us. Apple retains the claimed bit under its privacy
 policy so reinstalling cannot reset the offer.</li>
+<li><strong>Session challenges expire after two minutes and are one-time use.</strong> They are removed after
+session issuance or later cleanup. We retain a player's P-256 public-key verifier and last-used
+time while the corresponding opaque player/account, purchase, or gift identity remains protected,
+so a deleted social profile cannot be taken over to reach preserved purchases or gifts. The
+private key remains only on the user's device (including the App Group copy) and in the user's
+iCloud KVS record.</li>
 <li><strong>Leaderboard records remain until you delete all Duelio social data</strong> or we remove them for safety
 or operations. The rest of your statistics stay on your device and in your iCloud — see Section 6.</li>
 <li><strong>Gift records are retained as purchase and delivery records.</strong> Uncharged intents may remain so a
@@ -559,7 +602,7 @@ continued use of Duelio can create new first-party analytics events.</li>
 <h2 id="section-9-your-rights">9. Your rights</h2>
 <p>If you are in the UK or EU, you have rights over your personal data: to access it, correct it, have
 it deleted, restrict or object to how it is used, and to receive a copy. You also have the right to
-complain to your data protection authority — in the UK, the Information Commissioner&#39;s Office
+complain to your data protection authority — in the UK, the Information Commissioner's Office
 (ico.org.uk).</p>
 <p><strong>An honest limitation, which we want to be upfront about.</strong> Duelio does not connect its random
 identifiers to your real-world email, phone number, Apple ID, or legal identity. We therefore cannot
@@ -570,7 +613,7 @@ reports, shared tables, or matches, we may still need the specific submission, c
 <ul>
 <li><strong>Delete the app.</strong> The on-device data described in Section 6 goes with it; already-submitted
 feedback does not, but you can request its deletion at the contact address.</li>
-<li><strong>Change your display name</strong> at any time in Duelio&#39;s settings.</li>
+<li><strong>Change your display name</strong> at any time in Duelio's settings.</li>
 <li><strong>Delete your Duelio social profile and interaction data</strong> from Settings → Legal → Social Privacy
 → Delete Social Data and Analytics without contacting us. A successful request immediately removes
 tournaments you host and their invitation art/credits; removes your membership, queue, match and
@@ -578,10 +621,12 @@ result-submission rows from other hosted tournaments; clears the local tournamen
 invite capabilities; and deletes your leaderboard row, creator follows, official event/tournament
 registrations, and existing pseudonymous analytics rows. A moderation report already submitted is
 retained under its separate 90-day safety rule. Device/iCloud game statistics and App Store/gift
-records are not deleted and are handled under Section 8.</li>
+records are not deleted and are handled under Section 8. The public session-key verifier remains
+attached to the preserved opaque account key so another person cannot reclaim that identifier and
+reach purchases or gifts.</li>
 <li><strong>Not use online multiplayer.</strong> Asynchronous games sent through iMessage and local Pass &amp; Play do
-not send match state or content to our server; a completed message game can still send the bounded
-analytics event described in Section 5, and voluntary feedback is a separate Settings action.</li>
+not send match state or content to our server; their bounded lifecycle analytics described in
+Section 5 can still be sent, and voluntary feedback is a separate Settings action.</li>
 <li><strong>Wait.</strong> Online match data is not kept indefinitely — see Section 8.</li>
 </ul>
 <hr>
@@ -591,8 +636,8 @@ relationships with third parties that would make that possible — see Section 7
 <ul>
 <li><strong>Categories of personal information we collect:</strong> identifiers (an identifier issued by Apple for
 a Messages room or a random per-install identifier created for standalone online play, an IP
-address, the hidden random social ID, and the temporary DeviceCheck token and random request
-identifier described in Section 5), your display name and avatar choices, your ten leaderboard
+address, the hidden random social ID, the temporary DeviceCheck token and random request
+identifier, and the session public-key verifier and last-used time described in Section 5), your display name and avatar choices, your ten leaderboard
 values described under “Worldwide leaderboards,” friend relationships,
 presence, requests, challenges, recent players, Duelio social chat content, room and matchmaking
 information, content you create in an online match (Section 4), a Pool Table Builder design you
