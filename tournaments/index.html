@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tournament Invite — Duelio</title>
+<meta name="description" content="You’ve been invited to join a tournament on Duelio. Open the invitation in Duelio to view the details and join.">
+<meta property="og:title" content="Tournament Invite — Duelio">
+<meta property="og:description" content="You’ve been invited to join a tournament on Duelio. Open the invitation to view the details and join.">
+<meta property="og:url" content="https://duelioapp.com/tournaments/">
+<meta property="og:image" content="https://duelioapp.com/assets/img/tournament-invite.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Duelio tournament emblem">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tournament Invite — Duelio">
+<meta name="twitter:description" content="You’ve been invited to join a tournament on Duelio.">
+<meta name="twitter:image" content="https://duelioapp.com/assets/img/tournament-invite.png">
+<meta name="theme-color" content="#250019">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
+<link rel="apple-touch-icon" href="/assets/img/tournament-invite.png">
+<link rel="stylesheet" href="/assets/site.css?v=10">
+</head>
+<body>
+<div class="wall" aria-hidden="true"></div>
+<div class="duel-glow" aria-hidden="true"></div>
+
+<main class="err tournament-invite-page">
+  <div>
+    <img src="/assets/img/tournament-invite.png" alt="Duelio tournament emblem">
+    <p class="eyebrow">DUELIO TOURNAMENT</p>
+    <h1>Tournament <span class="grad-gold">Invite.</span></h1>
+    <p id="invite-copy">You’ve been invited to join a tournament on Duelio.</p>
+    <a class="btn btn-gold" id="open-in-duelio" href="/">Open in Duelio →</a>
+    <p class="invite-fallback"><a href="/">Learn more about Duelio</a></p>
+  </div>
+</main>
+
+<script>
+  (() => {
+    const id = new URLSearchParams(location.search).get("tournament");
+    const open = document.getElementById("open-in-duelio");
+    if (!id || !/^[A-Za-z0-9._:-]{6,128}$/.test(id)) return;
+    const capability = /^#invite=[0-9a-f]{32}$/.test(location.hash)
+      ? location.hash
+      : "";
+    open.href = `duelio://tournament/${encodeURIComponent(id)}${capability}`;
+    open.dataset.openDuelio = "";
+  })();
+</script>
+</body>
+</html>
