@@ -11,6 +11,9 @@
           "/shop",
           "/shop/",
           "/shop/*",
+          "/tournaments",
+          "/tournaments/",
+          "/tournaments/*",
           "/friend",
           "/friend/",
           "/friend/*"
