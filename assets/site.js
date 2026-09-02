@@ -7,7 +7,7 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=5";
+  const vid = (base) => V + base + ".mp4?v=6";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = {
