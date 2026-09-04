@@ -509,7 +509,8 @@ a.platform-card:hover {
 }
 .platform-soon {
   color: var(--gold); background: rgba(255, 212, 107, 0.08);
-  border: 1px solid rgba(255, 212, 107, 0.22); display: flex; gap: 3px;
+  border: 1px solid rgba(255, 212, 107, 0.22); display: flex; align-items: center;
+  justify-content: center; gap: 3px;
 }
 .platform-soon i {
   width: 4px; height: 4px; border-radius: 50%; background: currentColor;
