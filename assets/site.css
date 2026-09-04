@@ -509,7 +509,17 @@ a.platform-card:hover {
 }
 .platform-soon {
   color: var(--gold); background: rgba(255, 212, 107, 0.08);
-  border: 1px solid rgba(255, 212, 107, 0.22); font-size: 0.56rem; letter-spacing: 0.08em;
+  border: 1px solid rgba(255, 212, 107, 0.22); display: flex; gap: 3px;
+}
+.platform-soon i {
+  width: 4px; height: 4px; border-radius: 50%; background: currentColor;
+  animation: platform-buffering 1s infinite ease-in-out;
+}
+.platform-soon i:nth-child(2) { animation-delay: 0.15s; }
+.platform-soon i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes platform-buffering {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.38; }
+  30% { transform: translateY(-3px); opacity: 1; }
 }
 
 
@@ -648,14 +658,14 @@ a.platform-card:hover {
    ===================================================================== */
 @media (max-width: 960px) {
   .tile-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
+  .platform-status { margin: 36px 18px 44px; align-items: flex-start; flex-direction: column; }
+  .platform-list { width: 100%; }
+  .platform-card { flex: 1 1 0; min-width: 0; }
 }
 @media (max-width: 780px) {
   .online-card { padding: 16px 14px; }
   .online-card .code-chip { gap: 2px; font-size: 0.72rem; letter-spacing: 0.05em; }
   .online-card .code-chip span { padding: 4px 5px; }
-  .platform-status { margin: 36px 18px 44px; align-items: flex-start; flex-direction: column; }
-  .platform-list { width: 100%; }
-  .platform-card { flex: 1 1 0; min-width: 0; }
 }
 @media (max-width: 760px) {
   .nav { flex-wrap: wrap; row-gap: 4px; padding-top: 10px; padding-bottom: 10px; }
@@ -698,7 +708,7 @@ a.platform-card:hover {
    ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .duel-glow, .err img, .bubble.typing i, .tile .live-pip::before { animation: none !important; }
+  .duel-glow, .err img, .bubble.typing i, .tile .live-pip::before, .platform-soon i { animation: none !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .bubble { opacity: 1; transform: none; transition: none; }
   .btn, .tile { transition: none; }
