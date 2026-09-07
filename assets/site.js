@@ -7,7 +7,7 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=7";
+  const vid = (base) => V + base + ".mp4?v=8";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = {
@@ -80,6 +80,8 @@
             { label: "Race", desc: "Both players toss at once — highest score when the clock runs out." },
           ]},
         ]},
+        { n: "The Hook", k: "thehook", players: "2", pass: true, config: jumpIn },
+        { n: "Curling", k: "curling", players: "2", pass: true, config: jumpIn },
         // Pool & Darts: forced mode-select step (real per-mode preview clips)
         { n: "Pool", k: "8ballreboot", players: "2–8", pass: true,
           modes: [

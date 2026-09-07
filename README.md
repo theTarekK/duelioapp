@@ -19,16 +19,17 @@ assets/site.css     — the whole design system (self-hosted @font-face for Bung
 assets/site.js      — catalog data, lazy video loader, hero chat, hex-tech canvas
 assets/img/         — duelio-logo.png (the app icon) + favicon/apple-touch sizes
 assets/fonts/       — Bungee-Regular + Nunito weights, lifted from the app
-assets/videos/      — 38 catalog preview clips (H.264, see note below)
+assets/videos/      — 40 catalog preview clips (H.264, see note below)
 CNAME               — custom-domain marker for GitHub Pages (duelioapp.com)
 .nojekyll           — tells Pages to serve files as-is
 ```
 
 ## The catalog & its videos
 
-`assets/videos/` holds the 38 clips from `Duelio/Resources/MessageTilePreviews/`
+`assets/videos/` holds the 40 clips from `DuelioSharedResources/Resources/MessageTilePreviews/`
 (`MessageTilePreview-<gamekey>.mp4`, plus the 5 `PoolModePreview-*` and 5
-`DartsModePreview-*` mode clips). **They are full-length H.264 transcodes of the
+`DartsModePreview-*` mode clips). The catalog now includes the new The Hook and
+Curling previews. **They are full-length H.264 transcodes of the
 app's HEVC/H.265 originals** so they play across modern browsers. Re-transcode
 with macOS's built-in tool if you refresh them:
 `avconvert -p Preset640x480 -s in.mp4 -o out.mp4 --replace`.
