@@ -223,7 +223,14 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
   background: linear-gradient(135deg, var(--blue-bright), var(--red-bright));
   box-shadow: 0 0 10px rgba(255, 190, 40, 0.35);
 }
-.hero-cta { display: flex; gap: 11px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+.hero-cta {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: min(100%, 280px); margin-bottom: 24px;
+}
+.hero-download { width: 100%; min-height: 76px; padding: 18px 28px; font-size: 1.25rem; gap: 14px; }
+.hero-download svg { width: 28px; height: 28px; flex-shrink: 0; }
+.hero-download small { font-size: 0.8rem; margin-bottom: 3px; }
+.hero-browse { min-height: 44px; padding: 10px 16px; font-size: 0.75rem; }
 .hero-stats { display: flex; gap: 18px; flex-wrap: wrap; }
 .hero-stats > div { display: flex; flex-direction: column; }
 .hero-stats b { font-family: var(--display); font-size: 1.25rem; }
@@ -531,6 +538,8 @@ a.platform-card:hover {
 .foot-inner { max-width: 1080px; margin: 0 auto 18px; display: flex; justify-content: space-between; gap: 22px; flex-wrap: wrap; align-items: center; }
 .foot-brand p { color: var(--muted); font-size: 0.85rem; margin-top: 10px; }
 .foot-contact { display: flex; flex-direction: column; gap: 8px; }
+.foot-press { align-self: flex-start; color: var(--muted); font-size: 0.875rem; font-weight: 700; }
+.foot-press:hover { color: var(--ink); }
 .foot-contact .fc-lbl { font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel); }
 .foot-metk {
   display: inline-flex; align-items: center; gap: 12px;
