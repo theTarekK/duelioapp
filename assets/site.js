@@ -116,7 +116,7 @@
         { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
         { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
         { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
-        { n: "Quick Draw", k: "quickdraw", players: "2–8", config: { blurb: "Draw as many prompted objects as you can in 60 seconds. The built-in AI recognizes your drawings on your device." } },
+        { n: "SketchBot", k: "quickdraw", players: "2–8", config: { blurb: "Draw as many prompted objects as you can in 60 seconds. The built-in AI recognizes your drawings on your device." } },
         { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
           { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6", "7", "8", "9"] },
           { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
@@ -326,9 +326,9 @@
         { open: "rematch. right now",              reply: "you sure about that",      close: "bring it" },
         { open: "bullseye first try. calling it",  reply: "sure you are",             close: "watch me" },
       ]},
-      { cover: "quickdrawmessagecover.webp", game: "Quick Draw", lines: [
+      { cover: "quickdrawmessagecover.webp", game: "SketchBot", lines: [
         { open: "winner picks dinner",             reply: "easy money",               close: "we'll see" },
-        { open: "quick draw. most guesses wins",    reply: "my doodles are ready",     close: "60 seconds. let's go" },
+        { open: "SketchBot. most guesses wins",    reply: "my doodles are ready",     close: "60 seconds. let's go" },
       ]},
       { cover: "roadrushmessagecover.webp", game: "Road Rush", lines: [
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
