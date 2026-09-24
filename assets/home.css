@@ -1,0 +1,122 @@
+/* Landscape homepage: a wider catalog with comfortable spacing and readable labels. */
+.home { --page-gutter: clamp(16px, 3vw, 48px); }
+.home #catalog, .home #online { scroll-margin-top: 72px; }
+.home .hero, .home .section { width: 100%; max-width: none; }
+.home .section { padding: 32px var(--page-gutter) 18px; }
+.home .section > h2 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); margin-bottom: 12px; }
+.home .section > .lead { text-align: center; font-size: 0.92rem; color: var(--muted); margin: 0 auto 22px; }
+
+/* Retain the original introduction and phone, at a less oversized scale. */
+.home .hero { min-height: 0; padding: 84px var(--page-gutter) 24px; }
+.home .hero-inner { max-width: 1180px; grid-template-columns: 1.2fr 0.8fr; gap: 48px; }
+.home .hero h1 { font-size: clamp(2.5rem, 4.5vw, 3.6rem); }
+.home .hero-by { font-size: 0.68rem; margin-bottom: 14px; }
+.home .hero-bullets { margin-bottom: 18px; }
+.home .hero-bullets li { font-size: 0.94rem; margin-bottom: 5px; }
+.home .hero-cta { margin-bottom: 20px; }
+.home .hero-download { min-height: 50px; padding: 12px 16px; font-size: 1rem; }
+.home .hero-browse { min-height: 46px; font-size: 0.8rem; }
+.home .hero-stats b { font-size: 1.15rem; }
+.home .phone { width: 170px; border-radius: 30px; padding: 8px; }
+.home .phone-screen { border-radius: 24px; padding: 35px 8px 9px; }
+.home .phone-notch { width: 62px; height: 15px; }
+.home .thread { gap: 5px; padding: 8px 0; }
+.home .bubble { font-size: 0.68rem; padding: 6px 9px; }
+.home .bubble.invite { padding: 0; }
+.home .thread-head { gap: 7px; padding-bottom: 7px; }
+.home .avatar { width: 27px; height: 27px; }
+.home .thread-name { font-size: 0.68rem; }
+
+/* Use the whole page width, with each category on its own clear row. */
+.home .catalog-shell { max-width: none; padding: 0 16px 14px; }
+.home .catalog-head { height: 60px; margin: 0 2px 8px; justify-content: flex-start; gap: 10px; }
+.home .catalog-app-icon { position: static; width: 30px; height: 30px; border-radius: 8px; }
+.home .catalog-head .wm { font-size: 1.15rem; letter-spacing: 0.12em; }
+.catalog-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.home .catalog-shop { position: static; padding: 8px 10px; }
+.home .catalog-motion { min-height: 36px; padding: 8px 12px; }
+.home .catalog-scroll { padding: 0; }
+.home .cat-section { margin-bottom: 16px; }
+.home .cat-section:last-child { margin-bottom: 0; }
+.home .cat-header { min-height: 34px; margin: 0 0 6px; gap: 12px; }
+.home .cat-header .t { font-size: 0.76rem; letter-spacing: 0.1em; }
+.home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
+.home .tile { gap: 7px; }
+.home .tile-name { font-size: 10px; min-height: 2.36em; line-height: 1.25; }
+.home .tile[data-game="backgammon"] .tile-name { font-size: 9px; }
+.home .tile .pro-seal { width: 24px; }
+
+/* Two generous category columns on desktop, with a clear gutter between them. */
+@media (min-width: 1100px) {
+  .home .catalog-scroll { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; align-items: start; }
+  .home .cat-section { margin-bottom: 0; }
+  .home .cat-section[data-category="multi"] { grid-column: 2; grid-row: 2 / span 2; }
+  .home .cat-section[data-category="other"] { grid-column: 1; grid-row: 3; }
+  .home .tile-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .home .tile-name { font-size: clamp(8px, 0.7vw, 10px); }
+  .home .tile[data-game="backgammon"] .tile-name { font-size: clamp(7px, 0.625vw, 9px); }
+}
+
+/* Bring the supporting sections closer without squeezing their content. */
+.home .online-grid { gap: 18px; margin: 20px 0 8px; }
+.home .online-card { padding: 18px 20px; }
+.home .online-card .oc-icon { width: 36px; height: 36px; margin-bottom: 10px; }
+.home .online-card .oc-icon img { width: 25px; height: 25px; }
+.home .online-card h3 { font-size: 0.85rem; }
+.home .online-card p { font-size: 0.88rem; }
+.home .online-card .code-chip { margin-top: 10px; font-size: 0.75rem; }
+.home .online-card .code-chip span { padding: 4px 7px; }
+.home .platform-status { max-width: none; margin: 20px var(--page-gutter) 32px; padding: 22px 24px; }
+.home .platform-status-copy h2 { font-size: 1.45rem; }
+.home .platform-card { min-width: 155px; }
+.home .footer { padding: 24px var(--page-gutter) 20px; }
+.home .foot-inner, .home .foot-legal { max-width: none; }
+
+@media (max-width: 960px) {
+  .home .hero-inner { gap: 28px; }
+  .home .platform-status { margin: 20px var(--page-gutter) 28px; }
+  .home .platform-card { min-width: 0; }
+}
+
+@media (max-width: 760px) {
+  .home #catalog, .home #online { scroll-margin-top: 104px; }
+  .home .hero { padding-top: 112px; }
+  .home .hero-inner { gap: 20px; }
+  .home .hero h1 { font-size: 2.5rem; }
+  .home .phone { width: 155px; }
+  .home .section { padding-top: 26px; }
+  .home .catalog-shell { padding: 0 10px 12px; }
+  .home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+  .home .tile-name { font-size: 8px; }
+  .home .tile[data-game="backgammon"] .tile-name { font-size: 7px; }
+  .home .online-grid { gap: 12px; }
+  .home .platform-status { padding: 18px; }
+}
+
+@media (max-width: 640px) {
+  .home .hero-inner { grid-template-columns: 1fr; }
+  .home .section > .lead { font-size: 0.85rem; margin-bottom: 16px; }
+  .home .catalog-head { height: 54px; gap: 7px; }
+  .home .catalog-head .wm { font-size: 0.8rem; }
+  .home .catalog-app-icon { width: 24px; height: 24px; }
+  .catalog-actions { gap: 7px; }
+  .home .catalog-motion { padding: 6px 7px; font-size: 0.65rem; }
+  .home .catalog-shop { padding: 6px; font-size: 0.58rem; }
+  .home .catalog-shop img { width: 19px; }
+  .home .cat-header .t { font-size: 0.7rem; }
+  .home .cat-section { margin-bottom: 12px; }
+  .home .tile-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .home .tile-name { font-size: 7px; }
+  .home .tile[data-game="backgammon"] .tile-name { font-size: 6px; }
+}
+
+@media (max-width: 360px) {
+  .home .tile-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 380px) {
+  .home .catalog-head .wm { font-size: 0.7rem; }
+  .home .catalog-motion { font-size: 0.58rem; padding-inline: 5px; }
+  .home .catalog-shop { padding-inline: 5px; }
+  .home .catalog-shop img { display: none; }
+}

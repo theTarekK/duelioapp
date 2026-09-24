@@ -9,13 +9,14 @@ red/blue/gold "duel" palette, and the actual iMessage catalog preview clips.
 ## Structure
 
 ```
-index.html          — landing page: hex-tech hero (real gameplay in the phone),
-                      the iMessage catalog recreation, online matchmaking, ways to play
+index.html          — landscape landing page: gameplay phone, live catalog,
+                      online matchmaking, and platform availability
 privacy/index.html  — privacy policy   → https://duelioapp.com/privacy/
 terms/index.html    — EULA / terms     → https://duelioapp.com/terms/
 support/index.html  — support + FAQ    → https://duelioapp.com/support/
 404.html            — custom 404
-assets/site.css     — the whole design system (self-hosted @font-face for Bungee + Nunito)
+assets/site.css     — shared design system (self-hosted Bungee + Nunito)
+assets/home.css     — compact, full-width homepage and responsive catalog
 assets/site.js      — catalog data, lazy video loader, hero chat, hex-tech canvas
 assets/img/         — duelio-logo.png (the app icon) + favicon/apple-touch sizes
 assets/fonts/       — Bungee-Regular + Nunito weights, lifted from the app
@@ -26,9 +27,12 @@ CNAME               — custom-domain marker for GitHub Pages (duelioapp.com)
 
 ## The catalog & its videos
 
-The homepage follows the current `DuelioMessageCatalog.categories` layout:
-**Sports → Strategy → Word Games → Multiplayer → Other Games**, with five
-columns at every screen size. Its 29 game titles and two builder launchers use
+The homepage follows the current `DuelioMessageCatalog.categories` order:
+**Sports → Strategy → Word Games → Multiplayer → Other Games**. Each category
+keeps its own heading and breathing room. The full-width catalog uses two
+category columns on desktop, with seven tile positions per column, and
+reflows into single sections on smaller screens. The tips strip is omitted.
+Its 29 game titles and two builder launchers use
 the native order, square keycaps, fixed game captions, category tints, preview
 zoom and Pro builder seals. Board Builder follows Word
 Shift; Table Builder leads Other Games. Hidden/unavailable titles are not rendered.

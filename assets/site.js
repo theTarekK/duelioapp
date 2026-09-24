@@ -1,6 +1,6 @@
 /* ============================================================
    Duelio — duelioapp.com
-   Catalog recreation, tips key, gameplay phone chat, honeycomb
+   Catalog recreation, gameplay phone chat, honeycomb
    backdrop. Vanilla JS, no dependencies.
    ============================================================ */
 (() => {
@@ -268,7 +268,7 @@
   document.addEventListener("visibilitychange", () => players.forEach(p => p.sync()));
   setInterval(() => { if (!document.hidden && !previewsPaused) players.forEach(p => p.retry()); }, 2500);
 
-  /* Five tracks and category/item order mirror DuelioMessageCatalog.categories.
+  /* Native category/item order with a compact, responsive website layout.
      Builders count as tiles, not additional game titles. Other Games stays open. */
   const scroll = document.getElementById("catalog-scroll");
   const zoomedGames = new Set(["tictactoe", "dotsandboxes", "connect4", "backgammon", "anagrams", "wordhunt", "drawing"]);
@@ -310,71 +310,6 @@
       sec.appendChild(grid);
       scroll.appendChild(sec);
     });
-  }
-
-  /* ---------------- tip key: the app's rotating gameplay-tip ticker ----------------
-     The same tips the catalog footer cycles in the app, on the same 3D
-     pressable key: game name over the hint, auto-advancing every 6s, and a
-     tap presses the face down and deals a fresh tip (never the same twice). */
-  const TIPS = [
-    ["Road Rush", "If you are still air-born during the cooldown of the supernova, you keep your speed"],
-    ["Road Rush", "Level up your powers for a bigger speed boost"],
-    ["Road Rush", "Riding the ideal line powers you up, not just for show"],
-    ["Chess", "Stuck on a move? Tap the hint for a suggestion"],
-    ["Word Bomb", "Use a hint when you cannot find a word"],
-    ["Word Bomb", "Go for short safe words over risky long ones"],
-    ["Word Games", "English word games accept 1-letter words and longer; non-English lists and other games require at least 3 letters"],
-    ["Word Games", "The longest word in the dictionary runs 45 letters"],
-    ["Spelling", "Repeat the word when you are stuck"],
-    ["Spelling", "Ask for the origin when you are stuck"],
-    ["Spelling", "Ask for the definition when you are stuck"],
-    ["Landmark", "Voting early cuts the timer down fast"],
-    ["Landmark", "Your vote counts as long as your pin is on the map"],
-    ["Landmark", "A rough pin in the right region beats a precise pin in the wrong one"],
-    ["Insider", "The letter count is a free clue, so count before you guess"],
-    ["Pool", "The aim guide reads your spin, so set your English first"],
-    ["Bowling", "A little spin curves into the pocket for more strikes"],
-    ["Bowling", "If you miss enough, gutters may help"],
-    ["Blackjack", "Standing early on a solid hand beats chasing a bust"],
-    ["Go Fish", "Track what was asked, a card asked twice is likely gone"],
-    ["Telephone", "Simpler drawings survive the chain better"],
-    ["Corpse Collage", "Draw your part to connect at the seams, not the center"],
-    ["Add On Art", "Build on what is there instead of starting fresh"],
-    ["Quick Draw", "Draw the main shape first so the on-device AI can recognize it"],
-    ["Characters", "Level up your tier to unlock new characters for free"],
-    ["Tiers", "Reaching a new tier lets you pick a few unlocks"],
-    ["Badges", "Equipping a rarer badge plays a bigger unlock flourish"],
-    ["Pro", "Pro turns your player name gold in matches"],
-    ["Pro", "Pro includes exclusive characters and game cosmetics"],
-    ["Stats", "Your stats track across games and feed achievements"],
-    ["Local Pass & Play", "Games played here do not count toward wins or any other stats"],
-    ["Ready Rooms", "Set the vibe on the jukebox before the match starts"],
-    ["Shop", "The shop is where all cosmetics and extra games live"],
-    ["Shop", "Car bundles unlock the same rides in Road Rush and Drift"],
-    ["Suggestions", "Have a new game mode or game idea? Send it from Bug Report / Suggestions in Settings"],
-    ["Bug Reports", "Found a bug, glitch, lag spike, or crash? Tell us what happened in Bug Report / Suggestions"],
-    ["Feedback", "Tell us which game modes, features, or polish you want to see next"],
-    ["Feedback", "For a bug report, include the game and what you expected versus what happened"],
-  ];
-  const tipKey = document.getElementById("tip-key");
-  if (tipKey) {
-    const tg = document.getElementById("tip-game"), th = document.getElementById("tip-hint");
-    const face = tipKey.querySelector(".tip-face");
-    let tipIdx = -1, tipTimer = null;
-    const dealTip = () => {
-      let i; do { i = Math.floor(Math.random() * TIPS.length); } while (i === tipIdx);
-      tipIdx = i;
-      face.classList.add("swap");
-      setTimeout(() => {
-        tg.textContent = TIPS[i][0];
-        th.textContent = TIPS[i][1];
-        face.classList.remove("swap");
-      }, 180);
-    };
-    const armTip = () => { clearInterval(tipTimer); tipTimer = setInterval(dealTip, 6000); };
-    tipKey.addEventListener("click", () => { dealTip(); armTip(); });
-    tg.textContent = TIPS[0][0]; th.textContent = TIPS[0][1]; tipIdx = 0;
-    if (!reduce) armTip();
   }
 
   /* ---------------- hero phone: iMessage thread with real invite bubbles ----------------
