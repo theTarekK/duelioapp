@@ -356,7 +356,6 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 .catalog-shop img { width: 24px; height: auto; }
 .catalog-toolbar { position: relative; z-index: 2; display: flex; justify-content: center; padding: 0 0 4px; }
 .catalog-motion { border: 1px solid rgba(163, 181, 199, 0.3); border-radius: 4px; padding: 8px 12px; min-height: 36px; color: var(--muted); background: rgba(0, 0, 0, 0.25); font: 700 0.7rem var(--body); cursor: pointer; }
-.catalog-note { margin: 8px 11px; color: var(--muted); font-size: 0.75rem; line-height: 1.45; }
 .catalog-shop:focus-visible, .catalog-motion:focus-visible, .cat-header:focus-visible, .tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* the rotating gameplay-tip key, straight from the app's catalog footer */
@@ -409,7 +408,6 @@ details[open] > .cat-header::before { transform: translateY(-2px) rotate(45deg);
 .tile .pro-seal { position: absolute; top: -5px; right: -1px; z-index: 4; width: clamp(20px, 5.8cqi, 30px); height: auto; pointer-events: none; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 5px rgba(255, 212, 107, 0.35)); }
 .tile.builder .tile-face { outline-color: rgba(255, 212, 107, 0.5); }
 .tile.builder .tile-face::after { border-color: rgba(255, 212, 107, 0.22); }
-.tile .new-badge { position: absolute; top: 3px; left: 3px; z-index: 4; display: grid; place-items: center; width: clamp(21px, 6.2cqi, 28px); aspect-ratio: 1; border: 1.4px solid rgba(255, 255, 255, 0.9); border-radius: 50%; background: #ff3b30; color: white; font: 900 clamp(6px, 1.8cqi, 8px) var(--body); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35); }
 .game-index li { scroll-margin-top: 30px; }
 .game-index li:target { outline: 1px solid var(--gold); outline-offset: 5px; border-radius: 3px; }
 

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://api.duelioapp.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tournament Invite — Duelio</title>
 <meta name="description" content="You’ve been invited to join a tournament on Duelio. Open the invitation in Duelio to view the details and join.">
@@ -38,17 +40,6 @@
   </div>
 </main>
 
-<script>
-  (() => {
-    const id = new URLSearchParams(location.search).get("tournament");
-    const open = document.getElementById("open-in-duelio");
-    if (!id || !/^[A-Za-z0-9._:-]{6,128}$/.test(id)) return;
-    const capability = /^#invite=[0-9a-f]{32}$/.test(location.hash)
-      ? location.hash
-      : "";
-    open.href = `duelio://tournament/${encodeURIComponent(id)}${capability}`;
-    open.dataset.openDuelio = "";
-  })();
-</script>
+<script src="/assets/tournament-invite.js" defer></script>
 </body>
 </html>

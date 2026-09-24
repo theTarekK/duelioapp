@@ -302,19 +302,12 @@
         name.textContent = g.n;
         const bases = g.modes ? g.modes.map(mode => mode.video) : [g.tileVideo || "MessageTilePreview-" + g.k];
         const face = makeTileVideo(bases, zoomedGames.has(g.k) ? 1.15 : 1);
-        if (g.k === "quickdraw") face.insertAdjacentHTML("beforeend", '<span class="new-badge">NEW</span>');
         tile.append(face);
         if (g.builder) tile.insertAdjacentHTML("beforeend", '<img class="pro-seal" src="/assets/img/pro-icon.png" alt="" width="160" height="109">');
         tile.append(name);
         grid.appendChild(tile);
       });
       sec.appendChild(grid);
-      if (!collapsible) {
-        const note = document.createElement("p");
-        note.className = "catalog-note";
-        note.textContent = "2 Truths & 1 Lie, Insider, and Drawing Games are available in iMessage only.";
-        sec.appendChild(note);
-      }
       scroll.appendChild(sec);
     });
   }

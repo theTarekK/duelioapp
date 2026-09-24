@@ -30,9 +30,8 @@ The homepage follows the current `DuelioMessageCatalog.categories` layout:
 **Sports → Strategy → Word Games → Multiplayer → Other Games**, with five
 columns at every screen size. Its 29 game titles and two builder launchers use
 the native order, square keycaps, fixed game captions, category tints, preview
-zoom, Quick Draw NEW badge, and Pro builder seals. Board Builder follows Word
-Shift; Table Builder leads Other Games. The three iMessage-only titles are
-identified below Other Games. Hidden/unavailable titles are not rendered.
+zoom and Pro builder seals. Board Builder follows Word
+Shift; Table Builder leads Other Games. Hidden/unavailable titles are not rendered.
 
 `SECTIONS` in `assets/site.js` owns the catalog data. Each game tile links to its
 entry in `/games/`; builder tiles link to the shop. Categories can collapse;

@@ -1,1 +1,13 @@
 .DS_Store
+
+# Machine-local credentials must never enter source or a public Pages artifact.
+.env
+.env.*
+!.env.example
+.dev.vars
+Secret/
+secrets/
+*.pem
+*.p8
+*.p12
+*.key

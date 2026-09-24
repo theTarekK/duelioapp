@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://api.duelioapp.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy — Duelio</title>
 <meta name="description" content="Duelio privacy policy: first-party analytics, LiveOps, community events, hosted tournaments, purchases, moderation, and data retention.">
@@ -32,7 +34,7 @@
 
   <div class="page-head">
     <h1>Duelio — Privacy Policy</h1>
-    <p class="dates"><b>Effective date:</b> 2 August 2026 &nbsp;·&nbsp; <b>Last updated:</b> 28 August 2026</p>
+    <p class="dates"><b>Effective date:</b> 2 August 2026 &nbsp;·&nbsp; <b>Last updated:</b> 22 September 2026</p>
   </div>
 
 <h2 id="the-short-version">The short version</h2>
@@ -64,8 +66,8 @@ play-mode/player-count/duration bucket, and random run identifier, but not a sco
 signed online session, and when it checks the one-time starter-hint offer, the app sends an
 encrypted, temporary DeviceCheck token through our server to Apple. We never receive an Apple
 ID, serial number, or advertising identifier, and we do not store the DeviceCheck token. Session
-ownership is also protected by a P-256 credential: its private key stays on your device (including
-an App Group copy shared by both Duelio surfaces) and in your iCloud KVS record, while our server
+ownership is also protected by a P-256 credential: its private key stays in the shared device Keychain and
+syncs through iCloud Keychain when enabled, while our server
 stores only the public verifier and last-used time.</li>
 <li><strong>Message games and Pass &amp; Play do not send their game state or content to us.</strong> An asynchronous
 game sent as an iMessage stays in that conversation, and Pass &amp; Play stays on the device in front
@@ -411,9 +413,10 @@ the table code so we can identify it.</p>
 <p>Before our server issues or renews a signed session for a Duelio player identifier, the app asks
 Apple for an encrypted, temporary <strong>DeviceCheck token</strong>. Our server forwards that token to Apple's
 DeviceCheck service, then returns a two-minute, one-time challenge. Duelio signs the exact challenge
-with a P-256 account credential. The private key is generated and stored on-device, including an App
-Group copy shared between the app and Messages extension, and stored in a sharded iCloud KVS record so the same
-hidden identity can survive reinstall or work on another device using the same iCloud account. The
+with a P-256 account credential. The private key is generated on-device and stored in the Keychain, shared
+between the app and Messages extension using their App Group. It syncs through iCloud Keychain when
+enabled so the same hidden identity can survive reinstall or work on another device using the same iCloud account.
+Legacy private keys are migrated out of preferences and iCloud KVS only after the Keychain copy is verified. The
 private key is never sent to us. Our server stores the matching public-key verifier, its creation
 time, and its last-used time so another install cannot claim an identifier merely by knowing it.</p>
 <p>Session challenges are consumed once and removed after a session is issued; an abandoned challenge
@@ -433,6 +436,10 @@ bounded grant receipt. Our hosting provider
 necessarily sees the connecting IP address. DeviceCheck and the session credential are used only
 to authenticate Duelio, secure online services, deliver the one-time starter hints, and prevent
 abuse; they are not used for advertising, analytics, profiling, or tracking.</p>
+<p>To enforce service limits, we separately keep daily request counters keyed by a one-way,
+secret-keyed hash of the authenticated player ID or connecting IP address. These counters contain
+no raw identifiers, addresses, device tokens, or request content. They expire within two days of
+the start of their UTC counting day and are removed by scheduled cleanup.</p>
 <h3 id="chat-and-anything-you-type">Chat and anything you type</h3>
 <p>Chat messages in an online room are relayed between the players in that room. <strong>They are not stored
 on our server.</strong> Text sent as an ordinary iMessage is handled by Apple, not our server.</p>
@@ -575,8 +582,8 @@ policy so reinstalling cannot reset the offer.</li>
 session issuance or later cleanup. We retain a player's P-256 public-key verifier and last-used
 time while the corresponding opaque player/account, purchase, or gift identity remains protected,
 so a deleted social profile cannot be taken over to reach preserved purchases or gifts. The
-private key remains only on the user's device (including the App Group copy) and in the user's
-iCloud KVS record.</li>
+private key remains in the shared device Keychain and, when enabled, iCloud Keychain.
+Preferences and iCloud KVS retain only public credential metadata after migration.</li>
 <li><strong>Leaderboard records remain until you delete all Duelio social data</strong> or we remove them for safety
 or operations. The rest of your statistics stay on your device and in your iCloud — see Section 6.</li>
 <li><strong>Gift records are retained as purchase and delivery records.</strong> Uncharged intents may remain so a
