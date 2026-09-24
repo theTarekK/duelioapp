@@ -49,8 +49,8 @@ The videos are full-length H.264 conversions of the bundled HEVC clips, using
 The native `*-poster.png` files stay visible while clips load or are paused.
 
 Videos load near the viewport, play muted and inline, and release their decoder
-when offscreen or when the tab is hidden. **Pause previews** stops every tile;
-reduced-motion preferences start with posters and **Play previews**. Failed
+when offscreen or when the tab is hidden. Reduced-motion preferences keep
+the previews on their static posters. Failed
 requests remain retryable. Refresh the video/poster cache version in `site.js`
 and the stylesheet/script versions in HTML when updating the catalog.
 

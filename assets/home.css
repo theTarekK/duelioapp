@@ -29,26 +29,25 @@
 
 /* Use the whole page width, with each category on its own clear row. */
 .home .catalog-shell { max-width: none; padding: 0 16px 14px; }
-.home .catalog-head { height: 60px; margin: 0 2px 8px; justify-content: flex-start; gap: 10px; }
+.home .catalog-head { height: 60px; margin: 0 2px 2px; justify-content: flex-start; gap: 10px; }
 .home .catalog-app-icon { position: static; width: 30px; height: 30px; border-radius: 8px; }
 .home .catalog-head .wm { font-size: 1.15rem; letter-spacing: 0.12em; }
 .catalog-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
 .home .catalog-shop { position: static; padding: 8px 10px; }
-.home .catalog-motion { min-height: 36px; padding: 8px 12px; }
 .home .catalog-scroll { padding: 0; }
-.home .cat-section { margin-bottom: 16px; }
+.home .cat-section { margin-bottom: 6px; }
 .home .cat-section:last-child { margin-bottom: 0; }
-.home .cat-header { min-height: 34px; margin: 0 0 6px; gap: 12px; }
+.home .cat-header { min-height: 28px; margin: 0 0 3px; gap: 12px; }
 .home .cat-header .t { font-size: 0.76rem; letter-spacing: 0.1em; }
-.home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
-.home .tile { gap: 7px; }
-.home .tile-name { font-size: 10px; min-height: 2.36em; line-height: 1.25; }
+.home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 6px 10px; }
+.home .tile { gap: 5px; }
+.home .tile-name { font-size: 10px; min-height: 1.25em; line-height: 1.25; }
 .home .tile[data-game="backgammon"] .tile-name { font-size: 9px; }
 .home .tile .pro-seal { width: 24px; }
 
 /* Two generous category columns on desktop, with a clear gutter between them. */
 @media (min-width: 1100px) {
-  .home .catalog-scroll { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; align-items: start; }
+  .home .catalog-scroll { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 32px; align-items: start; }
   .home .cat-section { margin-bottom: 0; }
   .home .cat-section[data-category="multi"] { grid-column: 2; grid-row: 2 / span 2; }
   .home .cat-section[data-category="other"] { grid-column: 1; grid-row: 3; }
@@ -86,7 +85,7 @@
   .home .phone { width: 155px; }
   .home .section { padding-top: 26px; }
   .home .catalog-shell { padding: 0 10px 12px; }
-  .home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+  .home .tile-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px 8px; }
   .home .tile-name { font-size: 8px; }
   .home .tile[data-game="backgammon"] .tile-name { font-size: 7px; }
   .home .online-grid { gap: 12px; }
@@ -100,11 +99,9 @@
   .home .catalog-head .wm { font-size: 0.8rem; }
   .home .catalog-app-icon { width: 24px; height: 24px; }
   .catalog-actions { gap: 7px; }
-  .home .catalog-motion { padding: 6px 7px; font-size: 0.65rem; }
   .home .catalog-shop { padding: 6px; font-size: 0.58rem; }
   .home .catalog-shop img { width: 19px; }
   .home .cat-header .t { font-size: 0.7rem; }
-  .home .cat-section { margin-bottom: 12px; }
   .home .tile-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .home .tile-name { font-size: 7px; }
   .home .tile[data-game="backgammon"] .tile-name { font-size: 6px; }
@@ -116,7 +113,6 @@
 
 @media (max-width: 380px) {
   .home .catalog-head .wm { font-size: 0.7rem; }
-  .home .catalog-motion { font-size: 0.58rem; padding-inline: 5px; }
   .home .catalog-shop { padding-inline: 5px; }
   .home .catalog-shop img { display: none; }
 }

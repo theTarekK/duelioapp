@@ -248,21 +248,8 @@
     return face;
   }
 
-  const motionButton = document.getElementById("catalog-motion");
-  function updateMotionButton() {
-    if (!motionButton) return;
-    motionButton.textContent = previewsPaused ? "Play previews" : "Pause previews";
-    motionButton.setAttribute("aria-pressed", String(previewsPaused));
-  }
-  motionButton?.addEventListener("click", () => {
-    previewsPaused = !previewsPaused;
-    updateMotionButton();
-    players.forEach(p => p.sync());
-  });
-  updateMotionButton();
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", event => {
     previewsPaused = event.matches;
-    updateMotionButton();
     players.forEach(p => p.sync());
   });
   document.addEventListener("visibilitychange", () => players.forEach(p => p.sync()));

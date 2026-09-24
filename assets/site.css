@@ -355,8 +355,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 .catalog-shop { position: absolute; right: 0; display: flex; align-items: center; gap: 5px; padding: 7px 9px; border: 1px solid rgba(255, 212, 107, 0.48); border-radius: 3px; background: linear-gradient(var(--tile-top), var(--tile-bot)); box-shadow: 0 2.5px 0 #090a0c; color: var(--gold); font: 0.65rem var(--display); text-decoration: none; }
 .catalog-shop img { width: 24px; height: auto; }
 .catalog-toolbar { position: relative; z-index: 2; display: flex; justify-content: center; padding: 0 0 4px; }
-.catalog-motion { border: 1px solid rgba(163, 181, 199, 0.3); border-radius: 4px; padding: 8px 12px; min-height: 36px; color: var(--muted); background: rgba(0, 0, 0, 0.25); font: 700 0.7rem var(--body); cursor: pointer; }
-.catalog-shop:focus-visible, .catalog-motion:focus-visible, .cat-header:focus-visible, .tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.catalog-shop:focus-visible, .cat-header:focus-visible, .tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* the rotating gameplay-tip key, straight from the app's catalog footer */
 .tip-row { position: relative; z-index: 2; display: flex; justify-content: center; padding: 3px 8px 10px; }
