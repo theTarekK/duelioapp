@@ -27,12 +27,44 @@
   // cat tint keys map to --cat-* CSS vars. live = server-backed realtime game.
   // pass = Pass & Play offered (Strategy + Sports only). modes[] = forced
   // mode-select step (Pool/Darts) with per-mode preview clips.
+  // Matches DuelioMessageCatalog.categories for iOS 1.3. Other Games titles are iMessage-only.
   const SECTIONS = [
+    {
+      title: "Sports", tint: "sports",
+      games: [
+        { n: "Pool", k: "8ballreboot", players: "2–8", pass: true,
+          modes: [
+            { id: "classic", label: "8 Ball", desc: "Standard 8 ball rules — pot your group, then sink the 8 to win.", video: "PoolModePreview-classic" },
+            { id: "nineBall", label: "9 Ball", desc: "Balls 1–9 in a diamond. Always hit the lowest first; pot the 9 to win.", video: "PoolModePreview-nineBall" },
+            { id: "powers", label: "Powers", desc: "8 ball where every turn grants one random power.", video: "PoolModePreview-powers" },
+            { id: "snooker", label: "Snooker", desc: "Snooker balls and spacing on the full snooker table.", video: "PoolModePreview-snooker" },
+            { id: "runout", label: "Runout", desc: "Every object ball matches — clear the table; fastest time wins, fewest shots breaks ties.", video: "PoolModePreview-runoutChallenge" },
+          ],
+          config: [{ label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "Removes the aim guide lines on any game mode." }] },
+        { n: "Bowling", k: "bowling", players: "2", pass: true, config: [
+          { label: "Mode", type: "modes", options: [
+            { label: "10 Pin", desc: "Standard ten-pin bowling with official scoring." },
+            { label: "21 Pin", desc: "A taller rack — bowl for 21." },
+          ]},
+        ]},
+        { n: "Darts", k: "darts", players: "2", pass: true,
+          modes: [
+            { id: "classic", label: "Classic", desc: "Race your score down from 301 to exactly zero.", video: "DartsModePreview-classic" },
+            { id: "championship", label: "Championship", desc: "A 501 countdown on the championship stage.", pro: true, video: "DartsModePreview-championship" },
+            { id: "aroundWorld", label: "Around the World", desc: "Hit the numbers in order around the board — first to finish the lap wins.", video: "DartsModePreview-aroundWorld" },
+            { id: "powers", label: "Powers", desc: "A 901 countdown with a random power on every throw.", video: "DartsModePreview-powers" },
+            { id: "combo", label: "Combo", desc: "A 501 with the combo power always on, chaining hits into bonus points.", video: "DartsModePreview-combo" },
+          ],
+          config: null },
+        { n: "Curling", k: "curling", players: "2", pass: true, config: jumpIn },
+        // Pool & Darts: forced mode-select step (real per-mode preview clips)
+        { n: "The Hook", k: "thehook", players: "2", pass: true, config: jumpIn },
+      ],
+      builders: [],
+    },
     {
       title: "Strategy", tint: "strategy",
       games: [
-        { n: "Tic Tac Toe", k: "tictactoe", players: "2", pass: true, config: jumpIn },
-        { n: "Dots & Boxes", k: "dotsandboxes", players: "2", pass: true, config: jumpIn },
         { n: "Chess", k: "chess", players: "2", pass: true, config: [
           { label: "Variant", type: "modes", options: [
             { label: "Classic", desc: "Classic chess rules." },
@@ -54,7 +86,6 @@
           { label: "Rack", type: "seg", options: ["7 Tiles", "10 Tiles"] },
           LANGS,
         ]},
-        { n: "Backgammon", k: "backgammon", players: "2", pass: true, config: jumpIn },
         { n: "Four in a Row", k: "connect4", players: "2", pass: true, config: [
           { label: "Mode", type: "modes", options: [
             { label: "Classic", desc: "Drop discs, connect four in a row to win." },
@@ -62,47 +93,11 @@
             { label: "Cyclone Spin", desc: "Spin the whole grid and let gravity rearrange it." },
           ]},
         ]},
+        { n: "Backgammon", k: "backgammon", players: "2", pass: true, config: jumpIn },
+        { n: "Tic Tac Toe", k: "tictactoe", players: "2", pass: true, config: jumpIn },
+        { n: "Dots & Boxes", k: "dotsandboxes", players: "2", pass: true, config: jumpIn },
       ],
       builders: [],
-    },
-    {
-      title: "Sports", tint: "sports",
-      games: [
-        { n: "Bowling", k: "bowling", players: "2", pass: true, config: [
-          { label: "Mode", type: "modes", options: [
-            { label: "10 Pin", desc: "Standard ten-pin bowling with official scoring." },
-            { label: "21 Pin", desc: "A taller rack — bowl for 21." },
-          ]},
-        ]},
-        { n: "Ring Toss", k: "ringtoss", players: "2", pass: true, config: [
-          { label: "Mode", type: "modes", options: [
-            { label: "Classic", desc: "Land rings on the bottles across a set number of throws." },
-            { label: "Race", desc: "Both players toss at once — highest score when the clock runs out." },
-          ]},
-        ]},
-        { n: "The Hook", k: "thehook", players: "2", pass: true, config: jumpIn },
-        { n: "Curling", k: "curling", players: "2", pass: true, config: jumpIn },
-        // Pool & Darts: forced mode-select step (real per-mode preview clips)
-        { n: "Pool", k: "8ballreboot", players: "2–8", pass: true,
-          modes: [
-            { id: "classic", label: "8 Ball", desc: "Standard 8 ball rules — pot your group, then sink the 8 to win.", video: "PoolModePreview-classic" },
-            { id: "nineBall", label: "9 Ball", desc: "Balls 1–9 in a diamond. Always hit the lowest first; pot the 9 to win.", video: "PoolModePreview-nineBall" },
-            { id: "powers", label: "Powers", desc: "8 ball where every turn grants one random power.", video: "PoolModePreview-powers" },
-            { id: "snooker", label: "Snooker", desc: "Snooker balls and spacing on the full snooker table.", video: "PoolModePreview-snooker" },
-            { id: "runout", label: "Runout", desc: "Every object ball matches — clear the table; fastest time wins, fewest shots breaks ties.", video: "PoolModePreview-runoutChallenge" },
-          ],
-          config: [{ label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "Removes the aim guide lines on any game mode." }] },
-        { n: "Darts", k: "darts", players: "2", pass: true,
-          modes: [
-            { id: "classic", label: "Classic", desc: "Race your score down from 301 to exactly zero.", video: "DartsModePreview-classic" },
-            { id: "championship", label: "Championship", desc: "A 501 countdown on the championship stage.", pro: true, video: "DartsModePreview-championship" },
-            { id: "aroundWorld", label: "Around the World", desc: "Hit the numbers in order around the board — first to finish the lap wins.", video: "DartsModePreview-aroundWorld" },
-            { id: "powers", label: "Powers", desc: "A 901 countdown with a random power on every throw.", video: "DartsModePreview-powers" },
-            { id: "combo", label: "Combo", desc: "A 501 with the combo power always on, chaining hits into bonus points.", video: "DartsModePreview-combo" },
-          ],
-          config: null },
-      ],
-      builders: [{ n: "Table Builder", k: "tablebuilder", sub: "POOL", players: "2" }],
     },
     {
       title: "Word Games", tint: "words",
@@ -118,17 +113,29 @@
       title: "Multiplayer", tint: "multi",
       games: [
         { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
+        { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
+        { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
+        { n: "Quick Draw", k: "quickdraw", players: "2–8", config: { blurb: "Draw as many prompted objects as you can in 60 seconds. The built-in AI recognizes your drawings on your device." } },
         { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
           { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6", "7", "8", "9"] },
           { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
           { label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "5 categories, 15s timer, no second chance." },
           { label: "Second Chance", type: "toggle", tt: "2nd chance", td: "A shot at redemption on a miss.", on: true },
         ]},
-        { n: "Insider", k: "insider", live: true, players: "3–6", config: jumpIn },
-        { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
-        { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
-        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, players: "3–6", config: jumpIn },
-        { n: "Draw", k: "drawing", live: true, players: "2–8", config: [
+        { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
+        { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
+        { n: "Go Fish", k: "gofish", live: true, players: "2–7", config: jumpIn },
+        { n: "Road Rush", k: "roadracer", players: "2–4", live: true, pass: true, config: jumpIn },
+        { n: "Drift", k: "toprace", players: "2–4", pass: true, config: jumpIn },
+      ],
+      builders: [],
+    },
+    {
+      title: "Other Games", tint: "multi",
+      games: [
+        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
+        { n: "Insider", k: "insider", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
+        { n: "Drawing Games", k: "drawing", live: true, iMessageOnly: true, players: "2–8", config: [
           { label: "Mode", type: "modes", options: [
             { label: "Classic", desc: "Write a secret prompt, then draw another player's." },
             { label: "Telephone", desc: "Write a prompt, draw it, then describe the next — watch it morph." },
@@ -139,24 +146,8 @@
           { label: "Fast Mode", type: "toggle", tt: "Fast Mode", td: "Quick-fire 25s rounds." },
         ]},
       ],
-      builders: [],
-    },
-    {
-      title: "Card Games", tint: "cards",
-      games: [
-        { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
-        { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
-        { n: "Go Fish", k: "gofish", live: true, players: "2–7", config: jumpIn },
-      ],
-      builders: [],
-    },
-    {
-      title: "Racing", tint: "racing",
-      games: [
-        { n: "Road Rush", k: "roadracer", players: "2–4", pass: true, config: jumpIn },
-        { n: "Drift", k: "toprace", players: "2–4", pass: true, config: jumpIn },
-      ],
-      builders: [],
+      builders: [{ n: "Table Builder", k: "tablebuilder", sub: "POOL", players: "2" }],
+      buildersFirst: true,
     },
   ];
 
@@ -352,8 +343,11 @@
       const count = s.games.length + s.builders.length;
       sec.innerHTML = `<div class="cat-header"><span class="t">${s.title}</span><span class="rule"></span><span class="count">${count}</span></div>`;
       const grid = document.createElement("div"); grid.className = "tile-grid";
-      s.games.concat(s.builders.map(b => ({ ...b, builder: true }))).forEach(g => {
+      const builders = s.builders.map(b => ({ ...b, builder: true }));
+      const items = s.buildersFirst ? builders.concat(s.games) : s.games.concat(builders);
+      items.forEach(g => {
         const tile = document.createElement("button");
+        tile.setAttribute("aria-label", g.n + (g.iMessageOnly ? ", iMessage only" : ""));
         tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
         const name = document.createElement("div");
         name.className = "tile-name" + (g.builder ? " gold" : "");
@@ -376,6 +370,11 @@
         if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<img class="pro-seal" src="/assets/img/pro-icon.png" alt="Pro" width="160" height="109">`);
         if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
         tile.appendChild(name);
+        if (g.iMessageOnly) {
+          const availability = document.createElement("small");
+          availability.textContent = "iMessage only";
+          tile.appendChild(availability);
+        }
         grid.appendChild(tile);
       });
       sec.appendChild(grid);
@@ -412,7 +411,7 @@
     ["Telephone", "Simpler drawings survive the chain better"],
     ["Corpse Collage", "Draw your part to connect at the seams, not the center"],
     ["Add On Art", "Build on what is there instead of starting fresh"],
-    ["Ring Toss", "Aim for a flat arc that drops onto the neck"],
+    ["Quick Draw", "Draw the main shape first so the on-device AI can recognize it"],
     ["Characters", "Level up your tier to unlock new characters for free"],
     ["Tiers", "Reaching a new tier lets you pick a few unlocks"],
     ["Badges", "Equipping a rarer badge plays a bigger unlock flourish"],
@@ -476,9 +475,9 @@
         { open: "rematch. right now",              reply: "you sure about that",      close: "bring it" },
         { open: "bullseye first try. calling it",  reply: "sure you are",             close: "watch me" },
       ]},
-      { cover: "ringtossmessagecover.webp", game: "Ring Toss", lines: [
+      { cover: "quickdrawmessagecover.webp", game: "Quick Draw", lines: [
         { open: "winner picks dinner",             reply: "easy money",               close: "we'll see" },
-        { open: "ring toss. best arc wins",        reply: "physics is on my side",    close: "physics can't save you" },
+        { open: "quick draw. most guesses wins",    reply: "my doodles are ready",     close: "60 seconds. let's go" },
       ]},
       { cover: "roadrushmessagecover.webp", game: "Road Rush", lines: [
         { open: "race me. right now",              reply: "don't cry when you lose",  close: "GO GO GO" },
