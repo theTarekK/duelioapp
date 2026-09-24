@@ -324,7 +324,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 /* The previews sit on a restrained graphite slab. The global duel wall carries
    the color; this panel stays neutral so the game art remains the focal point. */
 .catalog-shell {
-  position: relative; max-width: 1200px; margin: 0 auto; padding: 0 8px;
+  position: relative; max-width: 720px; margin: 0 auto; padding: 0 3px;
+  container-type: inline-size;
   border: 1px solid rgba(163, 181, 199, 0.22);
   border-radius: 12px; overflow: hidden;
   background:
@@ -346,10 +347,17 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 }
 .catalog-head {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center;
-  gap: 12px; height: 42px; margin: 2px 0 1px;
+  gap: 12px; height: 64px; margin: 2px 11px 1px;
 }
-.catalog-head .wm { font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.92); }
-.catalog-scroll { position: relative; z-index: 2; padding: 2px 2px 4px; }
+.catalog-head .wm { font-family: var(--display); font-size: clamp(1.2rem, 4.8cqi, 2rem); letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.92); }
+.catalog-scroll { position: relative; z-index: 2; padding: 2px 0 4px; }
+.catalog-app-icon { position: absolute; left: 0; width: 36px; height: 36px; border-radius: 9px; }
+.catalog-shop { position: absolute; right: 0; display: flex; align-items: center; gap: 5px; padding: 7px 9px; border: 1px solid rgba(255, 212, 107, 0.48); border-radius: 3px; background: linear-gradient(var(--tile-top), var(--tile-bot)); box-shadow: 0 2.5px 0 #090a0c; color: var(--gold); font: 0.65rem var(--display); text-decoration: none; }
+.catalog-shop img { width: 24px; height: auto; }
+.catalog-toolbar { position: relative; z-index: 2; display: flex; justify-content: center; padding: 0 0 4px; }
+.catalog-motion { border: 1px solid rgba(163, 181, 199, 0.3); border-radius: 4px; padding: 8px 12px; min-height: 36px; color: var(--muted); background: rgba(0, 0, 0, 0.25); font: 700 0.7rem var(--body); cursor: pointer; }
+.catalog-note { margin: 8px 11px; color: var(--muted); font-size: 0.75rem; line-height: 1.45; }
+.catalog-shop:focus-visible, .catalog-motion:focus-visible, .cat-header:focus-visible, .tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* the rotating gameplay-tip key, straight from the app's catalog footer */
 .tip-row { position: relative; z-index: 2; display: flex; justify-content: center; padding: 3px 8px 10px; }
@@ -374,82 +382,36 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01
 .tip-game { font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--gold); }
 .tip-hint { font-family: var(--body); font-weight: 700; font-size: 0.8rem; color: rgba(255, 255, 255, 0.88); line-height: 1.35; }
 
-.cat-section { margin-bottom: 9px; }
-.cat-header {
-  display: flex; align-items: center; gap: 10px; margin: 6px 2px 5px;
-}
-.cat-header .t { font-family: var(--display); font-size: 0.76rem; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.9); white-space: nowrap; }
+.cat-section { margin-bottom: 3px; --category-tint: transparent; }
+.cat-section[data-category="sports"] { --category-tint: rgb(46 139 255 / 5%); }
+.cat-section[data-category="strategy"] { --category-tint: rgb(255 59 48 / 5%); }
+.cat-section[data-category="words"] { --category-tint: rgb(175 82 222 / 5%); }
+.cat-section[data-category="multi"] { --category-tint: rgb(255 214 10 / 5%); }
+.cat-header { display: flex; align-items: center; gap: 10px; min-height: 38px; margin: 0 11px; list-style: none; }
+summary.cat-header { cursor: pointer; }
+summary.cat-header::-webkit-details-marker { display: none; }
+summary.cat-header::before { content: ""; width: 7px; height: 7px; margin: 0 4px 0 2px; border-right: 2px solid rgba(255, 255, 255, 0.88); border-bottom: 2px solid rgba(255, 255, 255, 0.88); transform: rotate(-45deg); }
+details[open] > .cat-header::before { transform: translateY(-2px) rotate(45deg); }
+.cat-header .t { font-family: var(--display); font-size: clamp(0.65rem, 2.8cqi, 0.82rem); letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.88); white-space: nowrap; }
 .cat-header .rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(163, 181, 199, 0.45), transparent); }
-.cat-header .count { font-family: var(--body); font-weight: 800; font-size: 0.7rem; color: var(--muted); }
-
-.tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 5px; }
-
-.tile {
-  position: relative; display: flex; flex-direction: column; gap: 3px; cursor: default;
-  border: none; background: transparent; padding: 0; font-family: inherit; text-align: center;
-}
-.tile-face {
-  position: relative; aspect-ratio: 1; border-radius: 9px; overflow: hidden;
-  background: linear-gradient(180deg, var(--tile-top), var(--tile-bot));
-  box-shadow: 0 3px 0 rgba(3, 4, 6, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  outline: 1px solid rgba(163, 181, 199, 0.16); outline-offset: -1px;
-}
-.tile-face video, .tile-face img:not(.pro-seal) { /* the Pro seal is a badge, not a face */
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; transition: opacity 0.5s ease;
-}
-.tile-face video.ready, .tile-face img:not(.pro-seal).ready { opacity: 1; }
-.tile-face .gloss { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 40%); pointer-events: none; }
-.tile-face::after { /* steel inner rim */
-  content: ""; position: absolute; inset: 1.5px; border-radius: 7px; border: 1px solid rgba(163, 181, 199, 0.2); pointer-events: none;
-}
-.tile-name { font-family: var(--display); font-size: 0.56rem; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.86); line-height: 1.15; min-height: 1.9em; padding: 0 2px; }
+.tile-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 2px; row-gap: 3px; }
+.tile { position: relative; min-width: 0; display: flex; flex-direction: column; gap: 3px; cursor: pointer; border: none; background: transparent; padding: 0; font-family: inherit; text-align: center; text-decoration: none; transition: transform 0.18s ease; }
+.tile:active { transform: scale(0.9); }
+.tile-face { position: relative; width: 100%; aspect-ratio: 1; border-radius: 2px; overflow: hidden; background: linear-gradient(180deg, var(--tile-top), var(--tile-bot)); box-shadow: 0 2.5px 0 rgba(3, 4, 6, 0.7); outline: 1px solid rgba(255, 255, 255, 0.28); outline-offset: -1px; }
+.tile-face video, .tile-face .tile-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(var(--preview-zoom, 1)); }
+.tile-face video { opacity: 0; }
+.tile-face video.ready { opacity: 1; }
+.tile-face .gloss { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 50%), var(--category-tint); pointer-events: none; }
+.tile-face::after { content: ""; position: absolute; inset: 1.6px; border-radius: 1px; border: 1px solid rgba(163, 181, 199, 0.22); pointer-events: none; }
+.tile-name { font-family: var(--display); font-size: clamp(7px, 2.2cqi, 12px); letter-spacing: 0; color: rgba(255, 255, 255, 0.84); line-height: 1.18; min-height: 2.36em; padding: 0 1px; overflow-wrap: normal; }
+.tile[data-game="backgammon"] .tile-name { font-size: clamp(6px, 2.05cqi, 12px); }
 .tile-name.gold { background: linear-gradient(180deg, #FFF5BD, var(--gold) 50%, var(--gold-deep)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-
-/* Pool & Darts: the caption is the current MODE, letter-faded on every change.
-   Height is locked in rem (not em) so the smaller sizes below cannot nudge the
-   grid as the name swaps, and the app's own length thresholds pick the size. */
-.tile-name.mode { min-height: 1.14rem; white-space: nowrap; text-transform: uppercase; }
-/* Sized to the NARROWEST a tile ever gets (the 96px grid floor, so ~92px of
-   label): AROUND THE WORLD is 10.87em wide, which fits at 8.4px — the old
-   0.39rem was compensating far harder than the tile ever needed. */
-.tile-name.mode.m-sm { font-size: 0.56rem; }
-.tile-name.mode.m-xs { font-size: 0.5rem; letter-spacing: 0.01em; }
-.tile-name.mode .lt {
-  display: inline-block; opacity: 0; filter: blur(2.5px); transform: translateY(3px);
-  transition: opacity 0.2s ease-out, filter 0.2s ease-out, transform 0.2s ease-out;
-}
-.tile-name.mode.shown .lt { opacity: 1; filter: blur(0); transform: none; }
-/* the mode handoff is a cut, not the 0.5s reveal fade the other tiles use */
-.tile-face video.pv { transition: opacity 0.22s linear; }
-
-/* live pip on the tile face */
-.tile .live-pip {
-  position: absolute; top: 6px; left: 6px; z-index: 4;
-  display: inline-flex; align-items: center; gap: 4px;
-  font-family: var(--display); font-size: 0.44rem; letter-spacing: 0.08em; color: #fff;
-  background: rgba(3, 4, 6, 0.5); border: 1px solid rgba(74, 222, 128, 0.5);
-  border-radius: 999px; padding: 2px 6px; backdrop-filter: blur(4px);
-}
-.tile .live-pip::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--cat-cards); }
-/* the app's own winged-gem Pro seal (DuelioProIcon), carried at the same
-   glow the app gives it rather than a lettered pill */
-.tile .pro-seal {
-  position: absolute; top: 4px; right: 4px; z-index: 4;
-  width: 30px; height: auto;
-  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 5px rgba(255, 212, 107, 0.35));
-}
+.tile .pro-seal { position: absolute; top: -5px; right: -1px; z-index: 4; width: clamp(20px, 5.8cqi, 30px); height: auto; pointer-events: none; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 5px rgba(255, 212, 107, 0.35)); }
 .tile.builder .tile-face { outline-color: rgba(255, 212, 107, 0.5); }
-.tile.soon { cursor: not-allowed; }
-.tile.soon .tile-face video, .tile.soon .tile-face img { filter: grayscale(0.4) brightness(0.5); }
-.tile .soon-badge {
-  position: absolute; inset: 0; z-index: 4; display: grid; place-items: center;
-}
-.tile .soon-badge span {
-  font-family: var(--display); font-size: 0.56rem; letter-spacing: 0.06em; color: #fff;
-  background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px; padding: 5px 10px;
-}
+.tile.builder .tile-face::after { border-color: rgba(255, 212, 107, 0.22); }
+.tile .new-badge { position: absolute; top: 3px; left: 3px; z-index: 4; display: grid; place-items: center; width: clamp(21px, 6.2cqi, 28px); aspect-ratio: 1; border: 1.4px solid rgba(255, 255, 255, 0.9); border-radius: 50%; background: #ff3b30; color: white; font: 900 clamp(6px, 1.8cqi, 8px) var(--body); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35); }
+.game-index li { scroll-margin-top: 30px; }
+.game-index li:target { outline: 1px solid var(--gold); outline-offset: 5px; border-radius: 3px; }
 
 /* =====================================================================
    ONLINE MATCHMAKING
@@ -666,7 +628,6 @@ a.platform-card:hover {
    RESPONSIVE
    ===================================================================== */
 @media (max-width: 960px) {
-  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
   .platform-status { margin: 36px 18px 44px; align-items: flex-start; flex-direction: column; }
   .platform-list { width: 100%; }
   .platform-card { flex: 1 1 0; min-width: 0; }
@@ -693,10 +654,7 @@ a.platform-card:hover {
   .hero-phone { display: none; }
   .online-grid { grid-template-columns: 1fr; }
   .section { padding: 44px 12px 22px; }
-  .catalog-shell { padding-inline: 6px; }
-  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
-  .tile-name.mode.m-sm { font-size: 0.48rem; }
-  .tile-name.mode.m-xs { font-size: 0.42rem; letter-spacing: 0; }
+  .catalog-shell { padding-inline: 3px; }
 }
 @media (max-width: 560px) {
   .nav { gap: 10px; padding-left: 16px; padding-right: 16px; }
@@ -704,7 +662,6 @@ a.platform-card:hover {
   .nav-logo img { width: 30px; height: 30px; }
   .nav-links { gap: 16px; }
   .hero h1 { font-size: clamp(2.65rem, 14vw, 4rem); }
-  .catalog-head .wm { font-size: 0.98rem; }
   .feedback-terminal { border-radius: 16px; }
   .feedback-terminal-body { padding: 14px; }
   .platform-status { margin-inline: 12px; padding: 19px 16px; }
@@ -712,12 +669,16 @@ a.platform-card:hover {
   .platform-card { width: 100%; }
 }
 
+@media (max-width: 360px) {
+  .catalog-head .wm { font-size: 1rem; }
+}
+
 /* =====================================================================
    REDUCED MOTION
    ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .duel-glow, .err img, .bubble.typing i, .tile .live-pip::before, .platform-soon i { animation: none !important; }
+  .duel-glow, .err img, .bubble.typing i, .platform-soon i { animation: none !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .bubble { opacity: 1; transform: none; transition: none; }
   .btn, .tile { transition: none; }

@@ -7,7 +7,8 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=8";
+  const vid = (base) => V + base + ".mp4?v=9";
+  const poster = (base) => V + base + "-poster.png?v=9";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = {
@@ -131,7 +132,7 @@
       builders: [],
     },
     {
-      title: "Other Games", tint: "multi",
+      title: "Other Games", tint: "other",
       games: [
         { n: "2 Truths & 1 Lie", k: "twotruths", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
         { n: "Insider", k: "insider", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
@@ -153,234 +154,169 @@
 
   const ALL_GAMES = SECTIONS.flatMap(s => s.games);
 
-  /* ---------------- tile videos: decoder-friendly, every visible tile plays ----------------
-     Bytes are fetched as blobs (fetch is never media-throttled), but a
-     <video> only HOLDS a decoder while it is near the viewport — 30 parallel
-     load() calls exhaust the browser's media decoders and the losers die
-     with SRC_NOT_SUPPORTED (this is why most tiles showed nothing). So,
-     exactly like the app's catalog: attach on approach, tear down when far
-     offscreen, and kick any player that lost the decoder race until it runs.
-     The fetch happens on approach too, NOT at boot: these are the app's
-     full-length clips (up to 17s, ~43MB across the catalog), so warming them
-     all up front would download the whole set before a visitor scrolls. */
+  /* Native preview loops, with first-frame posters and one decoder per tile.
+     Pool / Darts cycle the full mode playlist while their game names stay fixed.
+     Offscreen, hidden, paused, and reduced-motion previews release their decoder. */
   const vidCache = new Map();
+  let previewsPaused = reduce;
+  const players = new Set();
   const videoURL = (base) => {
     if (!vidCache.has(base)) {
-      vidCache.set(base, fetch(vid(base)).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(b => URL.createObjectURL(b)));
+      vidCache.set(base, fetch(vid(base))
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+        .then(b => URL.createObjectURL(b))
+        .catch(error => { vidCache.delete(base); throw error; }));
     }
     return vidCache.get(base);
   };
 
-  function attach(v) {
-    videoURL(v.dataset.base).then(u => {
-      if (!v.dataset.on) return;         // scrolled away while fetching
-      if (v.src !== u) { v.src = u; v.load(); }
-      v.play?.().catch(() => {});
-    });
-  }
-  function detach(v) {
-    v.pause?.();
-    if (v.src) { v.removeAttribute("src"); v.load(); } // releases the decoder
-    v.classList.remove("ready");
-  }
-
-  const videoIO = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      const v = e.target;
-      if (e.isIntersecting) { v.dataset.on = "1"; attach(v); }
-      else { delete v.dataset.on; detach(v); }
+  const videoIO = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      const player = [...players].find(p => p.face === entry.target);
+      if (!player) continue;
+      player.visible = entry.isIntersecting;
+      player.sync();
     }
-  }, { rootMargin: "300px 0px" });
+  }, { rootMargin: "80px 0px" });
 
-  function makeTileVideo(base) {
-    const wrap = document.createElement("div");
-    wrap.className = "tile-face";
-    const v = document.createElement("video");
-    v.muted = true; v.loop = true; v.playsInline = true;
-    v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
-    v.dataset.base = base;
-    const markReady = () => { v.classList.add("ready"); v.play?.().catch(() => {}); };
-    v.addEventListener("loadeddata", markReady);
-    v.addEventListener("canplay", markReady);
-    v.addEventListener("playing", () => v.classList.add("ready"));
-    wrap.appendChild(v);
-    const gloss = document.createElement("div"); gloss.className = "gloss"; wrap.appendChild(gloss);
-    videoIO.observe(v);
-    return wrap;
-  }
-
-  /* ---------------- Pool & Darts: the app's mode-cycling tile ----------------
-     These two are the only catalog games with a forced mode-select step, so in
-     the app their tile plays every mode's clip back to back and the caption
-     under the square becomes the current MODE name instead of the game name,
-     letter-faded on each change (DuelioMessagesTileVideoView + LetterFadeLabel).
-     Same here: an ordered playlist that advances when a clip ENDS — never on a
-     timer, so the caption can never drift out of sync with the picture — with a
-     standby <video> holding the next clip so the handoff is a cut rather than a
-     flash of empty tile. Only these two tiles carry a second decoder, and only
-     while they are near the viewport. */
-  const modeTiles = [];
-
-  function makeModeTile(modes, label) {
-    const wrap = document.createElement("div");
-    wrap.className = "tile-face";
-    let cur, next, idx = 0, on = false;
-
-    const clear = (v) => {
-      v.pause?.();
-      if (v.src) { v.removeAttribute("src"); v.load(); } // releases the decoder
-      v.classList.remove("ready");
+  function makeTileVideo(bases, zoom = 1) {
+    const face = document.createElement("div");
+    face.className = "tile-face";
+    face.style.setProperty("--preview-zoom", zoom);
+    const still = document.createElement("img");
+    still.className = "tile-poster";
+    still.src = poster(bases[0]);
+    still.alt = "";
+    still.loading = "lazy";
+    still.decoding = "async";
+    const video = document.createElement("video");
+    video.muted = true;
+    video.loop = bases.length === 1;
+    video.playsInline = true;
+    video.preload = "none";
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("aria-hidden", "true");
+    face.append(still, video);
+    face.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
+    let index = 0, revision = 0, loading = false;
+    const eligible = () => player.visible && !previewsPaused && !document.hidden
+      && (face.closest("details")?.open ?? true);
+    const clear = () => {
+      revision++;
+      loading = false;
+      video.pause();
+      video.classList.remove("ready");
+      if (video.hasAttribute("src")) { video.removeAttribute("src"); video.load(); }
     };
-    const load = (v, i, autoplay) => videoURL(modes[i].video).then(u => {
-      if (!on) return;                                  // scrolled away mid-fetch
-      if (v.src !== u) { v.src = u; v.load(); }
-      if (autoplay) v.play?.().catch(() => {});
-    }).catch(() => {});
-
-    const advance = () => {
-      const spent = cur;
-      idx = (idx + 1) % modes.length;
-      cur = next; next = spent;                         // standby takes the stage
-      spent.classList.remove("ready");
-      cur.classList.add("ready");
-      cur.play?.().catch(() => {});
-      label.set(modes[idx].label);
-      clear(next);                                      // recycle as the next standby
-      load(next, (idx + 1) % modes.length, false);
+    const load = () => {
+      if (!eligible() || loading) return;
+      if (video.error) clear();
+      if (video.hasAttribute("src")) {
+        video.play().catch(() => {});
+        return;
+      }
+      loading = true;
+      const current = ++revision;
+      videoURL(bases[index]).then(url => {
+        if (current !== revision || !eligible()) return;
+        loading = false;
+        video.src = url;
+        video.load();
+        video.play().catch(() => {});
+      }).catch(() => { if (current === revision) loading = false; });
     };
-
-    const mk = () => {
-      const v = document.createElement("video");
-      v.className = "pv";                               // excluded from the generic kicker
-      v.muted = true; v.playsInline = true; v.preload = "auto";
-      v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
-      v.addEventListener("ended", () => { if (v === cur) advance(); });
-      v.addEventListener("playing", () => { if (v === cur) v.classList.add("ready"); });
-      wrap.appendChild(v);
-      return v;
+    const player = {
+      face, visible: false,
+      sync() { if (eligible()) load(); else clear(); },
+      retry() { if (eligible() && (video.paused || video.error || !video.hasAttribute("src"))) load(); },
     };
-    cur = mk(); next = mk();
-    wrap.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
-    label.init(modes[0].label);
-    // nothing is fetched until the tile is approached; from there the standby
-    // pulls one clip ahead, so a mode tile never costs more than two clips
-
-    new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        if (on) return;
-        on = true;
-        load(cur, idx, true);
-        load(next, (idx + 1) % modes.length, false);
-      } else { on = false; clear(cur); clear(next); }
-    }, { rootMargin: "300px 0px" }).observe(wrap);
-
-    // a clip that will not decode must not park the tile on one mode forever
-    modeTiles.push(() => {
-      if (!on) return;
-      if (cur.error) advance();
-      else if (cur.readyState >= 2 && cur.paused) cur.play?.().catch(() => {});
-      else if (!cur.src) load(cur, idx, true);
+    video.addEventListener("playing", () => {
+      if (!eligible()) { clear(); return; }
+      video.classList.add("ready");
+      if (bases.length > 1) videoURL(bases[(index + 1) % bases.length]).catch(() => {});
     });
-    return wrap;
-  }
-
-  /* the app's LetterFadeLabel: the whole caption fades out letter by letter,
-     then the new mode name fades back in on the same left-to-right stagger */
-  function letterLabel(el) {
-    let gen = 0;
-    // per-letter layout rules out a scale-to-fit, so the size steps down on the
-    // app's own length thresholds instead
-    const size = (text) => {
-      el.classList.remove("m-sm", "m-xs");
-      if (text.length > 12) el.classList.add("m-xs");
-      else if (text.length > 8) el.classList.add("m-sm");
-    };
-    const plain = (text) => { size(text); el.textContent = text; };
-    const render = (text) => {
-      size(text);
-      el.textContent = "";
-      [...text].forEach((ch, i) => {
-        const s = document.createElement("span");
-        s.className = "lt";
-        s.textContent = ch === " " ? " " : ch;
-        s.style.transitionDelay = (i * 0.03).toFixed(2) + "s";
-        el.appendChild(s);
-      });
-      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("shown")));
-    };
-    return {
-      init: (text) => reduce ? plain(text) : render(text),
-      set(text) {
-        if (reduce) { plain(text); return; }
-        const g = ++gen;
-        const out = Math.min(200 + Math.max(el.childElementCount - 1, 0) * 30, 750) + 50;
-        el.classList.remove("shown");
-        setTimeout(() => { if (g === gen) render(text); }, out);
-      },
-    };
-  }
-
-  // the kicker: rebuild any near-viewport player that stalled or lost the
-  // decoder race (error) — mirrors the app's kick-until-the-loop-runs logic
-  setInterval(() => {
-    if (document.hidden) return;
-    document.querySelectorAll(".tile-face video:not(.pv)").forEach(v => {
-      if (!v.dataset.on) return;
-      if (v.error) { detach(v); v.dataset.on = "1"; attach(v); }
-      else if (v.readyState >= 2 && v.paused) v.play?.().catch(() => {});
-      else if (v.readyState === 0 && !v.src) attach(v);
+    video.addEventListener("ended", () => {
+      if (bases.length < 2) return;
+      clear();
+      index = (index + 1) % bases.length;
+      still.src = poster(bases[index]);
+      load();
     });
-    modeTiles.forEach(tick => tick());
-  }, 2500);
+    players.add(player);
+    videoIO.observe(face);
+    return face;
+  }
 
-  /* ---------------- render catalog (always grouped by category) ---------------- */
+  const motionButton = document.getElementById("catalog-motion");
+  function updateMotionButton() {
+    if (!motionButton) return;
+    motionButton.textContent = previewsPaused ? "Play previews" : "Pause previews";
+    motionButton.setAttribute("aria-pressed", String(previewsPaused));
+  }
+  motionButton?.addEventListener("click", () => {
+    previewsPaused = !previewsPaused;
+    updateMotionButton();
+    players.forEach(p => p.sync());
+  });
+  updateMotionButton();
+  matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", event => {
+    previewsPaused = event.matches;
+    updateMotionButton();
+    players.forEach(p => p.sync());
+  });
+  document.addEventListener("visibilitychange", () => players.forEach(p => p.sync()));
+  setInterval(() => { if (!document.hidden && !previewsPaused) players.forEach(p => p.retry()); }, 2500);
+
+  /* Five tracks and category/item order mirror DuelioMessageCatalog.categories.
+     Builders count as tiles, not additional game titles. Other Games stays open. */
   const scroll = document.getElementById("catalog-scroll");
+  const zoomedGames = new Set(["tictactoe", "dotsandboxes", "connect4", "backgammon", "anagrams", "wordhunt", "drawing"]);
   function renderCatalog() {
     if (!scroll) return;
-    scroll.innerHTML = "";
     SECTIONS.forEach(s => {
-      const sec = document.createElement("div"); sec.className = "cat-section reveal";
-      const count = s.games.length + s.builders.length;
-      sec.innerHTML = `<div class="cat-header"><span class="t">${s.title}</span><span class="rule"></span><span class="count">${count}</span></div>`;
-      const grid = document.createElement("div"); grid.className = "tile-grid";
+      const collapsible = s.title !== "Other Games";
+      const sec = document.createElement(collapsible ? "details" : "section");
+      sec.className = "cat-section";
+      sec.dataset.category = s.tint;
+      if (collapsible) {
+        sec.open = true;
+        sec.addEventListener("toggle", () => players.forEach(p => p.sync()));
+      }
+      const header = document.createElement(collapsible ? "summary" : "div");
+      header.className = "cat-header";
+      header.innerHTML = `<span class="t">${s.title}</span><span class="rule" aria-hidden="true"></span>`;
+      sec.appendChild(header);
+      const grid = document.createElement("div");
+      grid.className = "tile-grid";
       const builders = s.builders.map(b => ({ ...b, builder: true }));
       const items = s.buildersFirst ? builders.concat(s.games) : s.games.concat(builders);
       items.forEach(g => {
-        const tile = document.createElement("button");
-        tile.setAttribute("aria-label", g.n + (g.iMessageOnly ? ", iMessage only" : ""));
-        tile.className = "tile" + (g.builder ? " builder" : "") + (g.soon ? " soon" : "");
+        const tile = document.createElement("a");
+        tile.href = g.builder ? "/shop/" : "/games/?game=" + g.k + "#game-" + g.k;
+        tile.setAttribute("aria-label", g.n + (g.iMessageOnly ? ", iMessage only" : "") + (g.builder ? ", Duelio Pro" : ""));
+        tile.className = "tile" + (g.builder ? " builder" : "");
+        tile.dataset.game = g.k;
         const name = document.createElement("div");
         name.className = "tile-name" + (g.builder ? " gold" : "");
-        if (g.modes) {
-          // Pool / Darts: the square cycles the modes and the caption rides it,
-          // exactly as in the app — the game's own name is not shown
-          name.classList.add("mode");
-          tile.appendChild(makeModeTile(g.modes, letterLabel(name)));
-        } else if (g.noVideo) {
-          // no preview clip exists (e.g. a not-yet-built game) — bare graphite face
-          const face = document.createElement("div"); face.className = "tile-face";
-          face.appendChild(Object.assign(document.createElement("div"), { className: "gloss" }));
-          tile.appendChild(face);
-          name.textContent = g.n;
-        } else {
-          tile.appendChild(makeTileVideo(g.tileVideo || ("MessageTilePreview-" + g.k)));
-          name.textContent = g.n;
-        }
-        if (g.live) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<span class="live-pip">LIVE</span>`);
-        if (g.builder) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<img class="pro-seal" src="/assets/img/pro-icon.png" alt="Pro" width="160" height="109">`);
-        if (g.soon) tile.querySelector(".tile-face").insertAdjacentHTML("beforeend", `<div class="soon-badge"><span>Coming Soon</span></div>`);
-        tile.appendChild(name);
-        if (g.iMessageOnly) {
-          const availability = document.createElement("small");
-          availability.textContent = "iMessage only";
-          tile.appendChild(availability);
-        }
+        name.textContent = g.n;
+        const bases = g.modes ? g.modes.map(mode => mode.video) : [g.tileVideo || "MessageTilePreview-" + g.k];
+        const face = makeTileVideo(bases, zoomedGames.has(g.k) ? 1.15 : 1);
+        if (g.k === "quickdraw") face.insertAdjacentHTML("beforeend", '<span class="new-badge">NEW</span>');
+        tile.append(face);
+        if (g.builder) tile.insertAdjacentHTML("beforeend", '<img class="pro-seal" src="/assets/img/pro-icon.png" alt="" width="160" height="109">');
+        tile.append(name);
         grid.appendChild(tile);
       });
       sec.appendChild(grid);
+      if (!collapsible) {
+        const note = document.createElement("p");
+        note.className = "catalog-note";
+        note.textContent = "2 Truths & 1 Lie, Insider, and Drawing Games are available in iMessage only.";
+        sec.appendChild(note);
+      }
       scroll.appendChild(sec);
     });
-    revealObserve(scroll.querySelectorAll(".reveal"));
   }
 
   /* ---------------- tip key: the app's rotating gameplay-tip ticker ----------------

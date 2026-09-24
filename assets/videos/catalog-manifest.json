@@ -1,0 +1,357 @@
+{
+  "source": "Duelio iOS catalog, September 23, 2026",
+  "conversion": "avconvert Preset640x480; full-length H.264 with fast start; native poster images",
+  "assets": [
+    {
+      "file": "DartsModePreview-aroundWorld.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/DartsModePreview-aroundWorld.mp4",
+      "sourceSha256": "33a55ed6a0dfe0b1cf1108e5a00bc110568b49171904538eaaceb46a4f54f502",
+      "sha256": "491e088d3bb0dfb53a7e7ff7831cb0e9011a5d9365d92e3feed3f343f945b05b",
+      "bytes": 760673,
+      "poster": "DartsModePreview-aroundWorld-poster.png",
+      "posterSha256": "a768f39773c0bcfddf4e6281b1f1c26d219c2b0b2a7922cfa16bd6d6b3a13a0b"
+    },
+    {
+      "file": "DartsModePreview-championship.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/DartsModePreview-championship.mp4",
+      "sourceSha256": "0f164559dc40cbf143c0c99486f51b3c9e838522d5593959a08f3d7e25ba5de7",
+      "sha256": "d6e474c8e31fc7b5c0e6470be4a1c8328d97f3364d0e79cbcafabfabbdd62624",
+      "bytes": 912677,
+      "poster": "DartsModePreview-championship-poster.png",
+      "posterSha256": "68d161edd799667f1697ef177689f0b711d6f322cef805ab7b3c5ad0eb406924"
+    },
+    {
+      "file": "DartsModePreview-classic.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/DartsModePreview-classic.mp4",
+      "sourceSha256": "90fd8e2e68e18ddeb950efa3736e90ce6c10abd6860ee11f035dadf88b3fdec1",
+      "sha256": "07cd02e04b18660056665187c38c9a3c2ced0af8dab45a038ec0ad0505fe6ff4",
+      "bytes": 886533,
+      "poster": "DartsModePreview-classic-poster.png",
+      "posterSha256": "b3190e3d46752b662da811517f96e6fba4656ecd72dddbf87f26fa13bc3a4653"
+    },
+    {
+      "file": "DartsModePreview-combo.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/DartsModePreview-combo.mp4",
+      "sourceSha256": "b3f1b24b4281ba4f1a9ea7d1e82b9932981b3680f4d1d4586ca1ba32ad8dfb70",
+      "sha256": "c8346ce1007a2928c8fb6de8c4de91ac1fdfe005cd47ef2a086b43d8ce2754e5",
+      "bytes": 1027571,
+      "poster": "DartsModePreview-combo-poster.png",
+      "posterSha256": "4cbf034d39623114908fcbd48d66f365d9bbb7315f4fe3190d54188c6190981c"
+    },
+    {
+      "file": "DartsModePreview-powers.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/DartsModePreview-powers.mp4",
+      "sourceSha256": "7eb3c0ec4eed75be43d0cbe790392b0f33aeb538fec2a46d8c6755ca56d71cd0",
+      "sha256": "850d8b17f6223e7d1904af812bf4b5c8f1437ff29a59b8b220ddb34846ce58cc",
+      "bytes": 634302,
+      "poster": "DartsModePreview-powers-poster.png",
+      "posterSha256": "c1d38315a09bce0d928ebc8f100c7e01dcf1da693a4624e541b1f942ed2c663c"
+    },
+    {
+      "file": "MessageTilePreview-anagrams.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-anagrams.mp4",
+      "sourceSha256": "d2cc692b1188ea7cc8bd1c07e4871a6e2fc54fed26a7694a7a3279f5d63adcb5",
+      "sha256": "9be6e1e2a4408e83d9312a59a69b1c40c1dfac9306c9658523edb8da98e05af5",
+      "bytes": 925988,
+      "poster": "MessageTilePreview-anagrams-poster.png",
+      "posterSha256": "12069c056245e194703a509d0c005737630b55baa9546fd92dfd07b27861ea9f"
+    },
+    {
+      "file": "MessageTilePreview-backgammon.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-backgammon.mp4",
+      "sourceSha256": "966345c67cf81326e6b27cc16e76d183f314d8f5d23df9e07b545768ea8ca8e7",
+      "sha256": "92e24be2b639ab5278d5057177df696c0a39944d53eca3d7e446d6bff2e2332c",
+      "bytes": 966441,
+      "poster": "MessageTilePreview-backgammon-poster.png",
+      "posterSha256": "ae43554672cefa9f94333c9f4a9ef72dd9170e80442568603bd9133c30b9452a"
+    },
+    {
+      "file": "MessageTilePreview-blackjack.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-blackjack.mp4",
+      "sourceSha256": "b1d11f8e80685811365e2e3cde12b34f278c0554adb885bf9831f9fa254c348d",
+      "sha256": "5366f376c34022f77389432eaf82e22daa1918bc8203e9625106edb9e8e5601b",
+      "bytes": 1024339,
+      "poster": "MessageTilePreview-blackjack-poster.png",
+      "posterSha256": "7db8212f8726d2ce1517c3091357b8f12dc0ecc6af37cb5c4fb8f9026b760f75"
+    },
+    {
+      "file": "MessageTilePreview-boardbuilder.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-boardbuilder.mp4",
+      "sourceSha256": "6562ea03acc611c9ff4a98bbbf6ef832c1467f8047fe9ba51b7d35db3ddfeea4",
+      "sha256": "029febb87b3420116789f75de353c0a523176e40f32f73fa628d9d5f7931074b",
+      "bytes": 1834549,
+      "poster": "MessageTilePreview-boardbuilder-poster.png",
+      "posterSha256": "f7c0b8715d5fa730098f1a2e6703b892cccd0f06f983f14d11b2ad2baa30808e"
+    },
+    {
+      "file": "MessageTilePreview-bombparty.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-bombparty.mp4",
+      "sourceSha256": "7b3cbf20b225d07a6b8226ad723bca682e51bc760c53ffbbc15dc7518fc58780",
+      "sha256": "240c2c71c9e5dabd9bc477f63b4633c42230a7ae6954acf207e79d6541bd7e67",
+      "bytes": 1385965,
+      "poster": "MessageTilePreview-bombparty-poster.png",
+      "posterSha256": "510780f14948330a6213ed85e131dc71578ca00c016177e4e66daaabc21c8d0b"
+    },
+    {
+      "file": "MessageTilePreview-bowling.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-bowling.mp4",
+      "sourceSha256": "41a5adfe8dec4be9ca2e57992d064c35d9c20ae2fb2c772ec7ee6cfd65f7241d",
+      "sha256": "ff4725c4a2497395b1ea3a3baeca5b4013afcdcef806c98c5e492153076890b4",
+      "bytes": 971590,
+      "poster": "MessageTilePreview-bowling-poster.png",
+      "posterSha256": "7e46eca6553b5be207aa96da0585ac2ecf464547e63b40d3a4b87fdd5666bff5"
+    },
+    {
+      "file": "MessageTilePreview-checkers.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-checkers.mp4",
+      "sourceSha256": "c94f50f26bb8ed4ed155fdcb272dca29ac6f31006499206e6f4073305b8f4f13",
+      "sha256": "8f057cbe838bdb0020b3b892544ff8e8b71d2d407f27fc6ea3d1508f8bc3a5e4",
+      "bytes": 1674330,
+      "poster": "MessageTilePreview-checkers-poster.png",
+      "posterSha256": "84edbfe8a3c883ea128ec299327a835b92b02f548a8bedbfab5d69da95f199e5"
+    },
+    {
+      "file": "MessageTilePreview-chess.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-chess.mp4",
+      "sourceSha256": "129be4c9fc14b427dca719e8390a21ee816f2a44cac958ba7ee7ea52422df123",
+      "sha256": "84cad28dc8f0ffbcaf5bd5f2b729118af9fe61c36c27c3a46c0b817275cfbbd6",
+      "bytes": 1620007,
+      "poster": "MessageTilePreview-chess-poster.png",
+      "posterSha256": "fa6f3a8cd011c8af41d9dd114745fb249f94bce2485691375865e98facfaf7fd"
+    },
+    {
+      "file": "MessageTilePreview-connect4.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-connect4.mp4",
+      "sourceSha256": "4efad465760e2cf5b7c243fe920142d876020a80fb981a9ca36aced3f2781466",
+      "sha256": "af883a47e5afa052d5ed46a5cb22324cad5d93ee195e8de77287e67a79700c42",
+      "bytes": 721959,
+      "poster": "MessageTilePreview-connect4-poster.png",
+      "posterSha256": "296802b1d5271a414700ac45f5b9b5e9856667286b99c7171cdf184324d85bb9"
+    },
+    {
+      "file": "MessageTilePreview-curling.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-curling.mp4",
+      "sourceSha256": "9cc0905f62057e890d8d6d7b6d34f61164b702afc6d216496e544e6da561050c",
+      "sha256": "df104da1992d2e98feb529f262e6c1afd22b994f4727e7ba0409889d41e2a512",
+      "bytes": 1983743,
+      "poster": "MessageTilePreview-curling-poster.png",
+      "posterSha256": "5d46a4d8e8476a07591caa5f3a4655c3202fe2b95274843b07d6daa519ccb171"
+    },
+    {
+      "file": "MessageTilePreview-dotsandboxes.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-dotsandboxes.mp4",
+      "sourceSha256": "347ffcec11bf929c4ea51dc3bba3c68ec52adb84215225e8b9e330b24b84b9c6",
+      "sha256": "43c2f402436f602dc97c1ff1d3f9d7c249b224ceba439dc1324118162ea03dab",
+      "bytes": 1179405,
+      "poster": "MessageTilePreview-dotsandboxes-poster.png",
+      "posterSha256": "1c548a238b8dfbf9017528bec8c58d6747e6dfd756c3a1ecdbfb27e399baf0b0"
+    },
+    {
+      "file": "MessageTilePreview-drawing.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-drawing.mp4",
+      "sourceSha256": "0f3f95649d0a8ebe5a9bf083e75573309a754bfae47abb2365e4b690fa343d94",
+      "sha256": "163234498ffdd9215fb1594c6ab32996e1dfe7c2b64c0b95181319c53e20453a",
+      "bytes": 662501,
+      "poster": "MessageTilePreview-drawing-poster.png",
+      "posterSha256": "a14a4963a8ede67a245724b6ab13dcc2237f7a45ed320aa3b775f0ed45851691"
+    },
+    {
+      "file": "MessageTilePreview-gofish.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-gofish.mp4",
+      "sourceSha256": "55bb54efd48022fe52baf3ab5c6609100c5a10e98ec67c56193c363fa66e5f68",
+      "sha256": "a13ae925d7c682b13ead4fd4b01282ef3be7ca2f73a612a887ceb49ac122d49c",
+      "bytes": 1297278,
+      "poster": "MessageTilePreview-gofish-poster.png",
+      "posterSha256": "e08b4899fc0347ea462a761ad5726c1b454cf23fffdcaa93e335b1add53a3866"
+    },
+    {
+      "file": "MessageTilePreview-insider.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-insider.mp4",
+      "sourceSha256": "43f61074b0f289ce06e269d336e6a2d695306f8066d92249778db3d9eebdaea6",
+      "sha256": "83545f0b1ed4390cd54852f01d165ae314914ea4b56f6b9e0d42ae1172a31b4b",
+      "bytes": 1143226,
+      "poster": "MessageTilePreview-insider-poster.png",
+      "posterSha256": "193ae979b94b4d7a6db294d3d4c82801c191e07c23381f2342043eb6f9c5befa"
+    },
+    {
+      "file": "MessageTilePreview-maps.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-maps.mp4",
+      "sourceSha256": "7cf5f93aa50ce958ec345f36e3195267c225a89e9be4e2a467f620b312a2695e",
+      "sha256": "e580fd746060a81ed95aad4c4fc2a1ec70a95f36037ab5d7e07139f6f19e33d6",
+      "bytes": 1434074,
+      "poster": "MessageTilePreview-maps-poster.png",
+      "posterSha256": "a78a5a210b078562a1d8623a123475dd0f2d7999b10faa34cbdfe3fc7930e880"
+    },
+    {
+      "file": "MessageTilePreview-poker.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-poker.mp4",
+      "sourceSha256": "1b97ef6326f8d12f2b5e40cecfd98abc78e487c978425c57ff46c82a909d3a5d",
+      "sha256": "69daae6a4788a551956f2beb23f43dd3b2f1a04a38b46fb264a1641bee43fbaf",
+      "bytes": 932955,
+      "poster": "MessageTilePreview-poker-poster.png",
+      "posterSha256": "61c4cf96c7259ab29df4d380e878b07c88b4547ce10f5d5947192a7f1be931cc"
+    },
+    {
+      "file": "MessageTilePreview-quickdraw.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-quickdraw.mp4",
+      "sourceSha256": "60ff783f6df2bdbdd10f19e76ba964793c7baa4fdcd9ba251cf2bf56e892c59e",
+      "sha256": "6d26d361c8a570ef5de93944b868548cce365a1e7e8b46fb1df97ea5f1a7e65b",
+      "bytes": 1232024,
+      "poster": "MessageTilePreview-quickdraw-poster.png",
+      "posterSha256": "f3f11e722c2cc27d116583fa0b46a1293d7840ce58ba08ec81c8bde15a711d04"
+    },
+    {
+      "file": "MessageTilePreview-roadracer.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-roadracer.mp4",
+      "sourceSha256": "2ca2ceaf184d26c004e95dd4f3cfda9586d5f3a231371fbaf6b9fdbd8e785a6a",
+      "sha256": "08bcd5a18c12987518819f317a4dd5969ddeee0c6b8ee85bed0edde5b63827ed",
+      "bytes": 1355076,
+      "poster": "MessageTilePreview-roadracer-poster.png",
+      "posterSha256": "59952146ab119eda1789f841cfad9ec7b9fbfbccfb93f01773b55ecd7d21679d"
+    },
+    {
+      "file": "MessageTilePreview-scrabble.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-scrabble.mp4",
+      "sourceSha256": "d87c9fd9aced2297ea5c48332f19f8b90a50834d1acf68c404dba35a201b1efe",
+      "sha256": "6a2b56a87ca1854627418c01dfcc3e1d5e8cec64195bc316861ef4a7cf00b1cc",
+      "bytes": 1086606,
+      "poster": "MessageTilePreview-scrabble-poster.png",
+      "posterSha256": "3901c56d77be2ad43c712c97d80254776e2ee961a0f68d819354ea06c94b5a0a"
+    },
+    {
+      "file": "MessageTilePreview-spellingbee.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-spellingbee.mp4",
+      "sourceSha256": "802d6a894c9763e745b94c5f9ed8c465ab2bccba4b5c693243ea77e25478165e",
+      "sha256": "b1f2e920ae27e0ab2fcc82f36c370890d89464318abb9d693fa5580a509dd4fb",
+      "bytes": 1085200,
+      "poster": "MessageTilePreview-spellingbee-poster.png",
+      "posterSha256": "192a1f1a7706ff84b39e28e5603b5ee48881dd9589cda099b96681f6d8bb4885"
+    },
+    {
+      "file": "MessageTilePreview-tablebuilder.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-tablebuilder.mp4",
+      "sourceSha256": "2efe4e400f919c743a15b38405f9f3b10764702d27236392008cd424f85fe02c",
+      "sha256": "69510711ffe6a78756d98e874dcf2a01e25f1ebaa44847e8a6350ead794480ab",
+      "bytes": 1721168,
+      "poster": "MessageTilePreview-tablebuilder-poster.png",
+      "posterSha256": "4f91ccf660ce5317e1e1331991b2f9d718f4170e1fcb66a63f193c3e1437be67"
+    },
+    {
+      "file": "MessageTilePreview-thehook.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-thehook.mp4",
+      "sourceSha256": "6e88cabc3b9eee8f4ac522b044498584170d49fef267f5db8b3883112fe1faff",
+      "sha256": "400a0d9575c44d1570840c3708d50acd4d44a1f47c580ac6f4278f5006054073",
+      "bytes": 1542683,
+      "poster": "MessageTilePreview-thehook-poster.png",
+      "posterSha256": "e3c36965389bcef5d465532eb0b59b088da77aab69226c9c3c6ebc266fafb9f7"
+    },
+    {
+      "file": "MessageTilePreview-tictactoe.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-tictactoe.mp4",
+      "sourceSha256": "b177f284f0ac3fea69117fa7c53418f9baa7c265247a2780679ea625b3c65ef0",
+      "sha256": "3f7cf38e817bd4b07d414140db88dc3ff1b21c71893e922ed753ca292acf4652",
+      "bytes": 987360,
+      "poster": "MessageTilePreview-tictactoe-poster.png",
+      "posterSha256": "0ed8bbe5a9092ae450979ab45301fd749341f9fa28e45df088cdf3dff87bc641"
+    },
+    {
+      "file": "MessageTilePreview-toprace.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-toprace.mp4",
+      "sourceSha256": "e0ae9810e2ae7d49597d2f045e42802ddbb9c19f484ae50fd8dbe6b1341a06e3",
+      "sha256": "8ee79a42e0c0b1685da9eaf18750c78d25391aa54bcda3204c5145d49a3f5a1d",
+      "bytes": 1230595,
+      "poster": "MessageTilePreview-toprace-poster.png",
+      "posterSha256": "846d4e6bddfcce43ec41488f3de18005991881404ef087cea5be03d0796cb4ea"
+    },
+    {
+      "file": "MessageTilePreview-trivia.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-trivia.mp4",
+      "sourceSha256": "ff9af2e4c844d89b376b88939ab83ab2a2111314eb7f7239c2f9e4dba22e77eb",
+      "sha256": "7987ce4e233f410e476242e99895f9f1fa5fd3639e3dccd0b8acdc9cee7674be",
+      "bytes": 1359450,
+      "poster": "MessageTilePreview-trivia-poster.png",
+      "posterSha256": "db7b1002af4a56dd570082e7f884efc7953458bb3d8a8cd1a0341a18f9428f73"
+    },
+    {
+      "file": "MessageTilePreview-twotruths.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-twotruths.mp4",
+      "sourceSha256": "9968ef4ccb75fc119c6465c7374bda35027d912854019220505e63830ce7ac7d",
+      "sha256": "c6ddc126c64b2e2a228b8d683e1c8dc923bc3b2bbf37fcc9847e83ff42a6a1f0",
+      "bytes": 1234771,
+      "poster": "MessageTilePreview-twotruths-poster.png",
+      "posterSha256": "ee3227042c75e6bd883d1205d51a484c2c53490ee65f61205e49c064291bae05"
+    },
+    {
+      "file": "MessageTilePreview-wordhunt.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-wordhunt.mp4",
+      "sourceSha256": "0dc2305aad7bf1b26ce13ef6dcf3e612077bffa47878c65d2a288701cebe5b76",
+      "sha256": "69bf8efcd8524cafe5524c3eccf71f64182b4bc28eb2aed418f129e473a4340c",
+      "bytes": 1253726,
+      "poster": "MessageTilePreview-wordhunt-poster.png",
+      "posterSha256": "90883ffe35af9d7ee04b815fd0a3e7fd489a180f2e59cf65d9fa41d201b7621f"
+    },
+    {
+      "file": "MessageTilePreview-wordhuntplus.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-wordhuntplus.mp4",
+      "sourceSha256": "f38c95757dfb2973acf07a7d7288f95b4e0cece76e1de313a70f3c876c685456",
+      "sha256": "03c29cd09f15924726de9a9ee2e27ab7020cbdbb3339b8942a8b86df54b59787",
+      "bytes": 969934,
+      "poster": "MessageTilePreview-wordhuntplus-poster.png",
+      "posterSha256": "b01cc94a3c177d56833357515595daffe68c467398f21bcb5f23470a582719f6"
+    },
+    {
+      "file": "MessageTilePreview-wordshift.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-wordshift.mp4",
+      "sourceSha256": "882eaa99fbffd24f44659d78e25e952b8cbb110174e934e02a4826e22d286e6b",
+      "sha256": "f3190ad35f1e0a6103f17c4e7552dd8fabb5b6c4e0135c6ac6fa95cb8d861a1f",
+      "bytes": 1107423,
+      "poster": "MessageTilePreview-wordshift-poster.png",
+      "posterSha256": "8cdc3b569ce5181b8cffabe188f0d18e06d6943dc6bb3b82f6a86b6ce7272b5b"
+    },
+    {
+      "file": "PoolModePreview-classic.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/PoolModePreview-classic.mp4",
+      "sourceSha256": "8a90e8fbf520970dae2b4d2c71583578208f0b3e08f2421e57f634fc3f1c4b9b",
+      "sha256": "20e27590a458afc455b636c15e8a905b7119d28397cdacd10d9750fc45b82416",
+      "bytes": 742766,
+      "poster": "PoolModePreview-classic-poster.png",
+      "posterSha256": "1544d13fedb2733c0db00af75e237feb345bbb77b964958753ceaf9937f2653c"
+    },
+    {
+      "file": "PoolModePreview-nineBall.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/PoolModePreview-nineBall.mp4",
+      "sourceSha256": "b6beb953fe7731934f6b73ff20a7dfdfb9322da79e76c1f2b02297335f5fbba1",
+      "sha256": "d1c27f752173a1f6399f28ebbfeaa971ae41869eb684270c35eadeccaf151c2a",
+      "bytes": 1035234,
+      "poster": "PoolModePreview-nineBall-poster.png",
+      "posterSha256": "c204522fd836d1de34fd7b8a446bb11093494ae7788f7ae40a36af73ef87f7c1"
+    },
+    {
+      "file": "PoolModePreview-powers.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/PoolModePreview-powers.mp4",
+      "sourceSha256": "469ef8bcc80427108263961bfd7d202f3839648d95f12a324704ea3d9e81428b",
+      "sha256": "1bed7ab34e040b4f0201a126e795720b78c7415d62bfb7698b4ab2874c655e9a",
+      "bytes": 1217863,
+      "poster": "PoolModePreview-powers-poster.png",
+      "posterSha256": "9e42c7a17c01783585a1c7048dd4233503a7af4ab1cdf075db365458b7111f63"
+    },
+    {
+      "file": "PoolModePreview-runoutChallenge.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/PoolModePreview-runoutChallenge.mp4",
+      "sourceSha256": "3a1a535b3ccc8f68f94a445b4e9d1624c33041b1cd9963e1270ac7a5ee268ee6",
+      "sha256": "c1e8e5ec8d662ad00f67616803df21720ae6c2e4e62503ca0cce3c745e53398d",
+      "bytes": 1091578,
+      "poster": "PoolModePreview-runoutChallenge-poster.png",
+      "posterSha256": "eb73d3bcf8fc775e423b9efca33d1b31385b7e421f816e8091aa13e473624fb7"
+    },
+    {
+      "file": "PoolModePreview-snooker.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/PoolModePreview-snooker.mp4",
+      "sourceSha256": "3410d9b36e36f00e2f1961f2f6169955a3c4d3614151ec0688885520d690010d",
+      "sha256": "c977ee461cd02eed42214565ca550a7f3086ed02c11d3351037c9dcdad82a792",
+      "bytes": 1128547,
+      "poster": "PoolModePreview-snooker-poster.png",
+      "posterSha256": "f1489a67addcb2c5a4f765ba1c476e849a6e1f479b9464a81f3c3a5b0b46af6d"
+    }
+  ]
+}
