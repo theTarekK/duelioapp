@@ -5,20 +5,59 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://api.duelioapp.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Duelio</title>
-<meta name="description" content="Duelio drops 29 games straight into iMessage. Chess, pool, word games, live multiplayer and more. Play friends in a chat or match online. No ads, no sign-up, no cross-app tracking.">
-<meta property="og:title" content="Duelio — 29 games inside iMessage">
-<meta property="og:description" content="Turn any chat into a game night. Challenge the group chat, match online, or pass the phone.">
+<title>Duelio — iMessage Games for iPhone &amp; iPad</title>
+<meta name="description" content="Play 29 iMessage games with Duelio on iPhone and iPad. Challenge friends to pool, chess, Word Hunt and more in Messages. No ads or sign-up.">
+<meta property="og:title" content="Duelio — iMessage Games for iPhone &amp; iPad">
+<meta property="og:description" content="Play 29 iMessage games with Duelio on iPhone and iPad. Challenge friends to pool, chess, Word Hunt and more in Messages. No ads or sign-up.">
 <meta property="og:url" content="https://duelioapp.com/">
 <meta property="og:image" content="https://duelioapp.com/assets/img/duelio-logo.png">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Duelio">
+<meta property="og:image:alt" content="Duelio iMessage games app icon">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Duelio — iMessage Games for iPhone &amp; iPad">
+<meta name="twitter:description" content="Play 29 iMessage games with Duelio on iPhone and iPad. Challenge friends to pool, chess, Word Hunt and more in Messages. No ads or sign-up.">
+<meta name="twitter:image" content="https://duelioapp.com/assets/img/duelio-logo.png">
+<link rel="canonical" href="https://duelioapp.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://duelioapp.com/#website",
+      "name": "Duelio",
+      "alternateName": "Duelio Games",
+      "url": "https://duelioapp.com/",
+      "publisher": { "@id": "https://duelioapp.com/#organization" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://duelioapp.com/#organization",
+      "name": "METK LLC",
+      "url": "https://metkapps.com/"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Duelio Games",
+      "url": "https://duelioapp.com/",
+      "downloadUrl": "https://apps.apple.com/app/id6792538416",
+      "image": "https://duelioapp.com/assets/img/duelio-logo.png",
+      "operatingSystem": "iOS, iPadOS",
+      "applicationCategory": "GameApplication",
+      "description": "An iMessage game collection for iPhone and iPad with pool, chess, word games, card games and live multiplayer.",
+      "publisher": { "@id": "https://duelioapp.com/#organization" }
+    }
+  ]
+}
+</script>
 <meta name="theme-color" content="#020104">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=2">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png?v=2">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png?v=2">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
 <link rel="stylesheet" href="/assets/site.css?v=19">
-<link rel="stylesheet" href="/assets/home.css?v=2">
+<link rel="stylesheet" href="/assets/home.css?v=3">
 </head>
 <body class="home">
 
@@ -33,6 +72,7 @@
   </a>
   <nav class="nav-links">
     <a href="#catalog">Games</a>
+    <a href="/imessage-games/">How to play</a>
     <a href="/shop/">Shop</a>
     <a href="#online">Online</a>
     <a href="/privacy/">Privacy Policy</a>
@@ -47,12 +87,12 @@
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-copy">
-      <h1 class="reveal d1"><span class="grad-duel">DUELIO</span></h1>
+      <h1 class="reveal d1"><span class="grad-duel">DUELIO</span><span class="hero-tagline">iMessage games for iPhone &amp; iPad</span></h1>
       <p class="hero-by reveal d1">by METK LLC</p>
       <ul class="hero-bullets reveal d2">
-        <li><b>29 games</b> inside iMessage</li>
+        <li><b>29 iMessage games</b> in one Messages extension</li>
         <li>Live multiplayer and online matchmaking</li>
-        <li>Turn based duels that ride the conversation</li>
+        <li>Play pool, chess and word games in your iMessage chats</li>
         <li><b>No sign-up. No ads. No cross-app tracking.</b></li>
       </ul>
       <div class="hero-cta reveal d3">
@@ -63,9 +103,9 @@
         <a class="btn btn-ghost hero-browse" href="#catalog">Browse the games</a>
       </div>
       <div class="hero-stats reveal d3">
-        <div><b class="count" data-count="29">0</b><span>games</span></div>
-        <div><b class="count" data-count="11">0</b><span>play live</span></div>
-        <div><b class="count" data-count="8">0</b><span>languages</span></div>
+        <div><b class="count" data-count="29">29</b><span>games</span></div>
+        <div><b class="count" data-count="11">11</b><span>play live</span></div>
+        <div><b class="count" data-count="8">8</b><span>languages</span></div>
         <div><b class="gap">0</b><span>ads &amp; trackers</span></div>
       </div>
     </div>
@@ -83,8 +123,9 @@
 
 <!-- ============================== CATALOG ============================== -->
 <section class="section" id="catalog">
-  <p class="eyebrow reveal">The catalog</p>
-  <h2 class="reveal">Every game, <span class="grad-gold">exactly as it looks</span></h2>
+  <p class="eyebrow reveal">The iMessage game collection</p>
+  <h2 class="reveal">iMessage games, <span class="grad-gold">exactly as they look</span></h2>
+  <p class="lead">From <a href="/games/#game-8ballreboot">Pool</a> and <a href="/games/#game-chess">Chess</a> to <a href="/games/#game-wordhunt">Word Hunt</a>, <a href="/games/#game-darts">Darts</a> and party games. <a href="/games/">Explore all 29 games</a>.</p>
 
   <div class="catalog-shell reveal">
     <canvas class="catalog-hexfx" aria-hidden="true"></canvas>
@@ -98,6 +139,13 @@
     <div class="catalog-scroll" id="catalog-scroll"></div>
 
   </div>
+</section>
+
+<section class="section imessage-intro" aria-labelledby="imessage-intro-title">
+  <p class="eyebrow">Made for your conversations</p>
+  <h2 id="imessage-intro-title">How to play games <span class="grad-gold">in iMessage</span></h2>
+  <p class="lead">Download Duelio, open an iMessage conversation, and tap the + button to find the Duelio extension. Pick a game and send a challenge to your friend or group chat. Take turns through Messages or join a live multiplayer room together.</p>
+  <p class="imessage-guide-link"><a class="btn btn-ghost" href="/imessage-games/">Read the iMessage games guide</a></p>
 </section>
 
 <!-- ============================== ONLINE ============================== -->
@@ -130,7 +178,7 @@
   <div class="platform-status-copy">
     <p class="eyebrow">Platform availability</p>
     <h2 id="platform-status-title">Play now on iOS.</h2>
-    <p>Bring the whole Duelio catalog to Messages on iPhone and iPad.</p>
+    <p>Play Duelio's iMessage games in the Messages app on iPhone and iPad, or open the standalone iOS app for online play.</p>
   </div>
   <div class="platform-list" aria-label="Duelio platform availability">
     <a class="platform-card available" href="https://apps.apple.com/app/id6792538416" target="_blank" rel="noopener">

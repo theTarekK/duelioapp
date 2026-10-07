@@ -14,6 +14,9 @@ index.html          — landscape landing page: gameplay phone, live catalog,
 privacy/index.html  — privacy policy   → https://duelioapp.com/privacy/
 terms/index.html    — EULA / terms     → https://duelioapp.com/terms/
 support/index.html  — support + FAQ    → https://duelioapp.com/support/
+imessage-games/index.html — how to play in Messages → https://duelioapp.com/imessage-games/
+robots.txt          — crawler access and sitemap discovery
+sitemap.xml         — canonical public pages for search engines
 404.html            — custom 404
 assets/site.css     — shared design system (self-hosted Bungee + Nunito)
 assets/home.css     — compact, full-width homepage and responsive catalog
@@ -73,6 +76,21 @@ and the stylesheet/script versions in HTML when updating the catalog.
    (can take up to an hour after DNS propagates).
 
 Every later update is just commit + push.
+
+## Search appearance
+
+The homepage, game collection, support page, and iMessage guide have distinct,
+descriptive titles and summaries. Keep iMessage wording natural and consistent
+with visible content; don't add repeated keywords or unsupported game counts.
+The homepage includes WebSite, publisher, and app structured data. Canonical URLs
+consolidate alternate entry paths such as game query links into the main pages.
+Add new public content pages to `sitemap.xml`; invitation URLs and error pages
+are intentionally excluded. There is no local build step.
+
+After publishing, submit `https://duelioapp.com/sitemap.xml` in Google Search
+Console and request indexing for the homepage, `/games/`, and `/imessage-games/`.
+Google chooses the displayed title and snippet and must recrawl before changes
+appear; these metadata changes do not guarantee a search position.
 
 ## App Store link
 
