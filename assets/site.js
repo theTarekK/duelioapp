@@ -7,8 +7,8 @@
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const V = "/assets/videos/";
-  const vid = (base) => V + base + ".mp4?v=9";
-  const poster = (base) => V + base + "-poster.png?v=9";
+  const vid = (base) => V + base + ".mp4?v=10";
+  const poster = (base) => V + base + "-poster.png?v=10";
 
   /* ---------------- reusable config fragments ---------------- */
   const LANGS = {
@@ -28,7 +28,7 @@
   // cat tint keys map to --cat-* CSS vars. live = server-backed realtime game.
   // pass = Pass & Play offered (Strategy + Sports only). modes[] = forced
   // mode-select step (Pool/Darts) with per-mode preview clips.
-  // Matches DuelioMessageCatalog.categories for iOS 1.3. Other Games titles are iMessage-only.
+  // Matches DuelioMessageCatalog.categories (October 20, 2026). Only Insider and 2 Truths & 1 Lie are iMessage-only.
   const SECTIONS = [
     {
       title: "Sports", tint: "sports",
@@ -58,10 +58,52 @@
           ],
           config: null },
         { n: "Curling", k: "curling", players: "2", pass: true, config: jumpIn },
-        // Pool & Darts: forced mode-select step (real per-mode preview clips)
         { n: "The Hook", k: "thehook", players: "2", pass: true, config: jumpIn },
+        { n: "Archery", k: "archery", players: "2", pass: true, config: jumpIn },
+        { n: "Road Rush", k: "roadracer", players: "2–8", live: true, pass: true, config: jumpIn },
+        { n: "Drift", k: "toprace", players: "2–4", pass: true, config: jumpIn },
       ],
       builders: [],
+    },
+    {
+      title: "Multiplayer", tint: "multi",
+      games: [
+        { n: "SketchBot", k: "quickdraw", players: "2–8", isNew: true, config: { blurb: "Choose a 30, 60, or 90-second drawing race. Draw prompted objects at the studio desk while the built-in AI recognizes them on your device." } },
+        { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
+        { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
+        { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
+        { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
+          { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6", "7", "8", "9"] },
+          { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
+          { label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "5 categories, 15s timer, no second chance." },
+          { label: "Second Chance", type: "toggle", tt: "2nd chance", td: "A shot at redemption on a miss.", on: true },
+        ]},
+        { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
+        { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
+        { n: "Go Fish", k: "gofish", live: true, players: "2–7", config: jumpIn },
+        { n: "Drawing Games", k: "drawing", live: true, players: "2–8", config: [
+          { label: "Mode", type: "modes", options: [
+            { label: "Classic", desc: "Write a secret prompt, then draw another player's." },
+            { label: "Telephone", desc: "Write a prompt, draw it, then describe the next — watch it morph." },
+            { label: "Corpse Collage", desc: "Draw a body part; only see a small hint from the previous one." },
+            { label: "Add-On Art", desc: "Build on the previous drawing." },
+            { label: "Guessing Game", desc: "One player draws live; everyone else guesses for points." },
+          ]},
+          { label: "Fast Mode", type: "toggle", tt: "Fast Mode", td: "Quick-fire 25s rounds." },
+        ]},
+        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
+      ],
+      builders: [],
+    },
+    {
+      title: "Word Games", tint: "words",
+      games: [
+        { n: "Word Hunt", k: "wordhunt", players: "2–8", pass: true, config: wordConfig(["3 × 3", "4 × 4", "5 × 5", "6 × 6"]) },
+        { n: "Word Hunt Plus", k: "wordhuntplus", players: "2–8", pass: true, config: wordConfig(["4 × 4", "5 × 5", "6 × 6"]) },
+        { n: "Anagrams", k: "anagrams", players: "2–8", pass: true, config: [{ label: "Word Length", type: "seg", options: ["5", "6", "7"] }, LANGS, { label: "Board Source", type: "seg", options: ["Random", "Set Seed"] }] },
+        { n: "Word Shift", k: "wordshift", players: "2–8", pass: true, config: wordConfig(["4 × 4", "5 × 5", "6 × 6"]) },
+      ],
+      builders: [{ n: "Board Builder", k: "boardbuilder", sub: "WORDS", players: "2–8" }],
     },
     {
       title: "Strategy", tint: "strategy",
@@ -101,51 +143,9 @@
       builders: [],
     },
     {
-      title: "Word Games", tint: "words",
-      games: [
-        { n: "Word Hunt", k: "wordhunt", players: "2–8", pass: true, config: wordConfig(["3 × 3", "4 × 4", "5 × 5", "6 × 6"]) },
-        { n: "Word Hunt Plus", k: "wordhuntplus", players: "2–8", pass: true, config: wordConfig(["4 × 4", "5 × 5", "6 × 6"]) },
-        { n: "Anagrams", k: "anagrams", players: "2–8", pass: true, config: [{ label: "Word Length", type: "seg", options: ["5", "6", "7"] }, LANGS, { label: "Board Source", type: "seg", options: ["Random", "Set Seed"] }] },
-        { n: "Word Shift", k: "wordshift", players: "2–8", pass: true, config: wordConfig(["4 × 4", "5 × 5", "6 × 6"]) },
-      ],
-      builders: [{ n: "Board Builder", k: "boardbuilder", sub: "WORDS", players: "2–8" }],
-    },
-    {
-      title: "Multiplayer", tint: "multi",
-      games: [
-        { n: "Word Bomb", k: "bombparty", live: true, players: "2–8", config: [{ label: "Timer", type: "seg", options: ["Fast", "Normal", "Relaxed"] }, LANGS] },
-        { n: "Spelling Bee", k: "spellingbee", live: true, players: "2–8", config: [LANGS] },
-        { n: "Landmark", k: "maps", live: true, players: "2–8", config: [{ label: "Difficulty", type: "seg", options: ["Easy", "Normal", "Hard"] }] },
-        { n: "SketchBot", k: "quickdraw", players: "2–8", config: { blurb: "Draw as many prompted objects as you can in 60 seconds. The built-in AI recognizes your drawings on your device." } },
-        { n: "Trivia Rush", k: "trivia", live: true, players: "2–8", config: [
-          { label: "Players", type: "seg", options: ["2", "3", "4", "5", "6", "7", "8", "9"] },
-          { label: "Seconds / Question", type: "seg", def: 2, options: ["10s", "15s", "20s"] },
-          { label: "Hard Mode", type: "toggle", tt: "Hard Mode", td: "5 categories, 15s timer, no second chance." },
-          { label: "Second Chance", type: "toggle", tt: "2nd chance", td: "A shot at redemption on a miss.", on: true },
-        ]},
-        { n: "Poker", k: "poker", live: true, players: "2–7", config: jumpIn },
-        { n: "Blackjack", k: "blackjack", live: true, players: "2–7", config: jumpIn },
-        { n: "Go Fish", k: "gofish", live: true, players: "2–7", config: jumpIn },
-        { n: "Road Rush", k: "roadracer", players: "2–4", live: true, pass: true, config: jumpIn },
-        { n: "Drift", k: "toprace", players: "2–4", pass: true, config: jumpIn },
-      ],
-      builders: [],
-    },
-    {
       title: "Other Games", tint: "other",
       games: [
-        { n: "2 Truths & 1 Lie", k: "twotruths", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
         { n: "Insider", k: "insider", live: true, iMessageOnly: true, players: "3–6", config: jumpIn },
-        { n: "Drawing Games", k: "drawing", live: true, iMessageOnly: true, players: "2–8", config: [
-          { label: "Mode", type: "modes", options: [
-            { label: "Classic", desc: "Write a secret prompt, then draw another player's." },
-            { label: "Telephone", desc: "Write a prompt, draw it, then describe the next — watch it morph." },
-            { label: "Corpse Collage", desc: "Draw a body part; only see a small hint from the previous one." },
-            { label: "Add-On Art", desc: "Build on the previous drawing." },
-            { label: "Guessing Game", desc: "One player draws live; everyone else guesses for points." },
-          ]},
-          { label: "Fast Mode", type: "toggle", tt: "Fast Mode", td: "Quick-fire 25s rounds." },
-        ]},
       ],
       builders: [{ n: "Table Builder", k: "tablebuilder", sub: "POOL", players: "2" }],
       buildersFirst: true,
@@ -281,7 +281,7 @@
       items.forEach(g => {
         const tile = document.createElement("a");
         tile.href = g.builder ? "/shop/" : "/games/?game=" + g.k + "#game-" + g.k;
-        tile.setAttribute("aria-label", g.n + (g.iMessageOnly ? ", iMessage only" : "") + (g.builder ? ", Duelio Pro" : ""));
+        tile.setAttribute("aria-label", g.n + (g.iMessageOnly ? ", iMessage only" : "") + (g.isNew ? ", new" : "") + (g.builder ? ", Duelio Pro" : ""));
         tile.className = "tile" + (g.builder ? " builder" : "");
         tile.dataset.game = g.k;
         const name = document.createElement("div");
@@ -290,6 +290,7 @@
         const bases = g.modes ? g.modes.map(mode => mode.video) : [g.tileVideo || "MessageTilePreview-" + g.k];
         const face = makeTileVideo(bases, zoomedGames.has(g.k) ? 1.15 : 1);
         tile.append(face);
+        if (g.isNew) tile.insertAdjacentHTML("beforeend", '<span class="tile-new" aria-hidden="true">NEW</span>');
         if (g.builder) tile.insertAdjacentHTML("beforeend", '<img class="pro-seal" src="/assets/img/pro-icon.png" alt="" width="160" height="109">');
         tile.append(name);
         grid.appendChild(tile);
@@ -382,7 +383,7 @@
         <div class="bubble me typing" data-step="2"><i></i><i></i><i></i></div>
         <div class="bubble me msg" data-step="3">${c.reply}</div>
         <div class="bubble me invite" data-step="4">
-          <img class="inv-img" src="/assets/img/covers/${c.cover}" alt="${c.game} invite">
+          <img class="inv-img" src="/assets/img/covers/${c.cover}?v=10" alt="${c.game} invite">
           <div class="inv-bar"><img src="/assets/img/duelio-logo.png" alt=""><div><b>Duelio</b><span>${c.caption}</span></div></div>
         </div>
         <div class="bubble them msg" data-step="5">${c.close}</div>`;

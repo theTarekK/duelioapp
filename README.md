@@ -31,21 +31,25 @@ CNAME               — custom-domain marker for GitHub Pages (duelioapp.com)
 ## The catalog & its videos
 
 The homepage follows the current `DuelioMessageCatalog.categories` order:
-**Sports → Strategy → Word Games → Multiplayer → Other Games**. Each category
+**Sports → Multiplayer → Word Games → Strategy → Other Games**. Each category
 keeps its own heading and breathing room. The full-width catalog uses two
-category columns on desktop, with seven tile positions per column, and
+category columns on desktop, with five tile positions per column, and
 reflows into single sections on smaller screens. The tips strip is omitted.
-Its 29 game titles and two builder launchers use
+Its 30 game titles and two builder launchers use
 the native order, square keycaps, fixed game captions, category tints, preview
 zoom and Pro builder seals. Board Builder follows Word
 Shift; Table Builder leads Other Games. Hidden/unavailable titles are not rendered.
 
 `SECTIONS` in `assets/site.js` owns the catalog data. Each game tile links to its
 entry in `/games/`; builder tiles link to the shop. Categories can collapse;
-Other Games stays open. Pool and Darts cycle all five of their mode clips while
+Other Games stays open. SketchBot leads Multiplayer with a NEW tag; Road Rush
+and Drift follow Archery in Sports. Drawing Games and 2 Truths & 1 Lie finish
+Multiplayer; Insider follows Table Builder in Other Games. Only Insider and
+2 Truths & 1 Lie are iMessage-only (28 titles also appear in the standalone app).
+Pool and Darts cycle all five of their mode clips while
 their captions remain **Pool** and **Darts**.
 
-`assets/videos/catalog-manifest.json` records all 39 current preview videos,
+`assets/videos/catalog-manifest.json` records all 40 current preview videos,
 their native source paths and SHA-256 hashes, and matching first-frame posters.
 The videos are full-length H.264 conversions of the bundled HEVC clips, using
 `avconvert --preset Preset640x480 --source in.mp4 --output out.mp4 --replace`.

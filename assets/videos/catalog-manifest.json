@@ -1,5 +1,5 @@
 {
-  "source": "Duelio iOS catalog, September 23, 2026",
+  "source": "Duelio iOS catalog, October 20, 2026",
   "conversion": "avconvert Preset640x480; full-length H.264 with fast start; native poster images",
   "assets": [
     {
@@ -57,6 +57,15 @@
       "posterSha256": "12069c056245e194703a509d0c005737630b55baa9546fd92dfd07b27861ea9f"
     },
     {
+      "file": "MessageTilePreview-archery.mp4",
+      "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-archery.mp4",
+      "sourceSha256": "98bcfc29aef7d253bbfd22c770ee69df315606c16d18732cf362a0cfedf31e4f",
+      "sha256": "92add19d7eb70754ce691c3d045f1a81615a137c49a3491730148f5854cfb300",
+      "bytes": 1524005,
+      "poster": "MessageTilePreview-archery-poster.png",
+      "posterSha256": "a64226ba2af88e5ad3770d33ff7a47c9b4aa943522ce3fdb0f24867cb48f679f"
+    },
+    {
       "file": "MessageTilePreview-backgammon.mp4",
       "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-backgammon.mp4",
       "sourceSha256": "966345c67cf81326e6b27cc16e76d183f314d8f5d23df9e07b545768ea8ca8e7",
@@ -68,11 +77,11 @@
     {
       "file": "MessageTilePreview-blackjack.mp4",
       "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-blackjack.mp4",
-      "sourceSha256": "b1d11f8e80685811365e2e3cde12b34f278c0554adb885bf9831f9fa254c348d",
-      "sha256": "5366f376c34022f77389432eaf82e22daa1918bc8203e9625106edb9e8e5601b",
-      "bytes": 1024339,
+      "sourceSha256": "6db89b9d666d323503d2b8aab371e4ce82b092b21538be375a9ff5a5db5dc99f",
+      "sha256": "c2e070b4ad7deeb37e529afc2f93227d9a95f8a4e6095257cef0ac794be853f1",
+      "bytes": 1294672,
       "poster": "MessageTilePreview-blackjack-poster.png",
-      "posterSha256": "7db8212f8726d2ce1517c3091357b8f12dc0ecc6af37cb5c4fb8f9026b760f75"
+      "posterSha256": "7aa83ca12156b7cf9fa0c53ffedb79ba023b268125710f5b952ca272d36316de"
     },
     {
       "file": "MessageTilePreview-boardbuilder.mp4",
@@ -185,29 +194,29 @@
     {
       "file": "MessageTilePreview-poker.mp4",
       "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-poker.mp4",
-      "sourceSha256": "1b97ef6326f8d12f2b5e40cecfd98abc78e487c978425c57ff46c82a909d3a5d",
-      "sha256": "69daae6a4788a551956f2beb23f43dd3b2f1a04a38b46fb264a1641bee43fbaf",
-      "bytes": 932955,
+      "sourceSha256": "f1a410bcfff6b76c41b3881f80c0fbd8a37029e354f8052b2e168e49104264c4",
+      "sha256": "0fdfdf9b1d9f7186e7c0ec192e67e4558ad321d9ef5a16fe2c39e910d99ec6de",
+      "bytes": 1461843,
       "poster": "MessageTilePreview-poker-poster.png",
-      "posterSha256": "61c4cf96c7259ab29df4d380e878b07c88b4547ce10f5d5947192a7f1be931cc"
+      "posterSha256": "daafa5f0ddd32d07cb16bf52352454e49833b8ac53e5efac67b07e57807547c2"
     },
     {
       "file": "MessageTilePreview-quickdraw.mp4",
       "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-quickdraw.mp4",
-      "sourceSha256": "60ff783f6df2bdbdd10f19e76ba964793c7baa4fdcd9ba251cf2bf56e892c59e",
-      "sha256": "6d26d361c8a570ef5de93944b868548cce365a1e7e8b46fb1df97ea5f1a7e65b",
-      "bytes": 1232024,
+      "sourceSha256": "92e69334bb314fa58476af027c616308488af390bb4be4dc3e3a8fa93a37cc58",
+      "sha256": "b6c7e2a623739f085eadb8cde4426e4e458826cf2c035dac3ac94b28dc4c113f",
+      "bytes": 1810097,
       "poster": "MessageTilePreview-quickdraw-poster.png",
-      "posterSha256": "f3f11e722c2cc27d116583fa0b46a1293d7840ce58ba08ec81c8bde15a711d04"
+      "posterSha256": "6275127f642d3cb774ef1881fd979e1bd4db0ef5ca91cbcfea2ec6e713695df8"
     },
     {
       "file": "MessageTilePreview-roadracer.mp4",
       "source": "DuelioSharedResources/Resources/MessageTilePreviews/MessageTilePreview-roadracer.mp4",
-      "sourceSha256": "2ca2ceaf184d26c004e95dd4f3cfda9586d5f3a231371fbaf6b9fdbd8e785a6a",
-      "sha256": "08bcd5a18c12987518819f317a4dd5969ddeee0c6b8ee85bed0edde5b63827ed",
-      "bytes": 1355076,
+      "sourceSha256": "8c06eae43dafbc7340f82ac2239c0559341a7c296b3378dc0a2c27b7476b0621",
+      "sha256": "e0fd328258260b5363abfa6a6d05ce67712240e624d0acca0532b9759eca90a2",
+      "bytes": 2246334,
       "poster": "MessageTilePreview-roadracer-poster.png",
-      "posterSha256": "59952146ab119eda1789f841cfad9ec7b9fbfbccfb93f01773b55ecd7d21679d"
+      "posterSha256": "95920cb9c30336d0d07251d18c6fc972df691c06c69d83ab06f89dc80278aa66"
     },
     {
       "file": "MessageTilePreview-scrabble.mp4",
