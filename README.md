@@ -42,8 +42,9 @@ Shift; Table Builder leads Other Games. Hidden/unavailable titles are not render
 
 `SECTIONS` in `assets/site.js` owns the catalog data. Each game tile links to its
 entry in `/games/`; builder tiles link to the shop. Categories can collapse;
-Other Games stays open. SketchBot leads Multiplayer with a NEW tag; Road Rush
-and Drift follow Archery in Sports. Drawing Games and 2 Truths & 1 Lie finish
+Other Games stays open. SketchBot leads Multiplayer with a NEW tag; Archery
+also has a NEW tag in Sports, followed by Road Rush and Drift. Its game-index
+entry covers the three-round duel, wind, controls, and turn replays. Drawing Games and 2 Truths & 1 Lie finish
 Multiplayer; Insider follows Table Builder in Other Games. Only Insider and
 2 Truths & 1 Lie are iMessage-only (28 titles also appear in the standalone app).
 Pool and Darts cycle all five of their mode clips while

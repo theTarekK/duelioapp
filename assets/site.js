@@ -59,7 +59,7 @@
           config: null },
         { n: "Curling", k: "curling", players: "2", pass: true, config: jumpIn },
         { n: "The Hook", k: "thehook", players: "2", pass: true, config: jumpIn },
-        { n: "Archery", k: "archery", players: "2", pass: true, config: jumpIn },
+        { n: "Archery", k: "archery", players: "2", pass: true, isNew: true, config: { blurb: "Draw your bow, read the wind, and chase the bullseye. Three arrows per round, three rounds, most points wins." } },
         { n: "Road Rush", k: "roadracer", players: "2–8", live: true, pass: true, config: jumpIn },
         { n: "Drift", k: "toprace", players: "2–4", pass: true, config: jumpIn },
       ],
